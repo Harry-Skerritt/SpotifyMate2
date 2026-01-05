@@ -3,6 +3,7 @@
 #include <lvgl.h>
 #include <Wire.h>
 #include <TAMC_GT911.h>
+#include <WiFi.h>
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 480
@@ -45,13 +46,29 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
     }
 }
 
+const char* ssid = "Mustang";
+const char* password = "";
+
+void setup_wifi() {
+    Serial.println("Connecting to WiFi...");
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+}
+
 void setup() {
     Serial.begin(115200);
-    // Give Serial time to start so we can see the logs
-    for(int i = 5; i > 0; i--) {
-        Serial.printf("Booting in %d...\n", i);
-        delay(500);
-    }
+    delay(2000);
+
+    setup_wifi();
 
     // 1. Initialize PSRAM FIRST (Before anything else)
     if (!psramInit()) {
@@ -151,6 +168,18 @@ void setup() {
         lv_obj_set_style_bg_color(b, lv_palette_main(LV_PALETTE_GREEN), 0);
         Serial.printf("Touch Registered. Total Clicks: %d\n", click_count);
     }, LV_EVENT_CLICKED, NULL);
+
+    // 1. Create a second label object on the current screen
+    lv_obj_t * label2 = lv_label_create(lv_scr_act());
+
+    // 2. Set the text
+    lv_label_set_text_fmt(label2, "Connected!\nIP: %s", WiFi.localIP().toString().c_str());
+    // 3. Position it
+    // You can use alignments like LV_ALIGN_TOP_MID, LV_ALIGN_BOTTOM_LEFT, etc.
+    lv_obj_align(label2, LV_ALIGN_TOP_MID, 0, 20); // Top middle, 20 pixels down
+
+    // 4. Style it (Optional: Make it look different)
+    lv_obj_set_style_text_color(label2, lv_palette_main(LV_PALETTE_ORANGE), 0);
 
     Serial.println("Setup Complete.");
 }
