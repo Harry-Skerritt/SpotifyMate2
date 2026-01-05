@@ -23,7 +23,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Got LVGL working with the display">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Tested WiFi">
+      <change afterPath="$PROJECT_DIR$/data/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
@@ -101,6 +103,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "PlatformIO.PlatformIO.executor": "Run",
     "RunOnceActivity.RadMigrateCodeStyle": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
@@ -146,7 +149,7 @@
       <workItem from="1767626336069" duration="1242000" />
       <workItem from="1767627587180" duration="14000" />
       <workItem from="1767627618534" duration="5364000" />
-      <workItem from="1767635617028" duration="257000" />
+      <workItem from="1767635617028" duration="2314000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -156,7 +159,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767631658369</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Tested WiFi">
+      <option name="closed" value="true" />
+      <created>1767636022442</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1767636022442</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -175,6 +186,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Got LVGL working with the display" />
-    <option name="LAST_COMMIT_MESSAGE" value="Got LVGL working with the display" />
+    <MESSAGE value="Tested WiFi" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tested WiFi" />
   </component>
 </project>

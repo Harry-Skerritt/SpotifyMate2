@@ -4,6 +4,8 @@
 #include <Wire.h>
 #include <TAMC_GT911.h>
 #include <WiFi.h>
+#include <LittleFS.h>
+#include <ArduinoJson.h>
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 480
@@ -46,29 +48,97 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
     }
 }
 
-const char* ssid = "Mustang";
-const char* password = "";
+String config_ssid, config_pass;
 
-void setup_wifi() {
-    Serial.println("Connecting to WiFi...");
-    WiFi.begin(ssid, password);
-
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
+bool loadConfig() {
+    if (!LittleFS.begin(true)) { // 'true' forces format if mount fails
+        Serial.println("LittleFS Mount Failed");
+        return false;
     }
 
-    Serial.println("");
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
-    Serial.println(WiFi.localIP());
+    // List files to see if config.json actually exists
+    File root = LittleFS.open("/");
+    File file = root.openNextFile();
+    Serial.println("Files found on Flash:");
+    while(file){
+        Serial.printf(" - %s (%d bytes)\n", file.name(), file.size());
+        file = root.openNextFile();
+    }
+
+    File configFile = LittleFS.open("/config.json", "r");
+    if (!configFile) {
+        Serial.println("CRITICAL: config.json not found! Did you 'Upload Filesystem Image'?");
+        return false;
+    }
+
+    JsonDocument doc;
+    DeserializationError error = deserializeJson(doc, configFile);
+    if (error) {
+        Serial.print("JSON Parse Error: ");
+        Serial.println(error.c_str());
+        return false;
+    }
+
+    config_ssid = doc["ssid"].as<String>();
+    config_pass = doc["password"].as<String>();
+
+    Serial.printf("Loaded SSID: %s\n", config_ssid.c_str());
+    Serial.printf("Password: %s\n", config_pass.c_str());
+    configFile.close();
+    return (config_ssid.length() > 0);
+}
+
+void setup_wifi() {
+    Serial.println("Initializing WiFi...");
+
+    // Use the strings loaded from your config.json
+    if (config_ssid.length() == 0) {
+        Serial.println("WiFi Error: SSID is empty!");
+        return;
+    }
+
+    WiFi.mode(WIFI_STA);
+    WiFi.setSleep(false); // Important for ESP32-S3 to prevent LCD flicker
+    WiFi.begin(config_ssid.c_str(), config_pass.c_str());
+
+    unsigned long startAttemptTime = millis();
+    const unsigned long timeout = 15000; // 15 seconds timeout
+
+    Serial.print("Connecting to WiFi");
+
+    // Non-blocking wait: keeps LVGL and Watchdog happy
+    while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < timeout) {
+        delay(100);
+        Serial.print(".");
+
+        // Keep the screen responsive while waiting
+        lv_timer_handler();
+    }
+
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.println("\n[SUCCESS] WiFi Connected!");
+        Serial.print("IP Address: ");
+        Serial.println(WiFi.localIP());
+
+        // Update your UI label if you have one
+        // lv_label_set_text_fmt(status_label, "Connected: %s", WiFi.localIP().toString().c_str());
+    } else {
+        Serial.println("\n[ERROR] WiFi Connection Timeout.");
+        WiFi.disconnect(true); // Clean up the failed attempt
+    }
 }
 
 void setup() {
     Serial.begin(115200);
+    Serial.println("Starting...");
     delay(2000);
 
-    setup_wifi();
+    if (loadConfig()) {
+        setup_wifi();
+        //WiFi.begin(config_ssid.c_str(), config_pass.c_str());
+    } else {
+        Serial.println("WiFi not started - Config load failed.");
+    }
 
     // 1. Initialize PSRAM FIRST (Before anything else)
     if (!psramInit()) {
