@@ -23,15 +23,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added a filesystem and a config file to load wifi creds">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Set up the project structure, and abstracted. Also added FreeRTOS">
       <change afterPath="$PROJECT_DIR$/data/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hal/display.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hal/display.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/network/wifiManager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/network/wifiManager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_20.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_80.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/uiManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/uiManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -130,8 +128,10 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/ui/fonts" />
+      <recent name="$PROJECT_DIR$/src/ui" />
       <recent name="$PROJECT_DIR$/include" />
+      <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
   <component name="RunManager">
@@ -161,7 +161,7 @@
       <workItem from="1767627587180" duration="14000" />
       <workItem from="1767627618534" duration="5364000" />
       <workItem from="1767635617028" duration="3883000" />
-      <workItem from="1767640971506" duration="2543000" />
+      <workItem from="1767640971506" duration="4270000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -187,7 +187,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767637978488</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Set up the project structure, and abstracted. Also added FreeRTOS">
+      <option name="closed" value="true" />
+      <created>1767643903962</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1767643903962</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,6 +216,7 @@
     <MESSAGE value="Got LVGL working with the display" />
     <MESSAGE value="Tested WiFi" />
     <MESSAGE value="Added a filesystem and a config file to load wifi creds" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a filesystem and a config file to load wifi creds" />
+    <MESSAGE value="Set up the project structure, and abstracted. Also added FreeRTOS" />
+    <option name="LAST_COMMIT_MESSAGE" value="Set up the project structure, and abstracted. Also added FreeRTOS" />
   </component>
 </project>

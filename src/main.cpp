@@ -2,6 +2,7 @@
 #include "hal/display.h"
 #include "network/wifiManager.h"
 #include "global_state.h"
+#include "ui/uiManager.h"
 
 
 SystemState deviceState;
@@ -27,20 +28,18 @@ void setup() {
 
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
-    lv_obj_t *label = lv_label_create(lv_scr_act());
-    lv_label_set_text(label, "Initializing...");
-    lv_obj_center(label);
+    uiInit();
 
     for (;;) {
         if (networkState.wifi_connected != last_wifi_state) {
             last_wifi_state = networkState.wifi_connected;
 
             if (networkState.wifi_connected) {
-                lv_label_set_text_fmt(label, "Connected!\nIP: %s", networkState.ip.c_str());
+                String ipStr = "Connected!\nIP: " + networkState.ip;
+                Serial.println(ipStr.c_str());
             } else {
-                lv_label_set_text(label, "Connecting to WiFi...");
+                Serial.println("Connecting to WiFi...");
             }
-            lv_obj_center(label);
         }
 
         lv_timer_handler();
