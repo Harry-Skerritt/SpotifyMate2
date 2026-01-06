@@ -37,8 +37,7 @@ void TaskGraphics(void *pvParameters) {
         vTaskDelay(pdMS_TO_TICKS(15));
     }
 
-    //UIManager::getInstance().showWifiConnectionError();
-    UIManager::getInstance().showFailure();
+    UIManager::getInstance().showWifiOnboarding();
 
     for (;;) {
         if (networkState.wifi_connected != last_wifi_state) {

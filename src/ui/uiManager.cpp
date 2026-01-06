@@ -4,10 +4,10 @@
 
 #include "uiManager.h"
 #include "global_state.h"
+#include <vector>
 
 
-
-// --- Button Callbacks ---
+// --- Error Button Callbacks ---
 static lv_obj_t* wifi_error_retry_btn_ptr;
 static lv_obj_t* wifi_error_reconnect_btn_ptr;
 static lv_obj_t* error_restart_btn_ptr;
@@ -26,12 +26,43 @@ static void errorEventHandler(lv_event_t * e) {
             lv_label_set_text(label, "Connecting...");
         }
         else if (btn == error_restart_btn_ptr) {
-            lv_obj_t * label = lv_obj_get_child(btn, 0);
-            lv_label_set_text(label, "Restarting...");
+            ESP.restart();
         }
     }
 }
 
+// --- WiFi Onboarding Callbacks ---
+static lv_obj_t* get_connected_btn_ptr;
+static void onboardingEventHandler(lv_event_t * e) {
+    lv_event_code_t code = lv_event_get_code(e); // What happened?
+    lv_obj_t * btn = lv_event_get_target(e);     // Which button was it?
+
+    if(code == LV_EVENT_CLICKED) {
+        Serial.println("Button Clicked!");
+
+        if (btn == get_connected_btn_ptr) {
+            lv_obj_t * label = lv_obj_get_child(btn, 0);
+            lv_label_set_text(label, "Connecting...");
+
+            UIManager::getInstance().showWifiScanning();
+
+            // Start the wifi scanner
+        }
+    }
+}
+
+static void wifiJoinEventHandler(lv_event_t * e) {
+    lv_obj_t * btn = lv_event_get_target(e);
+    lv_obj_t * card = lv_obj_get_parent(btn);
+
+    // Find the SSID label
+    lv_obj_t * label = lv_obj_get_child(card, 0);
+    const char * ssid = lv_label_get_text(label);
+
+    Serial.printf("UI: Attempting to join: %s\n", ssid);
+
+    // UIManager::instance().showPasswordEntry(ssid);
+}
 
 
 // --- Singleton ---
@@ -71,6 +102,15 @@ void UIManager::initStyles() {
     lv_style_set_border_width(&style_btn_outline, 3);
     lv_style_set_border_color(&style_btn_outline, SPOTIFY_GREEN);
     lv_style_set_text_color(&style_btn_outline, SPOTIFY_WHITE);
+
+    // Network card
+    lv_style_init(&style_network_card);
+    lv_style_set_bg_color(&style_network_card, lv_color_hex(0x444444));
+    lv_style_set_bg_opa(&style_network_card, LV_OPA_COVER);
+    lv_style_set_radius(&style_network_card, 12);
+    lv_style_set_pad_all(&style_network_card, 15);
+    lv_style_set_width(&style_network_card, 750); // Standard width for 800px screen
+    lv_style_set_height(&style_network_card, LV_SIZE_CONTENT);
 }
 
 
@@ -149,6 +189,46 @@ lv_obj_t *UIManager::createLogo(lv_obj_t *parent, const lv_font_t *font, const l
     return cont;
 }
 
+lv_obj_t *UIManager::createNetworkItem(lv_obj_t *parent, const char *ssid) {
+    lv_obj_t* card = lv_obj_create(parent);
+    lv_obj_add_style(card, &style_network_card, 0);
+
+    lv_obj_set_flex_flow(card, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(card, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+
+    // Padding
+    lv_obj_set_style_pad_top(card, 10, 0);
+    lv_obj_set_style_pad_bottom(card, 10, 0);
+    lv_obj_set_style_pad_left(card, 20, 0);
+    lv_obj_set_style_pad_right(card, 20, 0);
+
+    // SSID (Left)
+    lv_obj_t* label = lv_label_create(card);
+    lv_label_set_text(label, ssid);
+    lv_obj_set_style_text_color(label, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(label, &font_gotham_medium_40, 0);
+
+    // Truncation
+    lv_obj_set_flex_grow(label, 1);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_DOT);
+
+
+    // Connect Button (Right)
+    lv_obj_t* btn = lv_btn_create(card);
+    lv_obj_set_size(btn, 170, 42);
+    lv_obj_add_style(btn, &style_btn_green, 0); // Reuse your green style
+    lv_obj_set_style_radius(btn, 20, 0);
+    lv_obj_add_event_cb(btn, wifiJoinEventHandler, LV_EVENT_CLICKED, NULL);
+
+    lv_obj_t* btn_label = lv_label_create(btn);
+    lv_label_set_text(btn_label, "Connect");
+    lv_obj_set_style_text_font(btn_label, &font_gotham_medium_20, 0);
+    lv_obj_set_style_text_color(btn_label, SPOTIFY_WHITE, 0);
+    lv_obj_center(btn_label);
+
+    return card;
+}
+
 
 // --- Screens ---
 void UIManager::showFailure() {
@@ -169,7 +249,6 @@ void UIManager::showFailure() {
 
 }
 
-
 void UIManager::showSplashScreen() {
     clearScreen();
 
@@ -177,8 +256,6 @@ void UIManager::showSplashScreen() {
 
     createLogo(current_screen, &font_gotham_medium_80, LV_ALIGN_CENTER, 0, 0);
 }
-
-
 
 void UIManager::showWifiConnectionError() {
     clearScreen();
@@ -195,7 +272,7 @@ void UIManager::showWifiConnectionError() {
     // Message
     lv_obj_t * body = lv_label_create(current_screen);
     lv_label_set_text(body, "You don't appear to be\nconnected to the internet\n\nPlease check your connection\nand try again");
-    lv_obj_set_style_text_color(body, lv_color_hex(0xCCCCCC), 0);
+    lv_obj_set_style_text_color(body, SPOTIFY_GREY, 0);
     lv_obj_set_style_text_font(body, &font_gotham_medium_40, 0);
     lv_obj_align(body, LV_ALIGN_TOP_LEFT, 30, 115);
 
@@ -207,4 +284,89 @@ void UIManager::showWifiConnectionError() {
     wifi_error_reconnect_btn_ptr = createSpotifyBtn(
         current_screen, errorEventHandler, "Reconnect", LV_ALIGN_BOTTOM_RIGHT, -38, -19, false);
 
+}
+
+// --- WiFi Screens ---
+void UIManager::showWifiOnboarding() {
+    clearScreen();
+
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    // Header Title
+    lv_obj_t* title = lv_label_create(current_screen);
+    lv_label_set_text(title, "Let's get connected!");
+    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(title, &font_gotham_medium_60, 0);
+    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 30);
+
+    // Message
+    lv_obj_t * body = lv_label_create(current_screen);
+    lv_label_set_text(body, "Press the buton below to search for \nlocal networks. \n\nFind yours and connect!");
+    lv_obj_set_style_text_color(body, SPOTIFY_GREY, 0);
+    lv_obj_set_style_text_font(body, &font_gotham_medium_40, 0);
+    lv_obj_align(body, LV_ALIGN_TOP_LEFT, 30, 115);
+
+    get_connected_btn_ptr = createSpotifyBtn(current_screen, onboardingEventHandler, "Get Connected!", LV_ALIGN_BOTTOM_MID, 0, -32, true);
+}
+
+void UIManager::showWifiScanning() {
+    clearScreen();
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    lv_obj_t* spinner = lv_spinner_create(current_screen, 1000, 60);
+    lv_obj_set_size(spinner, 80, 80);
+    lv_obj_center(spinner);
+
+    lv_obj_set_style_arc_color(spinner, SPOTIFY_GREEN, LV_PART_INDICATOR);
+    lv_obj_set_style_arc_width(spinner, 8, LV_PART_MAIN);
+    lv_obj_set_style_arc_width(spinner, 8, LV_PART_INDICATOR);
+
+    lv_obj_t* label = lv_label_create(current_screen);
+    lv_label_set_text(label, "Searching for networks...");
+    lv_obj_set_style_text_font(label, &font_gotham_medium_40, 0);
+    lv_obj_set_style_text_color(label, SPOTIFY_WHITE, 0);
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 80);
+}
+
+
+void UIManager::showWifiConnections(const std::vector<String>& networks) {
+    clearScreen();
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    // Header Title
+    lv_obj_t* title = lv_label_create(current_screen);
+
+    char buf[32];
+    sprintf(buf, "%d Networks found", networks.size());
+    lv_label_set_text(title, buf);
+    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(title, &font_gotham_medium_60, 0);
+    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 30);
+
+    // Create a scrolling container for the list
+    lv_obj_t* list_cont = lv_obj_create(current_screen);
+    lv_obj_set_size(list_cont, 800, 350);
+    lv_obj_align(list_cont, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_set_flex_flow(list_cont, LV_FLEX_FLOW_COLUMN); // Stack cards vertically
+    lv_obj_set_style_bg_opa(list_cont, 0, 0);
+    lv_obj_set_style_border_width(list_cont, 0, 0);
+    lv_obj_set_style_pad_gap(list_cont, 10, 0); // Space between cards
+
+    // Network list
+    populateWifiList(list_cont, networks);
+}
+
+void UIManager::populateWifiList(lv_obj_t* list_cont, const std::vector<String>& networks) {
+    lv_obj_clean(list_cont);
+
+    for (const String& ssid : networks) {
+        createNetworkItem(list_cont, ssid.c_str());
+    }
+
+    lv_obj_t* spacer = lv_obj_create(list_cont);
+    lv_obj_set_size(spacer, LV_PCT(100), 40);
+    lv_obj_set_style_bg_opa(spacer, 0, 0);
+    lv_obj_set_style_border_width(spacer, 0, 0);
+
+    lv_obj_scroll_to_y(list_cont, 0, LV_ANIM_OFF);
 }

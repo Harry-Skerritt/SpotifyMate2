@@ -11,14 +11,31 @@
 #include <WiFi.h>
 
 
-void loadWifiConfig();
-void wifiInit();
+class WifiManager {
+public:
+
+    static WifiManager& getInstance() {
+        static WifiManager instance;
+        return instance;
+    }
+
+    void init();
 
 
-extern String ssid;
-extern String pass;
+private:
 
+    // Constructor for singleton
+    WifiManager() {}
 
+    String ssid;
+    String pass;
 
+    // Internal Helper
+    void loadWifiConfig();
+
+    // Prevent copying
+    WifiManager(const WifiManager&) = delete;
+    void operator=(const WifiManager&) = delete;
+};
 
 #endif //WIFIMANAGER_H

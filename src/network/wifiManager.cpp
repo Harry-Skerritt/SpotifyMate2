@@ -7,7 +7,18 @@
 
 String ssid, pass;
 
-void loadWifiConfig() {
+void WifiManager::init() {
+    loadWifiConfig();
+
+
+    if (ssid.length() > 0 && pass.length() > 0) {
+        WiFi.mode(WIFI_STA);
+        WiFi.setSleep(false);
+        WiFi.begin(ssid.c_str(), pass.c_str());
+    }
+}
+
+void WifiManager::loadWifiConfig() {
     if (!LittleFS.begin(true)) { // 'true' forces format if mount fails
         Serial.println("LittleFS Mount Failed");
         return;
@@ -22,19 +33,6 @@ void loadWifiConfig() {
         pass = doc["password"].as<String>();
         file.close();
     }
-
-}
-
-void wifiInit() {
-    loadWifiConfig();
-
-
-    if (ssid.length() > 0 && pass.length() > 0) {
-        WiFi.mode(WIFI_STA);
-        WiFi.setSleep(false);
-        WiFi.begin(ssid.c_str(), pass.c_str());
-    }
-
 
 }
 
