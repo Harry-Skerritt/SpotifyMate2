@@ -23,22 +23,16 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Bunch of errors">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Adding missed files">
       <change afterPath="$PROJECT_DIR$/data/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boards/esp32-s3-devkitc-1-n16r8.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/lv_conf.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/lv_conf.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hal/display.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hal/display.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/fonts/fontsManager.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/fonts/fontsManager.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/fonts/gotham_font.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hal/display.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hal/display.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/network/wifiManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/network/wifiManager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_20.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_80.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/uiManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/uiManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,7 +165,7 @@
       <workItem from="1767627587180" duration="14000" />
       <workItem from="1767627618534" duration="5364000" />
       <workItem from="1767635617028" duration="3883000" />
-      <workItem from="1767640971506" duration="17841000" />
+      <workItem from="1767640971506" duration="18140000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -221,7 +215,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767656967652</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Adding missed files">
+      <option name="closed" value="true" />
+      <created>1767659504356</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1767659504356</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -245,6 +247,8 @@
     <MESSAGE value="Set up the project structure, and abstracted. Also added FreeRTOS" />
     <MESSAGE value="Added the UI file and added a splash screen" />
     <MESSAGE value="Bunch of errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bunch of errors" />
+    <MESSAGE value="Rolled back to when it worked - no TinyTTF" />
+    <MESSAGE value="Adding missed files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding missed files" />
   </component>
 </project>
