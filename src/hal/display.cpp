@@ -9,10 +9,19 @@
 // --- Hardware Objects ---
 static Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     5, 3, 46, 7, 14, 38, 18, 17, 10, 39, 0, 45, 48, 47, 21, 1, 2, 42, 41, 40,
-    1, 8, 4, 8, 1, 8, 4, 8, 0, 16000000L);
+    1,
+    40,
+    48,
+    40,
+    1,
+    13,
+    1,
+    31,
+    1,
+    14000000L);
 
 static Arduino_GFX *gfx = new Arduino_RGB_Display(SCREEN_WIDTH, SCREEN_HEIGHT, bus, 0, true);
-static TAMC_GT911 ts = TAMC_GT911(TOUCH_SDA, TOUCH_SCL, -1, -1, SCREEN_WIDTH, SCREEN_HEIGHT);
+static TAMC_GT911 ts = TAMC_GT911(TOUCH_SDA, TOUCH_SCL, 43, -1, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 #define DISP_BUF_SIZE 80
 
@@ -25,10 +34,13 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
 }
 
 void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
+    // Only read every 20ms
+    static uint32_t last_read = 0;
+    if(millis() - last_read < 20) return;
+    last_read = millis();
+
     ts.read();
     if (ts.isTouched && ts.touches > 0) {
-        Serial.printf("GT911 Data -> X: %d, Y: %d\n", ts.points[0].x, ts.points[0].y);
-
         data->state = LV_INDEV_STATE_PR;
         data->point.x = ts.points[0].x;
         data->point.y = ts.points[0].y;
@@ -42,6 +54,8 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
 // --- Setup ---
 void halSetup() {
     Serial.println("Initializing GFX + Touch...");
+
+    pinMode(43, INPUT_PULLUP);
 
     // CH422G I/O Expander Initialization
     Wire.begin(8, 9, 100000);

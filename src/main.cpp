@@ -52,7 +52,7 @@ void TaskGraphics(void *pvParameters) {
         }
 
         lv_timer_handler();
-        vTaskDelay(pdMS_TO_TICKS(15));
+        vTaskDelay(pdMS_TO_TICKS(25));
     }
 }
 
