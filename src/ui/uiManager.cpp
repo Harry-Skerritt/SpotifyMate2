@@ -5,30 +5,34 @@
 #include "uiManager.h"
 #include "global_state.h"
 #include <vector>
+#include <LittleFS.h>
 
 
 // --- Error Button Callbacks ---
 static lv_obj_t* wifi_error_retry_btn_ptr;
 static lv_obj_t* wifi_error_reconnect_btn_ptr;
 static lv_obj_t* error_restart_btn_ptr;
+
 static void errorEventHandler(lv_event_t * e) {
     lv_event_code_t code = lv_event_get_code(e); // What happened?
     lv_obj_t * btn = lv_event_get_target(e);     // Which button was it?
 
     if(code == LV_EVENT_CLICKED) {
-        Serial.println("Button Clicked!");
         if (btn == wifi_error_retry_btn_ptr) {
-            lv_obj_t * label = lv_obj_get_child(btn, 0);
-            lv_label_set_text(label, "Retrying...");
-
-            // Todo: Ensure that SSID and Pass are set
-            networkState.start_connect_trigger = true;
+            transitionFlags.failed_to_connect_trigger = false;
+            transitionFlags.start_connect_trigger = true;
         }
         else if (btn == wifi_error_reconnect_btn_ptr) {
-            lv_obj_t * label = lv_obj_get_child(btn, 0);
-            lv_label_set_text(label, "Connecting...");
-            // Todo: Add functionality here
+
+            LittleFS.remove("/config.json");
+            deviceState.setup_complete = false;
+            networkState.wifi_connected = false;
+            transitionFlags.failed_to_connect_trigger = false;
+            transitionFlags.is_connecting = false;
+
+            //UIManager::getInstance().showWifiOnboarding();
         }
+
         else if (btn == error_restart_btn_ptr) {
             ESP.restart();
         }
@@ -47,7 +51,7 @@ static void onboardingEventHandler(lv_event_t * e) {
         if (btn == get_connected_btn_ptr) {
             lv_obj_t * label = lv_obj_get_child(btn, 0);
             lv_label_set_text(label, "Connecting...");
-            networkState.start_scan_trigger = true;
+            transitionFlags.start_scan_trigger = true;
         }
     }
 }
@@ -113,6 +117,83 @@ void UIManager::initStyles() {
     lv_style_set_pad_all(&style_network_card, 15);
     lv_style_set_width(&style_network_card, 750); // Standard width for 800px screen
     lv_style_set_height(&style_network_card, LV_SIZE_CONTENT);
+}
+
+void UIManager::update(NetworkState ns, SystemState ds, TransitionFlags tf) {
+    static bool last_wifi_conn = false;
+    static bool last_spotify_linked = false;
+    static bool last_error = false;
+    static bool last_connecting = false;
+    static bool last_scanning = false;
+    static bool last_scan_complete = false; // CRITICAL: Track completion state
+
+    // 1. FATAL ERROR
+    if (tf.fatal_error_trigger) {
+        if (!last_error) { showFailure(); last_error = true; }
+        return;
+    }
+
+    // 2. WIFI DISCONNECTED PHASE
+    if (!ns.wifi_connected) {
+        if (tf.failed_to_connect_trigger) {
+            if (!last_error) { showWifiConnectionError(); last_error = true; last_connecting = false; }
+        }
+        else if (tf.is_connecting) {
+            if (!last_connecting) { showWifiConnecting(); last_connecting = true; last_error = false; }
+        }
+        // FIX: Only show connections ONCE when scan_complete flips to true
+        else if (tf.scan_complete) {
+            if (!last_scan_complete) {
+                showWifiConnections(ns.found_ssids);
+                last_scan_complete = true; // Gate the screen creation
+                last_scanning = false;
+                last_error = false;
+            }
+        }
+        else if (tf.start_scan_trigger) {
+            if (!last_scanning) {
+                showWifiScanning();
+                last_scanning = true;
+                last_scan_complete = false; // Reset for next time
+            }
+        }
+        else {
+            // Default Onboarding
+            if (last_wifi_conn || last_error || last_connecting || last_scan_complete) {
+                showWifiOnboarding();
+
+                last_wifi_conn = false;
+                last_error = false;
+                last_connecting = false;
+                last_scanning = false;
+                last_scan_complete = false;
+                last_spotify_linked = false;
+            }
+        }
+        return;
+    }
+
+    // 3. WIFI CONNECTED PHASE
+    if (ns.wifi_connected && !last_wifi_conn) {
+        showContextScreen("WiFi Connected!");
+        last_wifi_conn = true;
+        last_connecting = false;
+        last_error = false;
+        // The success screen stays briefly; the next loop continues to Spotify linking
+        return;
+    }
+
+    // 4. SPOTIFY LINKING PHASE
+    if (!ds.spotify_linked) {
+        if (!last_spotify_linked) {
+            showSpotifyLinking(ds.spotify_auth_url.c_str());
+            last_spotify_linked = true;
+        }
+        return;
+    }
+
+    // 5. MAIN PLAYER PHASE
+    showMainPlayer();
 }
 
 
@@ -452,7 +533,11 @@ void UIManager::showWifiPasswordEntry(const String &ssid) {
         if(code == LV_EVENT_READY) { // Ready = Checkmark/OK clicked
             const char* pwd = lv_textarea_get_text(ta);
             networkState.selected_pass = String(pwd);
-            networkState.start_connect_trigger = true;
+
+            transitionFlags.start_connect_trigger = true;
+
+            transitionFlags.is_connecting = true;
+
         } else if(code == LV_EVENT_CANCEL) {
             UIManager::getInstance().showWifiOnboarding(); // Go back
         }
@@ -508,3 +593,20 @@ void UIManager::showSpotifyLinking(const char* auth_url) {
     lv_obj_align(auth_qr, LV_ALIGN_BOTTOM_MID, 0, -27);
 
 }
+
+
+// Main Player
+void UIManager::showMainPlayer() {
+    clearScreen();
+
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    // Header Title
+    lv_obj_t* title = lv_label_create(current_screen);
+    lv_label_set_text(title, "Player");
+    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(title, &font_gotham_medium_60, 0);
+    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 30);
+
+}
+

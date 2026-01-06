@@ -23,7 +23,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Trying to fix Core 0 abort" />
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Fixed gitignore issues + updated spotify lib">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/wifiManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/wifiManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.h" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,27 +49,39 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="9560553a9bb0743404dba9f4a16eb4a26ae89daf" />
+        <entry key="$PROJECT_DIR$" value="Fix-Core-0" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;Harry-Skerritt&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "history": [
+    {
+      "state": "OPEN"
+    }
+  ],
+  "lastFilter": {
+    "state": "OPEN"
   }
-}</component>
+}]]></component>
+  <component name="GitHubPullRequestState"><![CDATA[{
+  "prStates": [
+    {
+      "id": {
+        "id": "PR_kwDOQ0LHSM670PKe",
+        "number": 2
+      },
+      "lastSeen": 1767746588296
+    }
+  ]
+}]]></component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Harry-Skerritt/SpotifyMate2.git&quot;,
     &quot;accountId&quot;: &quot;5f314702-d3bf-4e2a-9560-968f32bc1895&quot;
   }
 }</component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-  </component>
   <component name="PlatformioLocalSettings">
     <option name="availableProjects">
       <map>
@@ -115,7 +135,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "Fix-Core-0",
+    "git-widget-placeholder": "#2 on Rebasing Fix-Core-0",
     "last_opened_file_path": "/Volumes/Data/Code/C++/2026/SpotifyMate2/src",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -340,7 +360,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767715195056</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Fixed gitignore issues + updated spotify lib">
+      <option name="closed" value="true" />
+      <created>1767736404069</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1767736404069</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -379,6 +407,7 @@
     <MESSAGE value="Added wifi handling for existing credentials, and added a factory reset option" />
     <MESSAGE value="Added the spotify linking page" />
     <MESSAGE value="Changes to flow" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes to flow" />
+    <MESSAGE value="Fixed gitignore issues + updated spotify lib" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed gitignore issues + updated spotify lib" />
   </component>
 </project>

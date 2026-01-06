@@ -6,59 +6,108 @@
 
 #include "global_state.h"
 
+
 // Init
 void WifiManager::init() {
-    loadWifiConfig();
-
-
-    if (ssid.length() > 0 && pass.length() > 0) {
-
-        WiFi.mode(WIFI_STA);
-        vTaskDelay(pdMS_TO_TICKS(100));
-
-        IPAddress local_IP(192, 168, 0, 141);
-        IPAddress gateway(192, 168, 0, 1);
-        IPAddress subnet(255, 255, 255, 0);
-        IPAddress primaryDNS(8, 8, 8, 8);   // Google DNS
-        IPAddress secondaryDNS(1, 1, 1, 1);
-
-        if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
-            Serial.println("STA: Static IP Failed to Configure");
-        }
-
-        networkState.selected_ssid = ssid;
-        networkState.selected_pass = pass;
-        networkState.setup_complete = true;
-
-
-        WiFi.setSleep(false);
-
-        //WiFi.begin(ssid.c_str(), pass.c_str());
-        vTaskDelay(pdMS_TO_TICKS(100));
-        networkState.start_connect_trigger = true;
+    if (loadWifiConfig()) {
+        transitionFlags.start_connect_trigger = true;
     }
 }
 
 
-void WifiManager::loadWifiConfig() {
-    File file = LittleFS.open("/config.json", "r");
+void WifiManager::update() {
+    handleAsyncScan(); // Handles trigger
 
-    if (file) {
-        JsonDocument doc;
-        deserializeJson(doc, file);
-        ssid = doc["ssid"].as<String>();
-        pass = doc["password"].as<String>();
-        networkState.setup_complete = doc["setup_complete"].as<bool>();
-        networkState.spotify_linked = doc["spotify_linked"].as<bool>();
-        file.close();
+    if (transitionFlags.start_connect_trigger) {
+        startConnection();
     }
 
+    if (transitionFlags.is_connecting) {
+        if (WiFi.status() == WL_CONNECTED) {
+            handleConnectionSuccess();
+        } else if (millis() - connect_start_time > current_timeout) {
+            handleConnectionFailure();
+        }
+    }
+}
+
+void WifiManager::startConnection() {
+    transitionFlags.start_connect_trigger = false;
+
+    String targetSSID = (ssid.length() > 0) ? ssid : networkState.selected_ssid;
+    String targetPass = (pass.length() > 0) ? pass : networkState.selected_pass;
+
+
+    if (ssid.length() > 0 && pass.length() > 0) {
+        WiFi.disconnect();
+        WiFi.mode(WIFI_STA);
+
+        connect_start_time = millis();
+        current_timeout = (transitionFlags.failed_to_connect_trigger) ? 30000 : 15000;
+
+        networkState.selected_ssid = targetSSID;
+        networkState.selected_pass = targetPass;
+
+        WiFi.begin(ssid.c_str(), pass.c_str());
+
+        transitionFlags.is_connecting = true;
+        transitionFlags.failed_to_connect_trigger = false;
+
+        Serial.println("WiFi: Connecting...");
+    }
+}
+
+void WifiManager::handleConnectionSuccess() {
+    transitionFlags.is_connecting = false;
+    networkState.wifi_connected = true;
+    networkState.ip = WiFi.localIP().toString();
+
+    saveWifiConfig(networkState.selected_ssid, networkState.selected_pass);
+
+    transitionFlags.show_success_trigger = true;
+    Serial.println("WiFi: Connection Successful");
+}
+
+
+void WifiManager::handleConnectionFailure() {
+    transitionFlags.is_connecting = false;
+    networkState.wifi_connected = false;
+    transitionFlags.failed_to_connect_trigger = true;
+    Serial.println("WiFi: Connection Timeout");
+}
+
+
+bool WifiManager::loadWifiConfig() {
+    if (!LittleFS.exists("/config.json")) return false;
+
+    File file = LittleFS.open("/config.json", "r");
+    if (!file) return false;
+
+    JsonDocument doc;
+    DeserializationError error = deserializeJson(doc, file);
+    file.close();
+
+    if (error) {
+        Serial.println("WiFi: Config file corrupted");
+        return false;
+    }
+
+    // Assign to local variables
+    ssid = doc["ssid"].as<String>();
+    pass = doc["password"].as<String>();
+
+    // Update global states
+    deviceState.setup_complete = doc["setup_complete"].as<bool>();
+    deviceState.spotify_linked = doc["spotify_linked"].as<bool>();
+
+    // Only return true if the setup is actually finished
+    return deviceState.setup_complete;
 }
 
 
 // Scan
 void WifiManager::handleAsyncScan() {
-    if (networkState.start_scan_trigger) {
+    if (transitionFlags.start_scan_trigger) {
         Serial.println("WiFi: Scan requested...");
 
         WiFi.disconnect();
@@ -85,8 +134,8 @@ void WifiManager::handleAsyncScan() {
         }
 
         WiFi.scanDelete();
-        networkState.start_scan_trigger = false;
-        networkState.scan_complete = true;
+        transitionFlags.start_scan_trigger = false;
+        transitionFlags.scan_complete = true;
         Serial.println("WiFi: Scan complete");
     }
 }
@@ -96,7 +145,7 @@ void WifiManager::saveWifiConfig(const String& s, const String& p) {
     File file = LittleFS.open("/config.json", "w");
     if (!file) {
         Serial.println("WiFi: Failed to open config.json");
-        deviceState.fatal_error_trigger = true;
+        transitionFlags.fatal_error_trigger = true;
         return;
     }
 
@@ -114,6 +163,7 @@ void WifiManager::saveWifiConfig(const String& s, const String& p) {
     file.close();
     Serial.println("Config Saved Successfully");
 }
+
 
 
 
