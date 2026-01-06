@@ -27,6 +27,8 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
 void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
     ts.read();
     if (ts.isTouched && ts.touches > 0) {
+        Serial.printf("GT911 Data -> X: %d, Y: %d\n", ts.points[0].x, ts.points[0].y);
+
         data->state = LV_INDEV_STATE_PR;
         data->point.x = ts.points[0].x;
         data->point.y = ts.points[0].y;
@@ -35,6 +37,7 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
     }
 }
 
+#define TOUCH_GT911_ADDRESS 0x5D
 
 // --- Setup ---
 void halSetup() {
@@ -46,10 +49,12 @@ void halSetup() {
     Wire.beginTransmission(0x38); Wire.write(0x0E); Wire.endTransmission();
     delay(200);
 
-    // GFX & Touch
+    // GFX
     gfx->begin();
-    ts.begin();
-    ts.setRotation(ROTATION_NORMAL);
+
+    Serial.println("Starting touch");
+    ts.begin(TOUCH_GT911_ADDRESS);
+    ts.setRotation(ROTATION_INVERTED);
 
     // LVGL Memory
     lv_init();

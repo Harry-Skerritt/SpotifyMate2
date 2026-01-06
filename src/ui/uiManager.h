@@ -20,8 +20,12 @@ LV_FONT_DECLARE(font_gotham_medium_40);
 LV_FONT_DECLARE(font_gotham_medium_60);
 LV_FONT_DECLARE(font_gotham_medium_80);
 
+
+
+void uiStylesInit();
+
 // Different screens
-void uiInit();
+void uiSplashScreen();
 void uiWifiOnboarding();
 void uiWifiConnectionError();
 void ui_show_player();

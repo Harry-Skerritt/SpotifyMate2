@@ -23,11 +23,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Fully reverted back to a 'stable' point">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added the network failure screen - not added button functionality">
       <change afterPath="$PROJECT_DIR$/data/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_40.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_60.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hal/display.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/hal/display.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.h" afterDir="false" />
@@ -163,7 +162,7 @@
       <workItem from="1767627587180" duration="14000" />
       <workItem from="1767627618534" duration="5364000" />
       <workItem from="1767635617028" duration="3883000" />
-      <workItem from="1767640971506" duration="19622000" />
+      <workItem from="1767640971506" duration="21280000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -229,7 +228,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767659530866</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Added the network failure screen - not added button functionality">
+      <option name="closed" value="true" />
+      <created>1767661038688</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1767661038688</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,6 +263,7 @@
     <MESSAGE value="Rolled back to when it worked - no TinyTTF" />
     <MESSAGE value="Adding missed files" />
     <MESSAGE value="Fully reverted back to a 'stable' point" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fully reverted back to a 'stable' point" />
+    <MESSAGE value="Added the network failure screen - not added button functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added the network failure screen - not added button functionality" />
   </component>
 </project>

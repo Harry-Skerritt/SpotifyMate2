@@ -18,9 +18,10 @@ void setup() {
     Serial.begin(9600);
 
     halSetup();
+    uiStylesInit();
 
     // UI Task (Core 1)
-    xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 8192, NULL, 3, NULL, 1);
+    xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 16384, NULL, 3, NULL, 1);
 
     // Network Task (Core 0)
     xTaskCreatePinnedToCore(TaskSystem, "System", 8192, NULL, 1, NULL, 0);
@@ -28,7 +29,14 @@ void setup() {
 
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
-    //uiInit();
+    uiSplashScreen();
+
+    uint32_t start_time = millis();
+    while(millis() - start_time < 1000) {
+        lv_timer_handler();
+        vTaskDelay(pdMS_TO_TICKS(5));
+    }
+
     uiWifiConnectionError();
 
     for (;;) {
