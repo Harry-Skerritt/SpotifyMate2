@@ -34,6 +34,7 @@ public:
 
     void init();
 
+    void showFailure();
     void showSplashScreen();
     void showWifiConnectionError();
 
@@ -53,7 +54,8 @@ private:
 
     // Internal Helpers
     void initStyles();
-    lv_obj_t* createSpotifyBtn(lv_obj_t* parent, const char* text, lv_align_t align, int x, int y, bool is_green);
+    lv_obj_t* createSpotifyBtn(lv_obj_t* parent, lv_event_cb_t cb, const char* text, lv_align_t align, int x, int y, bool is_green);
+    lv_obj_t* createLogo(lv_obj_t* parent, const lv_font_t* font, lv_align_t align, int x, int y);
 
     // Prevent copying
     UIManager(const UIManager&) = delete;

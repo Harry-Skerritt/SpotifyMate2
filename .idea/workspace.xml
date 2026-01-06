@@ -23,7 +23,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Fixed touch screen jittering">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Neatened up UIManager">
       <change afterPath="$PROJECT_DIR$/data/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
@@ -164,7 +164,7 @@
       <workItem from="1767627587180" duration="14000" />
       <workItem from="1767627618534" duration="5364000" />
       <workItem from="1767635617028" duration="3883000" />
-      <workItem from="1767640971506" duration="25417000" />
+      <workItem from="1767640971506" duration="26956000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -262,7 +262,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767703903771</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Neatened up UIManager">
+      <option name="closed" value="true" />
+      <created>1767705484391</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1767705484391</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -293,6 +301,7 @@
     <MESSAGE value="Started adding screen transitions - bug with touch" />
     <MESSAGE value="Fixed some of the touch bugs for now, still more to fix" />
     <MESSAGE value="Fixed touch screen jittering" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed touch screen jittering" />
+    <MESSAGE value="Neatened up UIManager" />
+    <option name="LAST_COMMIT_MESSAGE" value="Neatened up UIManager" />
   </component>
 </project>
