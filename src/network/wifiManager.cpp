@@ -4,9 +4,10 @@
 
 #include "wifiManager.h"
 
+#include "global_state.h"
 
-String ssid, pass;
 
+// Init
 void WifiManager::init() {
     loadWifiConfig();
 
@@ -35,4 +36,42 @@ void WifiManager::loadWifiConfig() {
     }
 
 }
+
+
+// Scan
+void WifiManager::handleAsyncScan() {
+    if (networkState.start_scan_trigger) {
+        Serial.println("WiFi: Scan requested...");
+
+        WiFi.disconnect();
+        networkState.found_ssids.clear();
+
+        int n = WiFi.scanNetworks(false, false);
+
+        for (int i = 0; i < n; ++i) {
+            String currentSSID = WiFi.SSID(i);
+
+            // CHECK FOR DUPLICATES
+            bool exists = false;
+            for (const String& s : networkState.found_ssids) {
+                if (s == currentSSID) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists && currentSSID.length() > 0) {
+                networkState.found_ssids.push_back(currentSSID);
+            }
+        }
+
+        WiFi.scanDelete();
+        networkState.start_scan_trigger = false;
+        networkState.scan_complete = true;
+        Serial.println("WiFi: Scan complete");
+    }
+}
+
+
+
 

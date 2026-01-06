@@ -43,10 +43,7 @@ static void onboardingEventHandler(lv_event_t * e) {
         if (btn == get_connected_btn_ptr) {
             lv_obj_t * label = lv_obj_get_child(btn, 0);
             lv_label_set_text(label, "Connecting...");
-
-            UIManager::getInstance().showWifiScanning();
-
-            // Start the wifi scanner
+            networkState.start_scan_trigger = true;
         }
     }
 }

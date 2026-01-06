@@ -7,10 +7,15 @@
 
 #pragma once
 #include <Arduino.h>
+#include <vector>
 
 struct NetworkState {
     bool wifi_connected = false;
     String ip = "0.0.0.0";
+
+    volatile bool start_scan_trigger = false;
+    volatile bool scan_complete = false;
+    std::vector<String> found_ssids;
 };
 
 struct SystemState {

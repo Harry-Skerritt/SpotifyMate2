@@ -21,12 +21,14 @@ void setup() {
     UIManager::getInstance().init();
 
     // UI Task (Core 1)
-    xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 16384, NULL, 3, NULL, 1);
+    xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 32768, NULL, 3, NULL, 1);
 
     // Network Task (Core 0)
     xTaskCreatePinnedToCore(TaskSystem, "System", 8192, NULL, 1, NULL, 0);
 }
 
+
+bool is_scanning_ui_active = false;
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
     UIManager::getInstance().showSplashScreen();
@@ -40,6 +42,20 @@ void TaskGraphics(void *pvParameters) {
     UIManager::getInstance().showWifiOnboarding();
 
     for (;;) {
+
+        if (networkState.start_scan_trigger && !is_scanning_ui_active) {
+            //networkState.start_scan_trigger = false;
+            is_scanning_ui_active = true;
+            UIManager::getInstance().showWifiScanning();
+        }
+
+        if (networkState.scan_complete) {
+            networkState.scan_complete = false;
+            is_scanning_ui_active = false;
+            UIManager::getInstance().showWifiConnections(networkState.found_ssids);
+        }
+
+
         if (networkState.wifi_connected != last_wifi_state) {
             last_wifi_state = networkState.wifi_connected;
 
@@ -58,9 +74,13 @@ void TaskGraphics(void *pvParameters) {
 
 // --- CORE 0: Handle Wi-Fi and API Logic ---
 void TaskSystem(void *pvParameters) {
-    wifiInit();
+    WifiManager::getInstance().init();
 
     for (;;) {
+
+        WifiManager::getInstance().handleAsyncScan();
+
+
         if (WiFi.status() == WL_CONNECTED) {
             if (!networkState.wifi_connected) {
                 networkState.wifi_connected = true;
@@ -71,12 +91,11 @@ void TaskSystem(void *pvParameters) {
             networkState.wifi_connected = false;
         }
 
-
         if (networkState.wifi_connected) {
             // Spotify API polling will live here
         }
 
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
