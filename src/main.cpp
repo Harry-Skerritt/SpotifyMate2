@@ -20,6 +20,11 @@ void setup() {
     halSetup();
     UIManager::getInstance().init();
 
+    if (!LittleFS.begin(true)) { // 'true' forces format if mount fails
+        Serial.println("LittleFS Mount Failed");
+        deviceState.fatal_error_trigger = true;
+    }
+
     // UI Task (Core 1)
     xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 32768, NULL, 3, NULL, 1);
 
@@ -31,15 +36,50 @@ void setup() {
 bool is_scanning_ui_active = false;
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
+    pinMode(0, INPUT_PULLUP);
+
     UIManager::getInstance().showSplashScreen();
 
+
+    // Reset Logic
     uint32_t start_time = millis();
-    while(millis() - start_time < 1000) {
+    bool reset_triggered = false;
+
+    while(millis() - start_time < 3000) {
+        if (digitalRead(0) == LOW && !reset_triggered) {
+            Serial.println("DEBUG: Reset Button Held! Wiping Config...");
+
+            if (LittleFS.remove("/config.json")) {
+                networkState.setup_complete = false;
+                UIManager::getInstance().showContextScreen("Resetting...");
+                reset_triggered = true; // Mark that we are done
+            } else {
+                Serial.println("File delete failed - might not exist");
+                UIManager::getInstance().showContextScreen("No config to reset!");
+                reset_triggered = true;
+            }
+        }
+
         lv_timer_handler();
         vTaskDelay(pdMS_TO_TICKS(15));
+
+        // Exit the 3-second window early if the user triggered a reset
+        if (reset_triggered) {
+            vTaskDelay(pdMS_TO_TICKS(1500)); // Brief pause so they can actually read the "Resetting" message
+            break;
+        }
     }
 
-    UIManager::getInstance().showWifiOnboarding();
+    WifiManager::getInstance().init(); // Init here for flags
+
+    if (networkState.setup_complete) {
+        // Have saved creds so connect
+        UIManager::getInstance().showWifiConnecting();
+    } else {
+        // Fresh - needs onboarding
+        UIManager::getInstance().showWifiOnboarding();
+    }
+
 
     for (;;) {
 
@@ -62,10 +102,14 @@ void TaskGraphics(void *pvParameters) {
         }
 
         // Handle connection error
-
         if (networkState.failed_to_connect_trigger) {
             UIManager::getInstance().showWifiConnectionError();
             networkState.failed_to_connect_trigger = false;
+        }
+
+        // Handle successful connection
+        if (networkState.show_success_trigger) {
+            UIManager::getInstance().showContextScreen("Connected!");
         }
 
 
@@ -85,36 +129,50 @@ void TaskGraphics(void *pvParameters) {
     }
 }
 
+
+unsigned long connect_start_time = 0;
+bool is_connecting = false;
 // --- CORE 0: Handle Wi-Fi and API Logic ---
 void TaskSystem(void *pvParameters) {
-    //WifiManager::getInstance().init();
+    // If init() starts a connection, mark us as connecting
+    if (networkState.setup_complete) {
+        is_connecting = true;
+        connect_start_time = millis();
+    }
 
     for (;;) {
-
         WifiManager::getInstance().handleAsyncScan();
 
+        // Handle User-Triggered Connection (from Keyboard)
         if (networkState.start_connect_trigger) {
             Serial.println("Sytem: Attemping to connect...");
             WiFi.begin(networkState.selected_ssid.c_str(), networkState.selected_pass.c_str());
-            networkState.has_been_connected = true;
             networkState.start_connect_trigger = false;
+            is_connecting = true;
+            connect_start_time = millis();
         }
 
-        if (WiFi.status() == WL_CONNECTED) {
+        wl_status_t status = WiFi.status();
+
+        if (status== WL_CONNECTED) {
             if (!networkState.wifi_connected) {
                 networkState.wifi_connected = true;
+                is_connecting = false;
                 networkState.ip = WiFi.localIP().toString();
                 Serial.println("Network Ready");
 
-                // If on wifi then this will transition somewhere else
-                UIManager::getInstance().showContextScreen("Connected!");
+                if (networkState.selected_ssid.length() > 0) {
+                    WifiManager::getInstance().saveWifiConfig(networkState.selected_ssid.c_str(), networkState.selected_pass.c_str());
+                }
+
+                // Success!
+                networkState.show_success_trigger = true;
             }
-        } else if (networkState.has_been_connected) {
-            // If not connected, but has ben previously then go to the failed screen
+        } else if (is_connecting && (millis() - connect_start_time > 15000)) {
+            // Trigger failure is trying for 15 seconds
             networkState.wifi_connected = false;
             networkState.failed_to_connect_trigger = true;
-        } else {
-            Serial.println("WiFi not connected and never has been");
+            is_connecting = false;
         }
 
         if (networkState.wifi_connected) {

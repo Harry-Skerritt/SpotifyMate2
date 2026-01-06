@@ -13,19 +13,18 @@ void WifiManager::init() {
 
 
     if (ssid.length() > 0 && pass.length() > 0) {
+
+        networkState.selected_ssid = ssid;
+        networkState.selected_pass = pass;
+        networkState.setup_complete = true;
+
         WiFi.mode(WIFI_STA);
         WiFi.setSleep(false);
         WiFi.begin(ssid.c_str(), pass.c_str());
-        networkState.has_been_connected = true;
     }
 }
 
 void WifiManager::loadWifiConfig() {
-    if (!LittleFS.begin(true)) { // 'true' forces format if mount fails
-        Serial.println("LittleFS Mount Failed");
-        return;
-    }
-
     File file = LittleFS.open("/config.json", "r");
 
     if (file) {
@@ -33,6 +32,7 @@ void WifiManager::loadWifiConfig() {
         deserializeJson(doc, file);
         ssid = doc["ssid"].as<String>();
         pass = doc["password"].as<String>();
+        networkState.setup_complete = doc["setup_complete"].as<bool>();
         file.close();
     }
 
@@ -73,6 +73,31 @@ void WifiManager::handleAsyncScan() {
         Serial.println("WiFi: Scan complete");
     }
 }
+
+// Config
+void WifiManager::saveWifiConfig(const String& s, const String& p) {
+    File file = LittleFS.open("/config.json", "w");
+    if (!file) {
+        Serial.println("WiFi: Failed to open config.json");
+        deviceState.fatal_error_trigger = true;
+        return;
+    }
+
+    JsonDocument doc;
+    doc["ssid"] = s;
+    doc["password"] = p;
+    doc["setup_complete"] = true;
+
+    if (serializeJson(doc, file) == 0) {
+        Serial.println("Failed to write to file");
+        file.close();
+        return;
+    }
+
+    file.close();
+    Serial.println("Config Saved Successfully");
+}
+
 
 
 

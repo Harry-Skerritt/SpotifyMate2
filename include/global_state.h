@@ -13,8 +13,7 @@ struct NetworkState {
     // Current Wifi Status
     bool wifi_connected = false;
     String ip = "0.0.0.0";
-
-    bool has_been_connected = false;
+    bool setup_complete = false;
 
     // Scanning Flags
     volatile bool start_scan_trigger = false;
@@ -26,11 +25,15 @@ struct NetworkState {
     String selected_ssid;
     String selected_pass;
 
-    // Failed Flags
+    // WiFi Status Flags
     volatile bool failed_to_connect_trigger = false;
+    volatile bool show_success_trigger = false;
 };
 
 struct SystemState {
+
+    volatile bool fatal_error_trigger = false;
+
     String current_track = "Idle";
     String artist = "Waiting...";
     int volume = 50;

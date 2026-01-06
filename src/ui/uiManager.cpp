@@ -451,7 +451,12 @@ void UIManager::showWifiConnecting() {
     lv_obj_set_style_arc_width(spinner, 8, LV_PART_INDICATOR);
 
     lv_obj_t* label = lv_label_create(current_screen);
-    lv_label_set_text_fmt(label, "Connecting to %s ...", networkState.selected_ssid.c_str());
+
+    const char* display_ssid = networkState.selected_ssid.length() > 0
+                                ? networkState.selected_ssid.c_str()
+                                : "Saved Network";
+
+    lv_label_set_text_fmt(label, "Connecting to %s ...", display_ssid);
     lv_obj_set_style_text_font(label, &font_gotham_medium_40, 0);
     lv_obj_set_style_text_color(label, SPOTIFY_WHITE, 0);
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 80);

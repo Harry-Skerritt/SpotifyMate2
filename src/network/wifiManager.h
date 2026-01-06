@@ -21,6 +21,7 @@ public:
 
     void init();
     void handleAsyncScan();
+    void saveWifiConfig(const String& ssid, const String& password);
 
 
 private:
