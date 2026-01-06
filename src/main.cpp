@@ -18,7 +18,7 @@ void setup() {
     Serial.begin(9600);
 
     halSetup();
-    uiStylesInit();
+    UIManager::getInstance().init();
 
     // UI Task (Core 1)
     xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 16384, NULL, 3, NULL, 1);
@@ -29,7 +29,7 @@ void setup() {
 
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
-    uiSplashScreen();
+    UIManager::getInstance().showSplashScreen();
 
     uint32_t start_time = millis();
     while(millis() - start_time < 1000) {
@@ -37,7 +37,7 @@ void TaskGraphics(void *pvParameters) {
         vTaskDelay(pdMS_TO_TICKS(15));
     }
 
-    uiWifiConnectionError();
+    UIManager::getInstance().showWifiConnectionError();
 
     for (;;) {
         if (networkState.wifi_connected != last_wifi_state) {

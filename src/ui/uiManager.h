@@ -9,27 +9,55 @@
 #pragma once
 #include <lvgl.h>
 
-// Global Colours
+
+// --- Global Colours ---
 #define SPOTIFY_GREEN lv_color_hex(0x1ED760)
+#define SPOTIFY_GREEN_DARKER lv_color_hex(0x1DB954)
 #define BACKGROUND_GREY lv_color_hex(0x1E1E1E)
 #define SPOTIFY_WHITE lv_color_hex(0xFFFFFF)
 
-// Global fonts
+// --- Global fonts ---
 LV_FONT_DECLARE(font_gotham_medium_20);
 LV_FONT_DECLARE(font_gotham_medium_40);
 LV_FONT_DECLARE(font_gotham_medium_60);
 LV_FONT_DECLARE(font_gotham_medium_80);
 
 
+class UIManager {
+public:
 
-void uiStylesInit();
+    static UIManager& getInstance() {
+        static UIManager instance;
+        return instance;
+    }
 
-// Different screens
-void uiSplashScreen();
-void uiWifiOnboarding();
-void uiWifiConnectionError();
-void ui_show_player();
-void ui_update_player();
 
+    void init();
+
+    void showSplashScreen();
+    void showWifiConnectionError();
+
+private:
+    // Constructor for singleton
+    UIManager() : current_screen(nullptr) {}
+
+    // Screen Management
+    lv_obj_t* current_screen;
+    void clearScreen();
+
+    // Styles
+    lv_style_t style_btn_base;
+    lv_style_t style_btn_green;
+    lv_style_t style_btn_outline;
+    lv_style_transition_dsc_t trans_btn;
+
+    // Internal Helpers
+    void initStyles();
+    lv_obj_t* createSpotifyBtn(lv_obj_t* parent, const char* text, lv_align_t align, int x, int y, bool is_green);
+
+    // Prevent copying
+    UIManager(const UIManager&) = delete;
+    void operator=(const UIManager&) = delete;
+};
 
 #endif //UIMANAGER_H
