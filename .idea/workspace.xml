@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="BackendCodeEditorMiscSettings">
-    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="13" type="long" />
+    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="22" type="long" />
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
     <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
@@ -23,16 +23,14 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Adding missed files">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Fully reverted back to a 'stable' point">
       <change afterPath="$PROJECT_DIR$/data/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hal/display.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hal/display.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/network/wifiManager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/network/wifiManager.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_20.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_80.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/uiManager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/uiManager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_40.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_60.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,9 +129,9 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/ui/fonts" />
       <recent name="$PROJECT_DIR$/lib" />
       <recent name="$PROJECT_DIR$/include" />
-      <recent name="$PROJECT_DIR$/src/ui/fonts" />
       <recent name="$PROJECT_DIR$/src/ui" />
       <recent name="$PROJECT_DIR$/src" />
     </key>
@@ -165,7 +163,7 @@
       <workItem from="1767627587180" duration="14000" />
       <workItem from="1767627618534" duration="5364000" />
       <workItem from="1767635617028" duration="3883000" />
-      <workItem from="1767640971506" duration="18140000" />
+      <workItem from="1767640971506" duration="19622000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -223,7 +221,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767659504356</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Fully reverted back to a 'stable' point">
+      <option name="closed" value="true" />
+      <created>1767659530866</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1767659530866</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -249,6 +255,7 @@
     <MESSAGE value="Bunch of errors" />
     <MESSAGE value="Rolled back to when it worked - no TinyTTF" />
     <MESSAGE value="Adding missed files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding missed files" />
+    <MESSAGE value="Fully reverted back to a 'stable' point" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fully reverted back to a 'stable' point" />
   </component>
 </project>

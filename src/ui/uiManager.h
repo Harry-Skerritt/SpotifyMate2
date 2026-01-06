@@ -16,6 +16,8 @@
 
 // Global fonts
 LV_FONT_DECLARE(font_gotham_medium_20);
+LV_FONT_DECLARE(font_gotham_medium_40);
+LV_FONT_DECLARE(font_gotham_medium_60);
 LV_FONT_DECLARE(font_gotham_medium_80);
 
 // Different screens

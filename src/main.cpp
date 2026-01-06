@@ -28,7 +28,8 @@ void setup() {
 
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
-    uiInit();
+    //uiInit();
+    uiWifiConnectionError();
 
     for (;;) {
         if (networkState.wifi_connected != last_wifi_state) {
