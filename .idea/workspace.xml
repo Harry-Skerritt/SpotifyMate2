@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="BackendCodeEditorMiscSettings">
-    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="10" type="long" />
+    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="13" type="long" />
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
     <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
@@ -23,22 +23,22 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added the UI file and added a splash screen">
-      <change afterPath="$PROJECT_DIR$/boards/esp32-s3-devkitc-1-n16r8.json" afterDir="false" />
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Bunch of errors">
       <change afterPath="$PROJECT_DIR$/data/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/lv_conf.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/fonts/fontsManager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/fonts/fontsManager.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/fonts/gotham_font.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boards/esp32-s3-devkitc-1-n16r8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/lv_conf.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/lv_conf.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hal/display.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/hal/display.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lv_conf.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hal/display.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hal/display.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_20.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_80.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/fonts/fontsManager.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/fonts/fontsManager.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/fonts/gotham_font.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,6 +137,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib" />
       <recent name="$PROJECT_DIR$/include" />
       <recent name="$PROJECT_DIR$/src/ui/fonts" />
       <recent name="$PROJECT_DIR$/src/ui" />
@@ -170,7 +171,7 @@
       <workItem from="1767627587180" duration="14000" />
       <workItem from="1767627618534" duration="5364000" />
       <workItem from="1767635617028" duration="3883000" />
-      <workItem from="1767640971506" duration="15512000" />
+      <workItem from="1767640971506" duration="17841000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -212,7 +213,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767645725507</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Bunch of errors">
+      <option name="closed" value="true" />
+      <created>1767656967652</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1767656967652</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -235,6 +244,7 @@
     <MESSAGE value="Added a filesystem and a config file to load wifi creds" />
     <MESSAGE value="Set up the project structure, and abstracted. Also added FreeRTOS" />
     <MESSAGE value="Added the UI file and added a splash screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added the UI file and added a splash screen" />
+    <MESSAGE value="Bunch of errors" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bunch of errors" />
   </component>
 </project>

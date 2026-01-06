@@ -3,7 +3,6 @@
 #include "network/wifiManager.h"
 #include "global_state.h"
 #include "ui/uiManager.h"
-#include "ui/fonts/fontsManager.h"
 
 
 SystemState deviceState;
@@ -17,33 +16,11 @@ bool last_wifi_state = false;
 
 void setup() {
     Serial.begin(9600);
-    // Give the USB CDC a moment to connect
-    delay(2000);
-
-    Serial.println("\n--- HARDWARE DIAGNOSTIC ---");
-
-    if(psramInit()){
-        Serial.printf("PSRAM: FOUND! Size: %u bytes\n", ESP.getPsramSize());
-    } else {
-        Serial.println("PSRAM: NOT FOUND. Hardware is not initializing.");
-    }
-
-    Serial.printf("Internal RAM Free: %u bytes\n", ESP.getFreeHeap());
-    Serial.println("---------------------------\n");
-
 
     halSetup();
-    Serial.println("Creating fonts...");
-    initCustomFonts();
-
-    Serial.println("Building UI...");
-    uiInit();
-
-    lv_timer_handler();
-    Serial.println("UI Built.");
 
     // UI Task (Core 1)
-    xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 20480, NULL, 3, NULL, 1);
+    xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 8192, NULL, 3, NULL, 1);
 
     // Network Task (Core 0)
     xTaskCreatePinnedToCore(TaskSystem, "System", 8192, NULL, 1, NULL, 0);
@@ -51,7 +28,7 @@ void setup() {
 
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
-    //uiInit();
+    uiInit();
 
     for (;;) {
         if (networkState.wifi_connected != last_wifi_state) {
