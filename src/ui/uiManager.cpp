@@ -232,15 +232,24 @@ lv_obj_t *UIManager::createNetworkItem(lv_obj_t *parent, const char *ssid) {
 }
 
 lv_obj_t *UIManager::createCustomQRCode(lv_obj_t *parent, const char *url, int size) {
-    lv_obj_t* qr = lv_qrcode_create(parent, size, SPOTIFY_GREEN, lv_color_hex(0x121212));
+    lv_obj_t* frame = lv_obj_create(parent);
+    lv_obj_set_size(frame, size + 10, size + 10);
+    lv_obj_set_style_radius(frame, 15, 0);
+    lv_obj_set_style_bg_color(frame, lv_color_hex(0x121212), 0);
+    lv_obj_set_style_border_color(frame, SPOTIFY_GREEN, 0);
+    lv_obj_set_style_border_width(frame, 2, 0);
+    lv_obj_set_style_clip_corner(frame, true, 0);
+    lv_obj_set_style_pad_all(frame, 5, 0);
+    lv_obj_clear_flag(frame, LV_OBJ_FLAG_SCROLLABLE);
+
+
+    lv_obj_t* qr = lv_qrcode_create(frame, size, SPOTIFY_GREEN, lv_color_hex(0x121212));
     lv_qrcode_update(qr, url, strlen(url));
 
-    lv_obj_set_style_border_color(qr, SPOTIFY_GREEN, 0);
-    lv_obj_set_style_border_width(qr, 5, 0);
-    lv_obj_set_style_radius(qr, 10, 0);
-    lv_obj_set_style_clip_corner(qr, true, 0);
+    lv_obj_align(qr, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_add_flag(qr, LV_OBJ_FLAG_IGNORE_LAYOUT);
 
-    return qr;
+    return frame;
 }
 
 

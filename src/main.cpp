@@ -117,7 +117,7 @@ void TaskGraphics(void *pvParameters) {
             if (millis() - networkState.success_shown_at > 2000) {
                 networkState.show_success_trigger = false;
                 networkState.success_shown_at = 0;
-                UIManager::getInstance().showMainPlayer(); // Your next destination
+                UIManager::getInstance().showSpotifyLinking("https://www.spotify.org");
             }
         }
 
@@ -131,7 +131,8 @@ void TaskGraphics(void *pvParameters) {
             if (millis() - networkState.success_shown_at > 2000) {
                 networkState.show_success_trigger = false;
                 networkState.success_shown_at = 0;
-                UIManager::getInstance().showMainPlayer(); // Your next destination
+                //UIManager::getInstance().showMainPlayer();
+                UIManager::getInstance().showSpotifyLinking("https://www.spotify.org");
             }
         }
 
@@ -153,9 +154,10 @@ void TaskGraphics(void *pvParameters) {
 }
 
 
+// --- CORE 0: Handle Wi-Fi and API Logic ---
 unsigned long connect_start_time = 0;
 bool is_connecting = false;
-// --- CORE 0: Handle Wi-Fi and API Logic ---
+
 void TaskSystem(void *pvParameters) {
     // If init() starts a connection, mark us as connecting
     if (networkState.setup_complete) {
@@ -202,7 +204,11 @@ void TaskSystem(void *pvParameters) {
             // Spotify API polling will live here
         }
 
-        vTaskDelay(pdMS_TO_TICKS(100));
+        if (networkState.wifi_connected && !networkState.spotify_linked) {
+            vTaskDelay(pdMS_TO_TICKS(500));
+        } else {
+            vTaskDelay(pdMS_TO_TICKS(100));
+        }
     }
 }
 
