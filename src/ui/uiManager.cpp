@@ -20,10 +20,14 @@ static void errorEventHandler(lv_event_t * e) {
         if (btn == wifi_error_retry_btn_ptr) {
             lv_obj_t * label = lv_obj_get_child(btn, 0);
             lv_label_set_text(label, "Retrying...");
+
+            // Todo: Ensure that SSID and Pass are set
+            networkState.start_connect_trigger = true;
         }
         else if (btn == wifi_error_reconnect_btn_ptr) {
             lv_obj_t * label = lv_obj_get_child(btn, 0);
             lv_label_set_text(label, "Connecting...");
+            // Todo: Add functionality here
         }
         else if (btn == error_restart_btn_ptr) {
             ESP.restart();
@@ -57,8 +61,9 @@ static void wifiJoinEventHandler(lv_event_t * e) {
     const char * ssid = lv_label_get_text(label);
 
     Serial.printf("UI: Attempting to join: %s\n", ssid);
+    networkState.selected_ssid = String(ssid);
+    UIManager::getInstance().showWifiPasswordEntry(ssid);
 
-    // UIManager::instance().showPasswordEntry(ssid);
 }
 
 
@@ -254,6 +259,21 @@ void UIManager::showSplashScreen() {
     createLogo(current_screen, &font_gotham_medium_80, LV_ALIGN_CENTER, 0, 0);
 }
 
+void UIManager::showContextScreen(const String &msg) {
+    clearScreen();
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    createLogo(current_screen, &font_gotham_medium_80, LV_ALIGN_CENTER, 0, 0);
+
+    lv_obj_t* context = lv_label_create(current_screen);
+    lv_label_set_text(context, msg.c_str());
+    lv_obj_set_style_text_font(context, &font_gotham_medium_20, 0);
+    lv_obj_set_style_text_color(context, SPOTIFY_WHITE, 0);
+    lv_obj_align(context, LV_ALIGN_BOTTOM_MID, 0, -18);
+}
+
+
+// --- WiFi Screens ---
 void UIManager::showWifiConnectionError() {
     clearScreen();
 
@@ -283,7 +303,6 @@ void UIManager::showWifiConnectionError() {
 
 }
 
-// --- WiFi Screens ---
 void UIManager::showWifiOnboarding() {
     clearScreen();
 
@@ -366,4 +385,74 @@ void UIManager::populateWifiList(lv_obj_t* list_cont, const std::vector<String>&
     lv_obj_set_style_border_width(spacer, 0, 0);
 
     lv_obj_scroll_to_y(list_cont, 0, LV_ANIM_OFF);
+}
+
+void UIManager::showWifiPasswordEntry(const String &ssid) {
+    clearScreen();
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    // Header
+    lv_obj_t* title = lv_label_create(current_screen);
+    lv_label_set_text_fmt(title, "Connect to %s", ssid);
+    lv_obj_set_style_text_font(title, &font_gotham_medium_40, 0);
+    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
+    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 40);
+
+    // Text Area
+    lv_obj_t* ta = lv_textarea_create(current_screen);
+    lv_textarea_set_password_mode(ta, true);
+    lv_textarea_set_one_line(ta, true);
+    lv_textarea_set_placeholder_text(ta, "Enter Password");
+    lv_obj_set_size(ta, 500, 60);
+    lv_obj_align(ta, LV_ALIGN_TOP_MID, 0, 100);
+    lv_obj_set_style_text_font(ta, &font_gotham_medium_20, 0);
+
+    // Spotify Stlye
+    lv_obj_set_style_bg_color(ta, lv_color_hex(0x333333), 0);
+    lv_obj_set_style_text_color(ta, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_border_width(ta, 0, 0);
+
+    // Keyboard
+    lv_obj_t* kb = lv_keyboard_create(current_screen);
+    lv_obj_set_size(kb, 800, 240);
+    lv_obj_align(kb, LV_ALIGN_BOTTOM_MID, 0, 0);
+
+    lv_keyboard_set_textarea(kb, ta);
+
+    lv_obj_set_style_bg_color(kb, BACKGROUND_GREY, 0);
+    lv_obj_set_style_bg_color(kb, SPOTIFY_GREEN, LV_PART_ITEMS | LV_STATE_CHECKED);
+
+    // Keyboard Callback
+    lv_obj_add_event_cb(kb, [](lv_event_t* e) {
+        lv_event_code_t code = lv_event_get_code(e);
+        lv_obj_t* kb = lv_event_get_target(e);
+        lv_obj_t* ta = lv_keyboard_get_textarea(kb);
+
+        if(code == LV_EVENT_READY) { // Ready = Checkmark/OK clicked
+            const char* pwd = lv_textarea_get_text(ta);
+            networkState.selected_pass = String(pwd);
+            networkState.start_connect_trigger = true;
+        } else if(code == LV_EVENT_CANCEL) {
+            UIManager::getInstance().showWifiOnboarding(); // Go back
+        }
+    }, LV_EVENT_ALL, NULL);
+}
+
+void UIManager::showWifiConnecting() {
+    clearScreen();
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    lv_obj_t* spinner = lv_spinner_create(current_screen, 1000, 60);
+    lv_obj_set_size(spinner, 80, 80);
+    lv_obj_center(spinner);
+
+    lv_obj_set_style_arc_color(spinner, SPOTIFY_GREEN, LV_PART_INDICATOR);
+    lv_obj_set_style_arc_width(spinner, 8, LV_PART_MAIN);
+    lv_obj_set_style_arc_width(spinner, 8, LV_PART_INDICATOR);
+
+    lv_obj_t* label = lv_label_create(current_screen);
+    lv_label_set_text_fmt(label, "Connecting to %s ...", networkState.selected_ssid.c_str());
+    lv_obj_set_style_text_font(label, &font_gotham_medium_40, 0);
+    lv_obj_set_style_text_color(label, SPOTIFY_WHITE, 0);
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 80);
 }

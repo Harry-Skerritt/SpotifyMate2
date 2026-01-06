@@ -43,16 +43,29 @@ void TaskGraphics(void *pvParameters) {
 
     for (;;) {
 
+        // Handle Network Scanning
         if (networkState.start_scan_trigger && !is_scanning_ui_active) {
-            //networkState.start_scan_trigger = false;
             is_scanning_ui_active = true;
             UIManager::getInstance().showWifiScanning();
         }
 
+        // Handle showing connections
         if (networkState.scan_complete) {
             networkState.scan_complete = false;
             is_scanning_ui_active = false;
             UIManager::getInstance().showWifiConnections(networkState.found_ssids);
+        }
+
+        // Handle connecting
+        if (networkState.start_connect_trigger) {
+            UIManager::getInstance().showWifiConnecting();
+        }
+
+        // Handle connection error
+
+        if (networkState.failed_to_connect_trigger) {
+            UIManager::getInstance().showWifiConnectionError();
+            networkState.failed_to_connect_trigger = false;
         }
 
 
@@ -74,21 +87,34 @@ void TaskGraphics(void *pvParameters) {
 
 // --- CORE 0: Handle Wi-Fi and API Logic ---
 void TaskSystem(void *pvParameters) {
-    WifiManager::getInstance().init();
+    //WifiManager::getInstance().init();
 
     for (;;) {
 
         WifiManager::getInstance().handleAsyncScan();
 
+        if (networkState.start_connect_trigger) {
+            Serial.println("Sytem: Attemping to connect...");
+            WiFi.begin(networkState.selected_ssid.c_str(), networkState.selected_pass.c_str());
+            networkState.has_been_connected = true;
+            networkState.start_connect_trigger = false;
+        }
 
         if (WiFi.status() == WL_CONNECTED) {
             if (!networkState.wifi_connected) {
                 networkState.wifi_connected = true;
                 networkState.ip = WiFi.localIP().toString();
                 Serial.println("Network Ready");
+
+                // If on wifi then this will transition somewhere else
+                UIManager::getInstance().showContextScreen("Connected!");
             }
-        } else {
+        } else if (networkState.has_been_connected) {
+            // If not connected, but has ben previously then go to the failed screen
             networkState.wifi_connected = false;
+            networkState.failed_to_connect_trigger = true;
+        } else {
+            Serial.println("WiFi not connected and never has been");
         }
 
         if (networkState.wifi_connected) {

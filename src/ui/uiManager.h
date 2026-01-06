@@ -41,11 +41,14 @@ public:
     void showFailure();
     void showSplashScreen();
     void showWifiConnectionError();
+    void showContextScreen(const String& msg);
 
     // WiFi Onboarding
     void showWifiOnboarding();
     void showWifiScanning();
     void showWifiConnections(const std::vector<String>& networks);
+    void showWifiPasswordEntry(const String& ssid);
+    void showWifiConnecting();
 
 
 private:

@@ -23,14 +23,14 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Started adding the wifi onboarding">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added WiFi scanning and the displaying of networks">
       <change afterPath="$PROJECT_DIR$/data/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/network/wifiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/wifiManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/wifiManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +166,7 @@
       <workItem from="1767627587180" duration="14000" />
       <workItem from="1767627618534" duration="5364000" />
       <workItem from="1767635617028" duration="3883000" />
-      <workItem from="1767640971506" duration="30143000" />
+      <workItem from="1767640971506" duration="31402000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -288,7 +288,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767709422738</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Added WiFi scanning and the displaying of networks">
+      <option name="closed" value="true" />
+      <created>1767710452106</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1767710452106</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -322,6 +330,7 @@
     <MESSAGE value="Neatened up UIManager" />
     <MESSAGE value="Added the error screen" />
     <MESSAGE value="Started adding the wifi onboarding" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started adding the wifi onboarding" />
+    <MESSAGE value="Added WiFi scanning and the displaying of networks" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added WiFi scanning and the displaying of networks" />
   </component>
 </project>

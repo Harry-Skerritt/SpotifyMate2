@@ -16,6 +16,7 @@ void WifiManager::init() {
         WiFi.mode(WIFI_STA);
         WiFi.setSleep(false);
         WiFi.begin(ssid.c_str(), pass.c_str());
+        networkState.has_been_connected = true;
     }
 }
 
@@ -44,6 +45,7 @@ void WifiManager::handleAsyncScan() {
         Serial.println("WiFi: Scan requested...");
 
         WiFi.disconnect();
+        networkState.wifi_connected = false;
         networkState.found_ssids.clear();
 
         int n = WiFi.scanNetworks(false, false);
