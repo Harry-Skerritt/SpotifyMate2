@@ -9,12 +9,18 @@
 #include <Arduino.h>
 #include <vector>
 
+#include "spotify/models/AuthModels.hpp"
+
 struct NetworkState {
     // Current Wifi Status
     bool wifi_connected = false;
     String ip = "0.0.0.0";
     bool setup_complete = false;
-    bool spotify_linked = false;
+
+    // Spotify Auth Flags
+    bool spotify_linked = false; // From Config.json
+    String spotify_auth_url = "";
+    volatile bool show_qr_trigger = false;
 
     // Scanning Flags
     volatile bool start_scan_trigger = false;
@@ -42,8 +48,10 @@ struct SystemState {
     bool is_playing = false;
 };
 
+
+
 // Declare a global instance that all files can see
 extern SystemState deviceState;
 extern NetworkState networkState;
-
+extern Spotify::AuthResponse spotifyAuth;
 #endif //GLOBAL_STATE_H
