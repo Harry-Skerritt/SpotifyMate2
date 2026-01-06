@@ -2,11 +2,13 @@
 #include "hal/display.h"
 #include "network/wifiManager.h"
 #include "global_state.h"
+#include "spotify/spotifyManager.h"
 #include "ui/uiManager.h"
 
 
 SystemState deviceState;
 NetworkState networkState;
+Spotify::AuthResponse spotifyAuth;
 
 // Task Handlers
 void TaskGraphics(void *pvParameters);
@@ -29,7 +31,7 @@ void setup() {
     xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 32768, NULL, 3, NULL, 1);
 
     // Network Task (Core 0)
-    xTaskCreatePinnedToCore(TaskSystem, "System", 8192, NULL, 1, NULL, 0);
+    xTaskCreatePinnedToCore(TaskSystem, "System", 16384, NULL, 1, NULL, 0);
 }
 
 
@@ -69,7 +71,7 @@ void TaskGraphics(void *pvParameters) {
         }
     }
 
-    WifiManager::getInstance().init(); // Init here for flags
+    // WiFi
 
     if (networkState.setup_complete) {
         // Have saved creds so connect
@@ -106,22 +108,12 @@ void TaskGraphics(void *pvParameters) {
             networkState.failed_to_connect_trigger = false;
         }
 
-        // Handle successful connection on wifi - go to spotify linking
-        if (networkState.show_success_trigger && !networkState.spotify_linked) {
-            if (networkState.success_shown_at == 0) {
-                // Debug until API implemetned
-                UIManager::getInstance().showSpotifyLinking("https://www.spotify.org");
-                networkState.success_shown_at = millis();
-            }
-
-            if (millis() - networkState.success_shown_at > 2000) {
-                networkState.show_success_trigger = false;
-                networkState.success_shown_at = 0;
-                UIManager::getInstance().showSpotifyLinking("https://www.spotify.org");
-            }
+        if (networkState.show_qr_trigger) {
+            networkState.show_qr_trigger = false;
+            UIManager::getInstance().showSpotifyLinking(networkState.spotify_auth_url.c_str());
         }
 
-        // Handle successful connection on wifi and spotify
+        // Handle successful connection on wifi + spotify
         if (networkState.show_success_trigger && networkState.spotify_linked) {
             if (networkState.success_shown_at == 0) {
                 UIManager::getInstance().showContextScreen("Connected!");
@@ -131,11 +123,9 @@ void TaskGraphics(void *pvParameters) {
             if (millis() - networkState.success_shown_at > 2000) {
                 networkState.show_success_trigger = false;
                 networkState.success_shown_at = 0;
-                //UIManager::getInstance().showMainPlayer();
-                UIManager::getInstance().showSpotifyLinking("https://www.spotify.org");
+                Serial.println("Connected! - Transition");
             }
         }
-
 
         if (networkState.wifi_connected != last_wifi_state) {
             last_wifi_state = networkState.wifi_connected;
@@ -157,8 +147,11 @@ void TaskGraphics(void *pvParameters) {
 // --- CORE 0: Handle Wi-Fi and API Logic ---
 unsigned long connect_start_time = 0;
 bool is_connecting = false;
+bool spotify_initialized = false;
 
 void TaskSystem(void *pvParameters) {
+    WifiManager::getInstance().init(); // Init here for flags
+
     // If init() starts a connection, mark us as connecting
     if (networkState.setup_complete) {
         is_connecting = true;
@@ -169,9 +162,14 @@ void TaskSystem(void *pvParameters) {
         WifiManager::getInstance().handleAsyncScan();
 
         // Handle User-Triggered Connection (from Keyboard)
-        if (networkState.start_connect_trigger) {
+        if (networkState.start_connect_trigger && !is_connecting) {
             Serial.println("Sytem: Attemping to connect...");
+
+            WiFi.disconnect();
+            vTaskDelay(pdMS_TO_TICKS(100));
+
             WiFi.begin(networkState.selected_ssid.c_str(), networkState.selected_pass.c_str());
+
             networkState.start_connect_trigger = false;
             is_connecting = true;
             connect_start_time = millis();
@@ -180,6 +178,7 @@ void TaskSystem(void *pvParameters) {
         wl_status_t status = WiFi.status();
 
         if (status== WL_CONNECTED) {
+            // --- Set States ---
             if (!networkState.wifi_connected) {
                 networkState.wifi_connected = true;
                 is_connecting = false;
@@ -193,15 +192,25 @@ void TaskSystem(void *pvParameters) {
                 // Success!
                 networkState.show_success_trigger = true;
             }
+
         } else if (is_connecting && (millis() - connect_start_time > 15000)) {
             // Trigger failure is trying for 15 seconds
+            spotify_initialized = false;
             networkState.wifi_connected = false;
             networkState.failed_to_connect_trigger = true;
             is_connecting = false;
         }
 
         if (networkState.wifi_connected) {
-            // Spotify API polling will live here
+
+
+            // --- Start Spotify ---
+            if (!spotify_initialized) {
+                Serial.println("Initialising to Spotify...");
+                SpotifyManager::getInstance().init();
+                spotify_initialized = true;
+            }
+
         }
 
         if (networkState.wifi_connected && !networkState.spotify_linked) {

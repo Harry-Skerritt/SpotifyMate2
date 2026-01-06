@@ -23,10 +23,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Changes to flow">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added my SpotifyCPP-esp library">
       <change afterPath="$PROJECT_DIR$/data/config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/secrets.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/spotify/spotifyManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/spotify/spotifyManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/wifiManager.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,7 +179,7 @@
       <workItem from="1767640971506" duration="36052000" />
       <workItem from="1767716356595" duration="328000" />
       <workItem from="1767716699504" duration="53000" />
-      <workItem from="1767716793957" duration="803000" />
+      <workItem from="1767716793957" duration="4135000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -336,7 +341,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767715195056</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Added my SpotifyCPP-esp library">
+      <option name="closed" value="true" />
+      <created>1767721905595</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1767721905595</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -375,6 +388,7 @@
     <MESSAGE value="Added wifi handling for existing credentials, and added a factory reset option" />
     <MESSAGE value="Added the spotify linking page" />
     <MESSAGE value="Changes to flow" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes to flow" />
+    <MESSAGE value="Added my SpotifyCPP-esp library" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added my SpotifyCPP-esp library" />
   </component>
 </project>

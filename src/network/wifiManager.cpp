@@ -6,7 +6,6 @@
 
 #include "global_state.h"
 
-
 // Init
 void WifiManager::init() {
     loadWifiConfig();
@@ -14,15 +13,32 @@ void WifiManager::init() {
 
     if (ssid.length() > 0 && pass.length() > 0) {
 
+        WiFi.mode(WIFI_STA);
+        vTaskDelay(pdMS_TO_TICKS(100));
+
+        IPAddress local_IP(192, 168, 0, 141);
+        IPAddress gateway(192, 168, 0, 1);
+        IPAddress subnet(255, 255, 255, 0);
+        IPAddress primaryDNS(8, 8, 8, 8);   // Google DNS
+        IPAddress secondaryDNS(1, 1, 1, 1);
+
+        if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
+            Serial.println("STA: Static IP Failed to Configure");
+        }
+
         networkState.selected_ssid = ssid;
         networkState.selected_pass = pass;
         networkState.setup_complete = true;
 
-        WiFi.mode(WIFI_STA);
+
         WiFi.setSleep(false);
-        WiFi.begin(ssid.c_str(), pass.c_str());
+
+        //WiFi.begin(ssid.c_str(), pass.c_str());
+        vTaskDelay(pdMS_TO_TICKS(100));
+        networkState.start_connect_trigger = true;
     }
 }
+
 
 void WifiManager::loadWifiConfig() {
     File file = LittleFS.open("/config.json", "r");
