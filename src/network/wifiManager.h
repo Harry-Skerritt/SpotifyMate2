@@ -20,6 +20,7 @@ public:
     }
 
     void init();
+    void update();
     void handleAsyncScan();
     void saveWifiConfig(const String& ssid, const String& password);
 
@@ -31,9 +32,14 @@ private:
 
     String ssid;
     String pass;
+    uint32_t connect_start_time;
+    uint32_t current_timeout = 15000;
 
     // Internal Helper
-    void loadWifiConfig();
+    bool loadWifiConfig();
+    void startConnection();
+    void handleConnectionSuccess();
+    void handleConnectionFailure();
 
     // Prevent copying
     WifiManager(const WifiManager&) = delete;
