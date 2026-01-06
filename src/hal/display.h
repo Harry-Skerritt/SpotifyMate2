@@ -24,8 +24,8 @@ void halSetBrightness(uint8_t brightness);
 // --- Touch Pins ---
 #define TOUCH_SDA  8
 #define TOUCH_SCL  9
-#define TOUCH_INT  4
-#define TOUCH_RST  -1
+#define TOUCH_INT  255
+#define TOUCH_RST  255
 
 
 

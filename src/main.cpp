@@ -34,7 +34,7 @@ void TaskGraphics(void *pvParameters) {
     uint32_t start_time = millis();
     while(millis() - start_time < 1000) {
         lv_timer_handler();
-        vTaskDelay(pdMS_TO_TICKS(5));
+        vTaskDelay(pdMS_TO_TICKS(15));
     }
 
     uiWifiConnectionError();
@@ -52,7 +52,7 @@ void TaskGraphics(void *pvParameters) {
         }
 
         lv_timer_handler();
-        vTaskDelay(pdMS_TO_TICKS(10));
+        vTaskDelay(pdMS_TO_TICKS(15));
     }
 }
 

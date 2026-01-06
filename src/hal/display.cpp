@@ -12,7 +12,7 @@ static Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     1, 8, 4, 8, 1, 8, 4, 8, 0, 16000000L);
 
 static Arduino_GFX *gfx = new Arduino_RGB_Display(SCREEN_WIDTH, SCREEN_HEIGHT, bus, 0, true);
-static TAMC_GT911 ts = TAMC_GT911(TOUCH_SDA, TOUCH_SCL, TOUCH_INT, TOUCH_RST, SCREEN_WIDTH, SCREEN_HEIGHT);
+static TAMC_GT911 ts = TAMC_GT911(TOUCH_SDA, TOUCH_SCL, -1, -1, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 #define DISP_BUF_SIZE 80
 
@@ -44,16 +44,16 @@ void halSetup() {
     Serial.println("Initializing GFX + Touch...");
 
     // CH422G I/O Expander Initialization
-    Wire.begin(8, 9);
+    Wire.begin(8, 9, 100000);
     Wire.beginTransmission(0x24); Wire.write(0x01); Wire.endTransmission();
-    Wire.beginTransmission(0x38); Wire.write(0x0E); Wire.endTransmission();
+    Wire.beginTransmission(0x38); Wire.write(0x0F); Wire.endTransmission();
     delay(200);
 
     // GFX
     gfx->begin();
 
     Serial.println("Starting touch");
-    ts.begin(TOUCH_GT911_ADDRESS);
+    ts.begin();
     ts.setRotation(ROTATION_INVERTED);
 
     // LVGL Memory

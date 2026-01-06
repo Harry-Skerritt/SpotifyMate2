@@ -14,10 +14,11 @@ static lv_obj_t* current_screen = nullptr;
 
 // Helper
 void uiClear() {
-    if (current_screen) {
-        lv_obj_del(current_screen);
-    }
     current_screen = lv_obj_create(NULL);
+    if(current_screen == NULL) {
+        Serial.println("Failed to create screen!");
+        return;
+    }
     lv_scr_load(current_screen);
 }
 
@@ -138,4 +139,6 @@ void uiWifiConnectionError() {
     lv_obj_set_style_text_color(reconnect_btn_label, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(reconnect_btn_label, &font_gotham_medium_40, 0);
     lv_obj_center(reconnect_btn_label);
+
+
 }
