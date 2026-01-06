@@ -50,6 +50,13 @@ public:
     void showWifiPasswordEntry(const String& ssid);
     void showWifiConnecting();
 
+    // Spotify Linking
+    void showSpotifyLinking(const char* auth_url);
+
+
+    // Player Screens
+    void showMainPlayer();
+
 
 private:
     // Constructor for singleton
@@ -72,7 +79,10 @@ private:
     lv_obj_t* createSpotifyBtn(lv_obj_t* parent, lv_event_cb_t cb, const char* text, lv_align_t align, int x, int y, bool is_green);
     lv_obj_t* createLogo(lv_obj_t* parent, const lv_font_t* font, lv_align_t align, int x, int y);
     lv_obj_t* createNetworkItem(lv_obj_t* parent, const char* ssid);
+    lv_obj_t* createCustomQRCode(lv_obj_t* parent, const char* url, int size);
+
     void populateWifiList(lv_obj_t* list_cont, const std::vector<String>& networks);
+
 
     // Prevent copying
     UIManager(const UIManager&) = delete;

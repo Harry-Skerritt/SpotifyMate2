@@ -14,6 +14,7 @@ struct NetworkState {
     bool wifi_connected = false;
     String ip = "0.0.0.0";
     bool setup_complete = false;
+    bool spotify_linked = false;
 
     // Scanning Flags
     volatile bool start_scan_trigger = false;
@@ -28,6 +29,7 @@ struct NetworkState {
     // WiFi Status Flags
     volatile bool failed_to_connect_trigger = false;
     volatile bool show_success_trigger = false;
+    uint32_t success_shown_at = 0;
 };
 
 struct SystemState {

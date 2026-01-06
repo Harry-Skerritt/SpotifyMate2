@@ -33,6 +33,7 @@ void WifiManager::loadWifiConfig() {
         ssid = doc["ssid"].as<String>();
         pass = doc["password"].as<String>();
         networkState.setup_complete = doc["setup_complete"].as<bool>();
+        networkState.spotify_linked = doc["spotify_linked"].as<bool>();
         file.close();
     }
 

@@ -17,4 +17,5 @@
 #define LV_USE_SLIDER 1
 #define LV_USE_ARC 1
 
+#define LV_USE_QRCODE 1
 #endif

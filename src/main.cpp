@@ -40,8 +40,7 @@ void TaskGraphics(void *pvParameters) {
 
     UIManager::getInstance().showSplashScreen();
 
-
-    // Reset Logic
+    // Hard Reset
     uint32_t start_time = millis();
     bool reset_triggered = false;
 
@@ -107,9 +106,33 @@ void TaskGraphics(void *pvParameters) {
             networkState.failed_to_connect_trigger = false;
         }
 
-        // Handle successful connection
-        if (networkState.show_success_trigger) {
-            UIManager::getInstance().showContextScreen("Connected!");
+        // Handle successful connection on wifi - go to spotify linking
+        if (networkState.show_success_trigger && !networkState.spotify_linked) {
+            if (networkState.success_shown_at == 0) {
+                // Debug until API implemetned
+                UIManager::getInstance().showSpotifyLinking("https://www.spotify.org");
+                networkState.success_shown_at = millis();
+            }
+
+            if (millis() - networkState.success_shown_at > 2000) {
+                networkState.show_success_trigger = false;
+                networkState.success_shown_at = 0;
+                UIManager::getInstance().showMainPlayer(); // Your next destination
+            }
+        }
+
+        // Handle successful connection on wifi and spotify
+        if (networkState.show_success_trigger && networkState.spotify_linked) {
+            if (networkState.success_shown_at == 0) {
+                UIManager::getInstance().showContextScreen("Connected!");
+                networkState.success_shown_at = millis();
+            }
+
+            if (millis() - networkState.success_shown_at > 2000) {
+                networkState.show_success_trigger = false;
+                networkState.success_shown_at = 0;
+                UIManager::getInstance().showMainPlayer(); // Your next destination
+            }
         }
 
 

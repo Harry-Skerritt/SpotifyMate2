@@ -23,14 +23,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added network onboarding">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added wifi handling for existing credentials, and added a factory reset option">
       <change afterPath="$PROJECT_DIR$/data/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lv_conf.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/lv_conf.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/network/wifiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/wifiManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/wifiManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +167,7 @@
       <workItem from="1767627587180" duration="14000" />
       <workItem from="1767627618534" duration="5364000" />
       <workItem from="1767635617028" duration="3883000" />
-      <workItem from="1767640971506" duration="32625000" />
+      <workItem from="1767640971506" duration="33800000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -304,7 +305,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767711728872</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Added wifi handling for existing credentials, and added a factory reset option">
+      <option name="closed" value="true" />
+      <created>1767713097502</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1767713097505</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -340,6 +349,7 @@
     <MESSAGE value="Started adding the wifi onboarding" />
     <MESSAGE value="Added WiFi scanning and the displaying of networks" />
     <MESSAGE value="Added network onboarding" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added network onboarding" />
+    <MESSAGE value="Added wifi handling for existing credentials, and added a factory reset option" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added wifi handling for existing credentials, and added a factory reset option" />
   </component>
 </project>
