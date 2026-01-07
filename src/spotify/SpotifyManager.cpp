@@ -51,6 +51,10 @@ void SpotifyManager::update() {
             //handleAuthCodeExchange();
             break;
 
+
+        case SPOTIFY_NEED_LINK:
+            break;
+
         default:
             break;
 

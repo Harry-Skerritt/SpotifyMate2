@@ -6,6 +6,7 @@
 
 #include "global_state.h"
 #include "network/WifiManager.h"
+#include "system/SystemManager.h"
 
 
 void UIManager::init() {
@@ -63,6 +64,7 @@ void UIManager::update() {
 
             if (spotifyState.status == SPOTIFY_IDLE) {
                 if (spotifyState.refresh_token.length() > 0) spotifyState.status = SPOTIFY_INITIALIZING;
+                else if (systemState.spotify_linked && spotifyState.refresh_token.length() == 0) spotifyState.status = SPOTIFY_LINK_ERROR;
                 else spotifyState.status = SPOTIFY_NEED_LINK;
             }
         }
@@ -88,6 +90,10 @@ void UIManager::update() {
                 //showMainPlayer();
                 break;
 
+            case SPOTIFY_LINK_ERROR:
+                showSpotifyLinkError();
+                break;
+
             case SPOTIFY_ERROR:
                 //showFailure(); // Or a specific Spotify error screen
                 showContextScreen("Spotify Error");
@@ -105,6 +111,7 @@ void UIManager::update() {
 static lv_obj_t* wifi_error_retry_btn_ptr;
 static lv_obj_t* wifi_error_reconnect_btn_ptr;
 static lv_obj_t* error_restart_btn_ptr;
+static lv_obj_t* spotify_link_error_btn_ptr;
 
 static void errorEventHandler(lv_event_t * e) {
     lv_event_code_t code = lv_event_get_code(e); // What happened?
@@ -112,16 +119,24 @@ static void errorEventHandler(lv_event_t * e) {
 
     if(code == LV_EVENT_CLICKED) {
         if (btn == wifi_error_retry_btn_ptr) {
-
+            // Retry with longer timeout
             WifiManager::getInstance().requestConnect(30000); // Double timeout
 
         }
         else if (btn == wifi_error_reconnect_btn_ptr) {
+            // Restart WiFi onboarding
             WifiManager::getInstance().requestReset();
         }
 
         else if (btn == error_restart_btn_ptr) {
+            // Restart Device
             ESP.restart();
+        }
+        else if (btn == spotify_link_error_btn_ptr) {
+            // Re link spotify
+            SystemManager::getInstance().resetSpotifyTokens(); // Wipe saved tokens
+            spotifyState.status = SPOTIFY_NEED_LINK; // Re onboard
+            spotifyState.refresh_token = ""; // Clear local token
         }
     }
 }
@@ -553,6 +568,29 @@ void UIManager::populateWifiList(lv_obj_t* list_cont, const std::vector<String>&
 
 
 // --- Spotify ---
+void UIManager::showSpotifyLinkError() {
+    clearScreen();
+
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    // Header Title
+    lv_obj_t* title = lv_label_create(current_screen);
+    lv_label_set_text(title, "Can't connect to Spotify");
+    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(title, &font_gotham_medium_60, 0);
+    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 30);
+
+    // Message
+    lv_obj_t * body = lv_label_create(current_screen);
+    lv_label_set_text(body, "Something has gone wrong! \nPress the button below and follow the instructions to re-link your Spotify account");
+    lv_obj_set_style_text_color(body, SPOTIFY_GREY, 0);
+    lv_obj_set_style_text_font(body, &font_gotham_medium_40, 0);
+    lv_obj_align(body, LV_ALIGN_TOP_LEFT, 30, 115);
+
+    spotify_link_error_btn_ptr = createSpotifyBtn(current_screen, errorEventHandler, "Re-link", LV_ALIGN_BOTTOM_MID, 0, -32, true);
+}
+
+
 void UIManager::showSpotifyLinking(const char *auth_url) {
     clearScreen();
 

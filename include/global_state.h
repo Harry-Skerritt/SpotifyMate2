@@ -24,6 +24,7 @@ enum SpotifyStatus {
     SPOTIFY_LINKING,       // QR code is on screen, waiting for user
     SPOTIFY_AUTHENTICATING,// User scanned QR, ESP32 is exchanging code for token
     SPOTIFY_READY,         // Token validated, go to player
+    SPOTIFY_LINK_ERROR,    // For errors where re-linking is necessary
     SPOTIFY_ERROR          // Auth failed or Token revoked
 };
 

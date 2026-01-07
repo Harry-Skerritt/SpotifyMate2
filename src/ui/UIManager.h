@@ -45,6 +45,7 @@ public:
     void showWifiError();
 
     // Spotify Screens
+    void showSpotifyLinkError();
     void showSpotifyLinking(const char* auth_url);
 
 
