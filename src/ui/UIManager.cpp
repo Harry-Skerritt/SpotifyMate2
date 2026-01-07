@@ -13,45 +13,91 @@ void UIManager::init() {
 }
 
 void UIManager::update() {
-
-    // Handles Stuff in Networking
-    static WifiStatus last_wifi_status = WIFI_IDLE;
     static bool first_run = true;
+    static WifiStatus last_wifi_status = WIFI_IDLE;
+    static SpotifyStatus last_spotify_status = SPOTIFY_IDLE;
+    static uint32_t connectedStartTime = 0;
 
+    // --- WIFI ----
     if (networkState.status != last_wifi_status || first_run) {
         switch (networkState.status) {
             case WIFI_IDLE:
-                // Probably Onboarding
                 showOnboarding();
                 break;
 
             case WIFI_CONNECTING:
-                // Spinner
                 showSpinner("Connecting to " + networkState.selected_ssid);
                 break;
 
             case WIFI_SCANNING:
-                // Spinner
                 showSpinner("Searching for networks...");
                 break;
 
             case WIFI_SCAN_RESULTS:
-                // Scan has finished and there are now results
                 showNetworkList(networkState.found_ssids);
                 break;
 
             case WIFI_CONNECTED:
-                // Briefly show success, then your loop will naturally move to Spotify linking
                 showContextScreen("WiFi Connected!");
-                // You could add a small delay here or let the next logic pump handle the switch
                 break;
 
             case WIFI_ERROR:
                 showWifiError();
                 break;
         }
+
+        if (networkState.status == WIFI_CONNECTED) {
+            connectedStartTime = millis();
+        } else {
+            connectedStartTime = 0;
+        }
+
+        last_wifi_status = networkState.status;
     }
-    last_wifi_status = networkState.status;
+
+    // --- TRANSITION ---
+    bool wifi_ready_for_spotify = false;
+    if (networkState.status == WIFI_CONNECTED && connectedStartTime != 0) {
+        if (millis() - connectedStartTime > 1500) {
+            wifi_ready_for_spotify = true;
+
+            if (spotifyState.status == SPOTIFY_IDLE) {
+                if (spotifyState.refresh_token.length() > 0) spotifyState.status = SPOTIFY_INITIALIZING;
+                else spotifyState.status = SPOTIFY_NEED_LINK;
+            }
+        }
+    }
+
+    // --- SPOTIFY ---
+    if (wifi_ready_for_spotify && (spotifyState.status != last_spotify_status)) {
+        switch (spotifyState.status) {
+            case SPOTIFY_NEED_LINK:
+                showContextScreen("Spotify Link Screen");
+                //showSpotifyLinking(spotifyState.auth_url.c_str());
+                break;
+
+            case SPOTIFY_AUTHENTICATING:
+                showSpinner("Authenticating with Spotify...");
+                break;
+
+            case SPOTIFY_INITIALIZING:
+                showSpinner("Resuming Spotify Session...");
+
+            case SPOTIFY_READY:
+                showContextScreen("Main Player!");
+                //showMainPlayer();
+                break;
+
+            case SPOTIFY_ERROR:
+                //showFailure(); // Or a specific Spotify error screen
+                showContextScreen("Spotify Error");
+                break;
+
+            default: break;
+        }
+        last_spotify_status = spotifyState.status;
+    }
+
     first_run = false;
 }
 
@@ -300,6 +346,7 @@ void UIManager::showPasswordEntry(const String &ssid) {
 
             networkState.selected_pass = pwd;
 
+            networkState.status = WIFI_CONNECTING;
             WifiManager::getInstance().requestConnect();
 
         } else if(code == LV_EVENT_CANCEL) {

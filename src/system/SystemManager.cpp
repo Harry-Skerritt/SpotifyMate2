@@ -12,12 +12,39 @@
 #include "ui/UIManager.h"
 
 void SystemManager::init() {
+    // --- Loading ---
+    // Handling Config.json
     if (!loadConfig()) {
         //  Device definitely hasn't been set up
         Serial.println("Failed to load config");
         networkState.status = WIFI_IDLE;
     }
 
+    // Handling Secret.json
+    if (!loadSpotifySecrets()) {
+        Serial.println("Failed to load spotify secrets");
+        UIManager::getInstance().showFailure();
+        return;
+    }
+
+    // Handling tokens.json
+    if (!loadSpotifyTokens()) {
+        Serial.println("Failed to load spotify tokens");
+        // This isn't critical but will mean spotify needs relinking
+        spotifyState.status = SPOTIFY_NEED_LINK;
+        spotifyState.refresh_token = "";
+    }
+
+    // --- Spotify Check ---
+    if (spotifyState.client_id.length() == 0)
+    {
+        Serial.println("Spotify Credentials are missing - aborting!");
+        UIManager::getInstance().showFailure();
+        return;
+    }
+
+
+    // --- WiFi Check ---
     // Device could've been set up
     if (systemState.setup_complete) {
         // System has been set up before
@@ -38,10 +65,10 @@ void SystemManager::init() {
         // Device has not been set up - initiate onboarding
         networkState.status = WIFI_IDLE;
     }
-
 }
 
 
+// --- CONFIG ---
 bool SystemManager::loadConfig() {
     if (!LittleFS.exists("/config.json")) return false;
 
@@ -69,7 +96,7 @@ bool SystemManager::loadConfig() {
 void SystemManager::writeConfig() {
     File file = LittleFS.open("/config.json", "w");
     if (!file) {
-        Serial.println("WiFi: Failed to open config.json");
+        Serial.println("System: Failed to open config.json");
         return;
     }
 
@@ -80,7 +107,7 @@ void SystemManager::writeConfig() {
     doc["spotify_linked"] = systemState.spotify_linked;
 
     if (serializeJson(doc, file) == 0) {
-        Serial.println("Failed to write to file");
+        Serial.println("Failed to write to file - config");
         file.close();
         return;
     }
@@ -96,6 +123,74 @@ void SystemManager::resetConfig() {
     systemState.spotify_linked = false; // Todo: Need this?
 }
 
+// --- SECRET ---
+bool SystemManager::loadSpotifySecrets() {
+    if (!LittleFS.exists("/secrets.json")) return false;
+
+    File file = LittleFS.open("/secrets.json", "r");
+    if (!file) return false;
+
+    JsonDocument doc;
+    DeserializationError error = deserializeJson(doc, file);
+    file.close();
+
+    if (error) {
+        Serial.println("System: Secrets is corrupt");
+        return false;
+    }
+
+    spotifyState.client_id = doc["spotify_client_id"].as<String>();
+    spotifyState.client_secret = doc["spotify_client_secret"].as<String>();
+
+    return true;
+}
 
 
+
+// --- TOKEN ---
+bool SystemManager::loadSpotifyTokens() {
+    if (!LittleFS.exists("/tokens.json")) return false;
+
+    File file = LittleFS.open("/tokens.json", "r");
+    if (!file) return false;
+
+    JsonDocument doc;
+    DeserializationError error = deserializeJson(doc, file);
+    file.close();
+
+    if (error) {
+        Serial.println("System: Tokens is corrupt");
+        return false;
+    }
+
+    spotifyState.refresh_token = doc["spotify_refresh_token"].as<String>();
+    //spotifyState.a = doc["spotify_client_secret"].as<String>();
+
+    return true;
+}
+
+void SystemManager::writeSpotifyTokens() {
+    File file = LittleFS.open("/tokens.json", "w");
+    if (!file) {
+        Serial.println("System: Failed to open tokens.json");
+        return;
+    }
+
+    JsonDocument doc;
+    doc["spotify_refresh_token"] = spotifyState.refresh_token;
+
+    if (serializeJson(doc, file) == 0) {
+        Serial.println("Failed to write to file - tokens");
+        file.close();
+        return;
+    }
+
+    file.close();
+    Serial.println("Tokens Saved Successfully");
+}
+
+void SystemManager::resetSpotifyTokens() {
+    LittleFS.remove("/tokens.json");
+    spotifyState.refresh_token = "";
+}
 

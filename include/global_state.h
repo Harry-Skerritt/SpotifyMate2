@@ -17,6 +17,26 @@
 // --- Task Handles ---
 extern TaskHandle_t systemTaskHandle;
 
+enum SpotifyStatus {
+    SPOTIFY_IDLE,          // Not doing anything yet
+    SPOTIFY_INITIALIZING,  // Checking if the saved token works
+    SPOTIFY_NEED_LINK,     // WiFi is up, but no token found
+    SPOTIFY_LINKING,       // QR code is on screen, waiting for user
+    SPOTIFY_AUTHENTICATING,// User scanned QR, ESP32 is exchanging code for token
+    SPOTIFY_READY,         // Token validated, go to player
+    SPOTIFY_ERROR          // Auth failed or Token revoked
+};
+
+struct SpotifyState {
+    SpotifyStatus status = SPOTIFY_IDLE;
+    String client_id;
+    String client_secret;
+    String refresh_token;
+
+    String auth_url = "";
+};
+
+
 struct SystemState {
     bool setup_complete = false;
     bool spotify_linked = false;
@@ -44,5 +64,6 @@ struct NetworkState {
 
 extern SystemState systemState;
 extern NetworkState networkState;
+extern SpotifyState spotifyState;
 
 #endif //GLOBAL_STATE_H

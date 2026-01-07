@@ -11,6 +11,7 @@
 #include <WiFi.h>
 
 #include "global_state.h"
+#include "spotify/SpotifyManager.h"
 
 void WifiManager::update() {
     if (networkState.status == WIFI_CONNECTING) {
@@ -54,6 +55,7 @@ void WifiManager::handleConnecting() {
         // Save config here
         systemState.setup_complete = true;
         SystemManager::getInstance().writeConfig();
+
     } else if (millis() - connect_start_time > connect_timeout) {
         // Network timed out
         networkState.status = WIFI_ERROR;

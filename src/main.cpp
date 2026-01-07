@@ -3,11 +3,13 @@
 #include "hal/display.h"
 #include "global_state.h"
 #include "network/WifiManager.h"
+#include "spotify/SpotifyManager.h"
 #include "system/SystemManager.h"
 #include "ui/UIManager.h"
 
 SystemState systemState;
 NetworkState networkState;
+SpotifyState spotifyState;
 
 
 // Task Handlers
@@ -28,6 +30,9 @@ void setup() {
     delay(100);
 
     SystemManager::getInstance().init();
+    delay(500);
+
+    SpotifyManager::getInstance().init();
 
     // UI Task (Core 1)
     xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 32768, NULL, 3, NULL, 1);
@@ -97,6 +102,12 @@ void TaskSystem(void *pvParameters) {
 
         // Non-Command Logic (e.g. Checking Wi-Fi status)
         WifiManager::getInstance().update();
+
+
+        // Only update if on WiFi
+        if (networkState.wifi_connected) {
+            SpotifyManager::getInstance().update();
+        }
 
         vTaskDelay(pdMS_TO_TICKS(100));
     }

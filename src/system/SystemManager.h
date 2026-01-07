@@ -17,15 +17,25 @@ public:
     void init();
 
 
+    // For Config.json
+    bool loadConfig();
     void writeConfig();
     void resetConfig();
+
+    // For Secrets.json
+    bool loadSpotifySecrets();
+    //void writeSpotifySecrets();
+    //void resetSpotifySecrets();
+
+    // For Spotify Tokens
+    bool loadSpotifyTokens();
+    void writeSpotifyTokens();
+    void resetSpotifyTokens();
 
 private:
 
     SystemManager() {}
 
-
-    bool loadConfig();
 
 
     SystemManager(const SystemManager&) = delete;
