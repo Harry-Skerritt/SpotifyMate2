@@ -5,12 +5,9 @@
 #ifndef SPOTIFYMANAGER_H
 #define SPOTIFYMANAGER_H
 
-#include <Arduino.h>
-#include <spotify/spotify.hpp>
-#include <ArduinoJson.h>
+
 
 class SpotifyManager {
-
 
 };
 

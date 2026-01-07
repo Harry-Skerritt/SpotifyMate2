@@ -24,23 +24,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Tried abstracting">
-      <change afterPath="$PROJECT_DIR$/src/network/WifiManager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/network/WifiManager.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/system/SystemManager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/system/SystemManager.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/dep/uiManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/dep/uiManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/spotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/spotifyManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/spotifyManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/spotifyManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,16 +50,16 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "history": [
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
     {
-      "state": "OPEN"
+      &quot;state&quot;: &quot;OPEN&quot;
     }
   ],
-  "lastFilter": {
-    "state": "OPEN"
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
   }
-}]]></component>
+}</component>
   <component name="GitHubPullRequestState"><![CDATA[{
   "prStates": [
     {
@@ -82,7 +67,7 @@
         "id": "PR_kwDOQ0LHSM670PKe",
         "number": 2
       },
-      "lastSeen": 1767746588296
+      "lastSeen": 1767746807431
     }
   ]
 }]]></component>
@@ -92,6 +77,14 @@
     &quot;accountId&quot;: &quot;5f314702-d3bf-4e2a-9560-968f32bc1895&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/dep/uiManager.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/src/spotify/SpotifyManager.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/src/spotify/SpotifyManager.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/src/spotify/SpotifyManager.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/src/ui/UIManager.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/src/ui/uiManager.cpp" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="PlatformioLocalSettings">
     <option name="availableProjects">
       <map>
@@ -145,7 +138,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "#2 on Rebasing Fix-Core-0",
+    "git-widget-placeholder": "#2 on Fix-Core-0",
     "last_opened_file_path": "/Volumes/Data/Code/C++/2026/SpotifyMate2/src",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -386,7 +379,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767740248955</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Updated Spotify Manager?">
+      <option name="closed" value="true" />
+      <created>1767746953066</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1767746953066</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -427,6 +428,7 @@
     <MESSAGE value="Changes to flow" />
     <MESSAGE value="Fixed gitignore issues + updated spotify lib" />
     <MESSAGE value="Tried abstracting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tried abstracting" />
+    <MESSAGE value="Updated Spotify Manager?" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated Spotify Manager?" />
   </component>
 </project>
