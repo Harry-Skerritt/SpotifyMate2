@@ -23,14 +23,24 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Fixed gitignore issues + updated spotify lib">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Tried abstracting">
+      <change afterPath="$PROJECT_DIR$/src/network/WifiManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/network/WifiManager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/system/SystemManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/system/SystemManager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/wifiManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/wifiManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/uiManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network/wifiManager.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/dep/uiManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/uiManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/dep/uiManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,11 +149,11 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/dep" />
       <recent name="$PROJECT_DIR$/src/ui/fonts" />
       <recent name="$PROJECT_DIR$/lib" />
       <recent name="$PROJECT_DIR$/include" />
       <recent name="$PROJECT_DIR$/src/ui" />
-      <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
   <component name="RunManager">
@@ -356,7 +366,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767736404069</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Tried abstracting">
+      <option name="closed" value="true" />
+      <created>1767740248955</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1767740248955</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -396,6 +414,7 @@
     <MESSAGE value="Added the spotify linking page" />
     <MESSAGE value="Changes to flow" />
     <MESSAGE value="Fixed gitignore issues + updated spotify lib" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed gitignore issues + updated spotify lib" />
+    <MESSAGE value="Tried abstracting" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tried abstracting" />
   </component>
 </project>

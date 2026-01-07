@@ -1,32 +1,39 @@
 #include <Arduino.h>
+#include <LittleFS.h>
 #include "hal/display.h"
-#include "network/wifiManager.h"
 #include "global_state.h"
-#include "ui/uiManager.h"
+#include "network/WifiManager.h"
+#include "system/SystemManager.h"
+#include "ui/UIManager.h"
 
-
-SystemState deviceState;
+SystemState systemState;
 NetworkState networkState;
-TransitionFlags transitionFlags;
+
 
 // Task Handlers
 void TaskGraphics(void *pvParameters);
 void TaskSystem(void *pvParameters);
 
-
+// Tasks
+TaskHandle_t systemTaskHandle = NULL;
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(115200);
+    delay(2000);
     halSetup();
+
     UIManager::getInstance().init();
 
-    if (!LittleFS.begin(true)) transitionFlags.fatal_error_trigger = true;
+    if (!LittleFS.begin(true)) UIManager::getInstance().showFailure();
+    delay(100);
+
+    SystemManager::getInstance().init();
 
     // UI Task (Core 1)
     xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 32768, NULL, 3, NULL, 1);
 
     // Network Task (Core 0)
-    xTaskCreatePinnedToCore(TaskSystem, "System", 16384, NULL, 1, NULL, 0);
+    xTaskCreatePinnedToCore(TaskSystem, "System", 16384, NULL, 1, &systemTaskHandle, 0);
 }
 
 void handleHardResetCheck() {
@@ -37,13 +44,12 @@ void handleHardResetCheck() {
         if (digitalRead(0) == LOW) {
             Serial.println("DEBUG: Reset Triggered!");
             LittleFS.remove("/config.json");
-            //LittleFS.remove("/secrets.json"); // Wipe Spotify too
-            deviceState.setup_complete = false;
-            deviceState.spotify_linked = false;
-            UIManager::getInstance().showContextScreen("Reseting...");
+            systemState.setup_complete = false;
+            systemState.spotify_linked = false;
+            UIManager::getInstance().showContextScreen("Resetting...");
             lv_timer_handler();
             vTaskDelay(pdMS_TO_TICKS(2000));
-            ESP.restart(); // Cleanest way to reset after wipe
+            ESP.restart();
         }
         lv_timer_handler();
         vTaskDelay(pdMS_TO_TICKS(20));
@@ -53,18 +59,15 @@ void handleHardResetCheck() {
 
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
+
     UIManager::getInstance().showSplashScreen();
-    lv_timer_handler();
 
     handleHardResetCheck();
 
-    if (!deviceState.setup_complete) {
-        Serial.println("System: No config found, forcing onboarding UI");
-        UIManager::getInstance().showWifiOnboarding();
-    }
 
     for (;;) {
-        UIManager::getInstance().update(networkState, deviceState, transitionFlags);
+
+        UIManager::getInstance().update();
 
         lv_timer_handler();
         vTaskDelay(pdMS_TO_TICKS(25));
@@ -74,14 +77,27 @@ void TaskGraphics(void *pvParameters) {
 
 // --- CORE 0: Handle Wi-Fi and API Logic ---
 void TaskSystem(void *pvParameters) {
-   WifiManager::getInstance().init();
+    uint32_t ulTaskNotifiedValue;
 
     for (;;) {
-        WifiManager::getInstance().update();
 
-        if (networkState.wifi_connected) {
-            // Update Spotify Manager
+        if (xTaskNotifyWait(0, ULONG_MAX, &ulTaskNotifiedValue, pdMS_TO_TICKS(100)) == pdPASS) {
+
+            if (ulTaskNotifiedValue & CMD_WIFI_SCAN) {
+                WifiManager::getInstance().processScan();
+            }
+
+            if (ulTaskNotifiedValue & CMD_WIFI_CONN) {
+                WifiManager::getInstance().processConnect();
+            }
+
+            if (ulTaskNotifiedValue & CMD_WIFI_RESET) {
+                WifiManager::getInstance().processReset();
+            }
         }
+
+        // Non-Command Logic (e.g. Checking Wi-Fi status)
+        WifiManager::getInstance().update();
 
         vTaskDelay(pdMS_TO_TICKS(100));
     }

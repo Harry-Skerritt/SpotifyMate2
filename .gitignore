@@ -1,4 +1,6 @@
 .pio
 
+dep
+
 data/config.json
 data/secrets.json
