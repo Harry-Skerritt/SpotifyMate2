@@ -11,21 +11,7 @@
 
 class SpotifyManager {
 
-public:
-    static SpotifyManager& getInstance() {
-        static SpotifyManager instance;
-        return instance;
-    }
 
-
-    void init();
-
-private:
-    Spotify::Auth* spotifyAuth = nullptr;
-    String refresh_token;
-    String access_token;
-
-    void loadSpotifySecrets();
 };
 
 
