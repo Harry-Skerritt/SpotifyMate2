@@ -18,6 +18,7 @@ uint16_t UIManager::current_h = 0;
 
 
 
+static lv_color_t* zoom_buffer = nullptr;
 void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
     if (!jpgData) return;
 
@@ -25,7 +26,7 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
     if (persistent_buffer != nullptr) free(persistent_buffer);
     persistent_buffer = jpgData;
 
-    album_dsc.header.always_zero = 0;
+    //album_dsc.header.always_zero = 0;
     album_dsc.header.cf = LV_IMG_CF_RAW;
     album_dsc.data_size = len;
     album_dsc.data = persistent_buffer;
@@ -33,14 +34,42 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
 
     lv_async_call([](void* p) {
         lv_obj_t* img = UIManager::getInstance().ui_album_art;
-        if (img) {
-            lv_img_set_src(img, NULL);
-            lv_img_cache_invalidate_src(&UIManager::album_dsc);
-            lv_img_set_src(img, &UIManager::album_dsc);
+        if (!img) return;
 
-            lv_obj_set_style_bg_opa(img, 0, 0); // Hide the blue/red background
-            lv_obj_invalidate(img);
-        }
+
+        // Zoom
+        if (!zoom_buffer) zoom_buffer = (lv_color_t*) ps_malloc(365 * 365 * sizeof(lv_color_t));
+
+        // Create A TEMP Canvas
+        lv_obj_t* canvas = lv_canvas_create(lv_scr_act());
+        lv_canvas_set_buffer(canvas, zoom_buffer, 365, 356, LV_IMG_CF_TRUE_COLOR);
+        lv_obj_add_flag(canvas, LV_OBJ_FLAG_HIDDEN);
+
+        // Draw & scaling
+        lv_draw_img_dsc_t draw_dsc;
+        lv_draw_img_dsc_init(&draw_dsc);
+        draw_dsc.zoom = 311;
+
+        lv_canvas_draw_img(canvas, 0, 0, &UIManager::album_dsc, &draw_dsc);
+
+        static lv_img_dsc_t final_dsc;
+        final_dsc.header.always_zero = 0;
+        final_dsc.header.cf = LV_IMG_CF_TRUE_COLOR;
+        final_dsc.header.w = 365;
+        final_dsc.header.h = 356;
+        final_dsc.data_size = 365 * 365 * sizeof(lv_color_t);
+        final_dsc.data = (const uint8_t*) zoom_buffer;
+
+        // Set IMG to canvas
+        lv_img_set_src(img, &final_dsc);
+
+        lv_obj_del(canvas);
+
+        lv_obj_invalidate(img);
+        Serial.println("UI: Image Scaled and Converted to True Colour");
+
+
+
     }, NULL);
 
 }

@@ -25,4 +25,5 @@
 #define LV_USE_TJPGD 1
 #define LV_IMG_CACHE_DEF_SIZE 4
 #define LV_USE_ASYNC 1
+#define LV_USE_CANVAS 1
 #endif
