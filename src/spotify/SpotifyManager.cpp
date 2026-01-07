@@ -4,9 +4,13 @@
 
 #include "SpotifyManager.h"
 
+#include <HTTPClient.h>
+#include <WiFiClientSecure.h>
+#include <TJpg_Decoder.h>
+
 #include "global_state.h"
 #include "system/SystemManager.h"
-
+#include "ui/UIManager.h"
 
 void SpotifyManager::init() {
 
@@ -71,8 +75,6 @@ void SpotifyManager::buildAuthURL() {
         scopes,
     std::string(localIP.c_str())
     ).c_str();
-
-    Serial.printf("Auth URL: %s\n", spotifyState.auth_url.c_str());
 }
 
 
@@ -153,3 +155,38 @@ void SpotifyManager::handleAuthCodeExchange() {
     }
 
 }
+
+void SpotifyManager::loadAlbumArt(String &url) {
+    WiFiClientSecure client;
+    client.setInsecure();
+    HTTPClient http;
+
+    http.setUserAgent("ESP32-Spotify-Mate"); // Some servers block empty UAs
+
+    if (http.begin(client, url)) {
+        int httpCode = http.GET();
+        if (httpCode == HTTP_CODE_OK) {
+            int len = http.getSize();
+            if (len <= 0) return;
+
+            uint8_t* temp_jpg = (uint8_t*)ps_malloc(len);
+            if (!temp_jpg) return;
+
+            // Use readBytesFully to ensure we get the whole file
+            int downloaded = http.getStream().readBytes(temp_jpg, len);
+
+            Serial.printf("Spotify: Downloaded %d of %d bytes\n", downloaded, len);
+
+            if (downloaded > 0) {
+                UIManager::getInstance().updateAlbumArt(temp_jpg, len);
+            }
+
+            free(temp_jpg);
+        } else {
+            Serial.printf("Spotify: HTTP Error %d\n", httpCode);
+        }
+        http.end();
+    }
+}
+
+

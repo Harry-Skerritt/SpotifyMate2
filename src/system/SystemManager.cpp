@@ -11,7 +11,9 @@
 #include "network/WifiManager.h"
 #include "ui/UIManager.h"
 
+
 void SystemManager::init() {
+
     // --- Loading ---
     // Handling Config.json
     if (!loadConfig()) {
@@ -66,6 +68,7 @@ void SystemManager::init() {
         networkState.status = WIFI_IDLE;
     }
 }
+
 
 
 // --- CONFIG ---

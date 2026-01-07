@@ -24,6 +24,8 @@ LV_FONT_DECLARE(font_gotham_medium_50);
 LV_FONT_DECLARE(font_gotham_medium_60);
 LV_FONT_DECLARE(font_gotham_medium_80);
 
+
+
 class UIManager {
 public:
 
@@ -54,6 +56,13 @@ public:
     void showMainPlayer();
 
 
+    void updateAlbumArt(uint8_t* jpgData, size_t len);
+
+    static lv_img_dsc_t album_dsc;
+    static uint16_t* album_buffer;
+    static uint16_t current_w;
+    static uint16_t current_h;
+
 private:
     UIManager() {}
 
@@ -69,6 +78,9 @@ private:
     lv_style_transition_dsc_t trans_btn;
 
     lv_style_t style_network_card;
+
+    lv_obj_t* ui_album_art = nullptr;
+    static bool tjpg_callback(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* bitmap);
 
 
     // Internal Helpers

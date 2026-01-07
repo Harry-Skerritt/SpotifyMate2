@@ -8,10 +8,122 @@
 #include "network/WifiManager.h"
 #include "spotify/SpotifyManager.h"
 #include "system/SystemManager.h"
+#include <TJpg_Decoder.h>
+
+static uint8_t tjpg_workspace[3100];
+
+lv_img_dsc_t UIManager::album_dsc;
+uint16_t* UIManager::album_buffer = nullptr;
+uint16_t UIManager::current_w = 0;
+uint16_t UIManager::current_h = 0;
+
+bool UIManager::tjpg_callback(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* bitmap) {
+    if (!album_buffer) return false;
+
+    for (int j = 0; j < h; j++) {
+        int canvas_y = y + j;
+        if (canvas_y >= current_h) break;
+
+        uint32_t row_index = (uint32_t)canvas_y * current_w;
+
+        for (int i = 0; i < w; i++) {
+            int canvas_x = x + i;
+            if (canvas_x >= current_w) break;
+
+            uint16_t pixel = bitmap[i + (j * w)];
+
+            uint16_t r = (pixel >> 11) & 0x1F;
+            uint16_t g = (pixel >> 5) & 0x3F;
+            uint16_t b = pixel & 0x1F;
+
+            uint16_t corrected = (b << 11) | (g << 5) | r;
+
+            album_buffer[row_index + canvas_x] = corrected; //bitmap[i + (j*w)];
+        }
+    }
+    return true;
+}
+
+
+
+void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
+    Serial.println("UI: Starting Album Art Decode...");
+
+    if (jpgData == nullptr || len < 4) return;
+
+    uint16_t w = 0, h = 0;
+
+    int result = TJpgDec.getJpgSize(&w, &h, jpgData, len);
+
+    if (result != uint8_t(0)) { // TJpgDec returns 0 for success
+        Serial.printf("UI: TJpgDec rejected header. Result code: %d\n", result);
+        return;
+    }
+    Serial.printf("UI: Image Size Found: %dx%d\n", w, h);
+
+    // Spotify 640px -> 320px
+    uint8_t scale = (w >= 600) ? 2 : 1;
+    current_w = w / scale;
+    current_h = h / scale;
+
+    // Allocate PSRAM
+    if (album_buffer) free(album_buffer);
+    album_buffer = (uint16_t*)ps_malloc(current_w * current_h * 2);
+    if (!album_buffer) {
+        Serial.println("UI: PSRAM ALLOCATION FAILED!");
+        return;
+    }
+
+    TJpgDec.setCallback(tjpg_callback);
+    TJpgDec.setJpgScale(scale);
+    //TJpgDec.setSwapBytes(true);
+
+    int drawResult = TJpgDec.drawJpg(0, 0, jpgData, len);
+
+    Serial.printf("UI: Original JPG: %dx%d | Scaling by: %d | Final Buffer: %dx%d\n",
+              w, h, scale, current_w, current_h);
+
+    for(int i=0; i<50; i++) {
+        for(int j=0; j<50; j++) {
+            // Pure Spotify Green in RGB565: R=3, G=57, B=13 -> 0x1ED760
+            // Packed as 16-bit: 0x1EB3
+            //album_buffer[j * current_w + i] = rgbToBGRHex(0x1ED760).full;
+        }
+    }
+
+    if (drawResult == 0) {
+        Serial.println("UI: Decode Draw Successful!");
+
+
+        // Prepare Descriptor
+        album_dsc.header.always_zero = 0;
+        album_dsc.header.w = current_w;
+        album_dsc.header.h = current_h;
+        album_dsc.header.cf = LV_IMG_CF_TRUE_COLOR;
+        album_dsc.data_size = current_w * current_h * 2;
+        album_dsc.data = (uint8_t*)album_buffer;
+
+        // Force UI Refresh
+        lv_async_call([](void* p) {
+            lv_obj_t* img = UIManager::getInstance().ui_album_art;
+            if (img) {
+                lv_img_cache_invalidate_src(&UIManager::album_dsc);
+                lv_img_set_src(img, &UIManager::album_dsc);
+                // Clear the blue box background so we can see the image
+                lv_obj_set_style_bg_opa(img, 0, 0);
+                lv_obj_invalidate(img);
+                Serial.println("UI: Object Refreshed on Screen");
+            }
+        }, NULL);
+    } else {
+        Serial.printf("UI: Draw Failed with code: %d\n", drawResult);
+    }
+}
 
 
 void UIManager::init() {
     initStyles();
+    TJpgDec.setCallback(tjpg_callback);
 }
 
 void UIManager::update() {
@@ -62,7 +174,7 @@ void UIManager::update() {
     if (networkState.status == WIFI_CONNECTED && connectedStartTime != 0) {
         if (millis() - connectedStartTime > 1500) {
             wifi_ready_for_spotify = true;
-            SpotifyManager::getInstance().buildAuthURL();
+            SpotifyManager::getInstance().buildAuthURL(); // Todo: Make this work but not infinite
 
             if (spotifyState.status == SPOTIFY_IDLE) {
                 if (spotifyState.refresh_token.length() > 0) spotifyState.status = SPOTIFY_INITIALIZING;
@@ -89,7 +201,7 @@ void UIManager::update() {
 
             case SPOTIFY_READY:
                 showContextScreen("Main Player!");
-                //showMainPlayer();
+                showMainPlayer();
                 break;
 
             case SPOTIFY_LINK_ERROR:
@@ -432,12 +544,24 @@ void UIManager::showMainPlayer() {
 
     lv_obj_set_style_bg_color(current_screen, rgbToBGRHex(0x942219), 0);
 
+    // Album Art
+    ui_album_art = lv_img_create(current_screen);
+    lv_obj_set_style_bg_color(ui_album_art, lv_color_hex(0x0000FF), 0); // Blue box
+    lv_obj_set_style_bg_opa(ui_album_art, LV_OPA_COVER, 0);
+
+    lv_img_set_src(ui_album_art, &album_dsc);
+    lv_obj_set_size(ui_album_art, 365, 365);
+    lv_obj_align(ui_album_art, LV_ALIGN_LEFT_MID, 40, 0);
+    lv_obj_set_style_radius(ui_album_art, 15, 0);
+    lv_obj_set_style_clip_corner(ui_album_art, true, 0);
+    lv_obj_move_foreground(ui_album_art);
+
     // Song Title
     lv_obj_t* song_title = lv_label_create(current_screen);
     lv_label_set_text(song_title, "Rock Believer");
     lv_obj_set_style_text_color(song_title, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(song_title, &font_gotham_medium_50, 0);
-    lv_obj_align(song_title, LV_ALIGN_BOTTOM_MID, 8, -155);
+    lv_obj_align_to(song_title, ui_album_art, LV_ALIGN_OUT_RIGHT_TOP, 25, 50);
 
 
     // Song Artist
@@ -445,7 +569,7 @@ void UIManager::showMainPlayer() {
     lv_label_set_text(song_artist, "Scorpions");
     lv_obj_set_style_text_color(song_artist, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(song_artist, &font_gotham_medium_30, 0);
-    lv_obj_align(song_artist, LV_ALIGN_BOTTOM_MID, 8, -105);
+    lv_obj_align_to(song_artist, song_title, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);
 
     // Device Icon
 
@@ -455,7 +579,13 @@ void UIManager::showMainPlayer() {
     lv_label_set_text(device_name, "Harry's Mac Mini");
     lv_obj_set_style_text_color(device_name, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(device_name, &font_gotham_medium_20, 0);
-    lv_obj_align(device_name, LV_ALIGN_BOTTOM_MID, 50, -190);
+    lv_obj_align_to(device_name, song_artist, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 40);
+
+
+    // Load Image
+    String testURL = "https://i.scdn.co/image/ab67616d0000b273eeacad9436d5ba5052d46c43"; //640
+    //String testURL = "https://www.elbecgardenbuildings.co.uk/images/products/large/6908_483.jpg";
+    SpotifyManager::getInstance().loadAlbumArt(testURL);
 }
 
 
@@ -506,6 +636,7 @@ void UIManager::initStyles() {
 }
 
 void UIManager::clearScreen() {
+    ui_album_art = nullptr;
     lv_obj_t* old_scr = lv_scr_act();
     current_screen = lv_obj_create(NULL);
 

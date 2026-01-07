@@ -50,8 +50,14 @@ void WifiManager::handleConnecting() {
         networkState.status = WIFI_CONNECTED;
         networkState.wifi_connected = true;
         networkState.ip = WiFi.localIP().toString();
+
+        IPAddress dns1(8, 8, 8, 8);
+        IPAddress dns2(4, 4, 4, 4);
+        WiFi.config(WiFi.localIP(), WiFi.gatewayIP(), WiFi.subnetMask(), dns1, dns2);
+
         Serial.printf("Device IP: %s\n", networkState.ip.c_str());
-        Serial.println("WiFi connected");
+        Serial.printf("DNS 1: %s\n", WiFi.dnsIP(0).toString().c_str()); // Verify it took
+        Serial.println("WiFi connected and DNS configured");
 
         // Save config here
         systemState.setup_complete = true;

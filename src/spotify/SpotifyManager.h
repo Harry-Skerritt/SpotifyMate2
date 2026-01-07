@@ -6,7 +6,10 @@
 #define SPOTIFYMANAGER_H
 
 #include <spotify/spotify.hpp>
+#include <lvgl.h>
 
+extern  lv_img_dsc_t spotify_img_dsc;
+extern uint8_t* compressed_buffer;
 
 class SpotifyManager {
 public:
@@ -21,15 +24,14 @@ public:
 
     void buildAuthURL();
 
+    void loadAlbumArt(String& url);
 
 
 private:
-
     SpotifyManager() {}
 
     Spotify::Auth* sp_auth = nullptr;
     Spotify::Client* sp_client = nullptr;
-
 
 
     // Web Server + Getting Code

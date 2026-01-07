@@ -24,6 +24,12 @@ void setup() {
     delay(2000);
     halSetup();
 
+#if LV_USE_SJPG == 0
+    Serial.println("WARNING: LV_USE_SJPG is DISABLED in lv_conf.h!");
+#else
+    Serial.println("SUCCESS: JPEG Decoder is ENABLED.");
+#endif
+
     UIManager::getInstance().init();
 
     if (!LittleFS.begin(true)) UIManager::getInstance().showFailure();
@@ -38,7 +44,7 @@ void setup() {
     xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 32768, NULL, 3, NULL, 1);
 
     // Network Task (Core 0)
-    xTaskCreatePinnedToCore(TaskSystem, "System", 16384, NULL, 1, &systemTaskHandle, 0);
+    xTaskCreatePinnedToCore(TaskSystem, "System", 32768, NULL, 1, &systemTaskHandle, 0);
 }
 
 void handleHardResetCheck() {
@@ -66,14 +72,13 @@ void handleHardResetCheck() {
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
 
-    //UIManager::getInstance().showSplashScreen();
-    UIManager::getInstance().showMainPlayer();
+    UIManager::getInstance().showSplashScreen();
 
     handleHardResetCheck();
 
     for (;;) {
 
-        //UIManager::getInstance().update();
+        UIManager::getInstance().update();
 
         lv_timer_handler();
         vTaskDelay(pdMS_TO_TICKS(25));

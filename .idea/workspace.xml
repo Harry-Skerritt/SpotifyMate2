@@ -23,11 +23,16 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added spotify authentication through a proxy">
-      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_30.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_gotham_medium_50.c" afterDir="false" />
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Started adding the PlayScreen (hardcoded for testing)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lv_conf.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/lv_conf.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network/WifiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/WifiManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/system/SystemManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/SystemManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/system/SystemManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/SystemManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
     </list>
@@ -166,10 +171,13 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="PlatformIO" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SpotifyMate2" TARGET_NAME="PlatformIO" CONFIG_NAME="PlatformIO">
+      <method v="2" />
     </configuration>
     <configuration name="PlatformIO" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SpotifyMate2" TARGET_NAME="PlatformIO" CONFIG_NAME="PlatformIO">
       <method v="2" />
@@ -209,7 +217,8 @@
       <workItem from="1767716699504" duration="53000" />
       <workItem from="1767716793957" duration="803000" />
       <workItem from="1767733927320" duration="1486000" />
-      <workItem from="1767747435141" duration="11463000" />
+      <workItem from="1767747435141" duration="15383000" />
+      <workItem from="1767802308495" duration="7724000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -435,7 +444,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767796443042</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Started adding the PlayScreen (hardcoded for testing)">
+      <option name="closed" value="true" />
+      <created>1767798606603</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1767798606603</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -453,7 +470,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added the UI file and added a splash screen" />
     <MESSAGE value="Bunch of errors" />
     <MESSAGE value="Rolled back to when it worked - no TinyTTF" />
     <MESSAGE value="Adding missed files" />
@@ -478,6 +494,7 @@
     <MESSAGE value="Tested the SpotifyCPP lib works by making an auth URL" />
     <MESSAGE value="Added a spotify link error" />
     <MESSAGE value="Added spotify authentication through a proxy" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added spotify authentication through a proxy" />
+    <MESSAGE value="Started adding the PlayScreen (hardcoded for testing)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Started adding the PlayScreen (hardcoded for testing)" />
   </component>
 </project>

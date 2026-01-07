@@ -18,4 +18,8 @@
 #define LV_USE_ARC 1
 
 #define LV_USE_QRCODE 1
+
+#define LV_USE_SJPG 1
+#define LV_USE_TJPGD 1
+#define LV_USE_ASYNC 1
 #endif

@@ -5,7 +5,8 @@
 #ifndef SYSTEMMANAGER_H
 #define SYSTEMMANAGER_H
 
-
+#include <Arduino.h>
+#include <lvgl.h>
 
 class SystemManager {
 public:
@@ -35,7 +36,6 @@ public:
 private:
 
     SystemManager() {}
-
 
 
     SystemManager(const SystemManager&) = delete;
