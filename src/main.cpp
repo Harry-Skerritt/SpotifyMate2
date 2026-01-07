@@ -49,6 +49,7 @@ void handleHardResetCheck() {
         if (digitalRead(0) == LOW) {
             Serial.println("DEBUG: Reset Triggered!");
             LittleFS.remove("/config.json");
+            LittleFS.remove("/tokens.json");
             systemState.setup_complete = false;
             systemState.spotify_linked = false;
             UIManager::getInstance().showContextScreen("Resetting...");

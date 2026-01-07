@@ -19,11 +19,22 @@ public:
     void init();
     void update();
 
+    void buildAuthURL();
+
 private:
 
     SpotifyManager() {}
 
     Spotify::Auth* sp_auth = nullptr;
+    Spotify::Client* sp_client = nullptr;
+
+
+
+    // Web Server + Getting Code
+    bool isServerRunning = false;
+    std::string temp_auth_code;
+    void handleCodeWebServer();
+    void handleAuthCodeExchange();
 
     void handleRefreshValidation();
 

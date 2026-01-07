@@ -6,6 +6,7 @@
 
 #include "global_state.h"
 #include "network/WifiManager.h"
+#include "spotify/SpotifyManager.h"
 #include "system/SystemManager.h"
 
 
@@ -61,6 +62,7 @@ void UIManager::update() {
     if (networkState.status == WIFI_CONNECTED && connectedStartTime != 0) {
         if (millis() - connectedStartTime > 1500) {
             wifi_ready_for_spotify = true;
+            SpotifyManager::getInstance().buildAuthURL();
 
             if (spotifyState.status == SPOTIFY_IDLE) {
                 if (spotifyState.refresh_token.length() > 0) spotifyState.status = SPOTIFY_INITIALIZING;

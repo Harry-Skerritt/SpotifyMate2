@@ -50,6 +50,7 @@ void WifiManager::handleConnecting() {
         networkState.status = WIFI_CONNECTED;
         networkState.wifi_connected = true;
         networkState.ip = WiFi.localIP().toString();
+        Serial.printf("Device IP: %s\n", networkState.ip.c_str());
         Serial.println("WiFi connected");
 
         // Save config here
