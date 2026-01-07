@@ -11,6 +11,8 @@
 #include <Arduino.h>
 #include <vector>
 
+#include "global_state.h"
+
 
 // --- Global Colours ---
 #define SPOTIFY_GREEN lv_color_hex(0x1ED760)
@@ -36,6 +38,8 @@ public:
 
 
     void init();
+
+    void update(NetworkState networkState, SystemState deviceState, TransitionFlags flags);
 
     // Start / State Screens
     void showFailure();

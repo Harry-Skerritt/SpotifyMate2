@@ -1,0 +1,125 @@
+Index: src/spotify/spotifyManager.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//\n// Created by Harry Skerritt on 06/01/2026.\n//\n\n#ifndef SPOTIFYMANAGER_H\n#define SPOTIFYMANAGER_H\n\n#include <Arduino.h>\n#include <spotify/spotify.hpp>\n#include <ArduinoJson.h>\n\nclass SpotifyManager {\n\npublic:\n    static SpotifyManager& getInstance() {\n        static SpotifyManager instance;\n        return instance;\n    }\n\n\n    void init();\n\nprivate:\n    Spotify::Auth* spotifyAuth = nullptr;\n    String refresh_token;\n    String access_token;\n\n    void loadSpotifySecrets();\n};\n\n\n\n#endif //SPOTIFYMANAGER_H\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/spotify/spotifyManager.h b/src/spotify/spotifyManager.h
+--- a/src/spotify/spotifyManager.h	(revision b8d6ec0c89b4c49e621612045c281993a443d60d)
++++ b/src/spotify/spotifyManager.h	(date 1767746903917)
+@@ -5,27 +5,10 @@
+ #ifndef SPOTIFYMANAGER_H
+ #define SPOTIFYMANAGER_H
+ 
+-#include <Arduino.h>
+-#include <spotify/spotify.hpp>
+-#include <ArduinoJson.h>
++
+ 
+ class SpotifyManager {
+ 
+-public:
+-    static SpotifyManager& getInstance() {
+-        static SpotifyManager instance;
+-        return instance;
+-    }
+-
+-
+-    void init();
+-
+-private:
+-    Spotify::Auth* spotifyAuth = nullptr;
+-    String refresh_token;
+-    String access_token;
+-
+-    void loadSpotifySecrets();
+ };
+ 
+ 
+Index: src/spotify/spotifyManager.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//\n// Created by Harry Skerritt on 06/01/2026.\n//\n\n#include \"spotifyManager.h\"\n#include <LittleFS.h>\n#include <WiFi.h>\n\n#include \"global_state.h\"\n\nSpotify::Auth spotify({ \"\", \"\" });\n\nvoid SpotifyManager::init() {\n    loadSpotifySecrets();\n\n    if (spotifyAuth != nullptr) {\n        // Is linked?\n        if (refresh_token.length() > 0) {\n            Serial.println(\"Spotify: Loaded existing refresh token.\");\n            networkState.spotify_linked = true;\n            //networkState.show_success_trigger = true;\n        } else {\n            Serial.println(\"Spotify: No saved token. Starting Linking\");\n\n            String ip = WiFi.localIP().toString().c_str();\n            String redirect = \"http://\" + ip + \":8888/callback\";\n\n            networkState.spotify_auth_url = spotifyAuth->createAuthoriseURL(redirect.c_str(),\n                {\n                    Spotify::Scope::UserReadPrivate,\n                    Spotify::Scope::UserReadEmail,\n                    Spotify::Scope::UserReadCurrentlyPlaying,\n                    Spotify::Scope::UserReadPlaybackState,\n                    Spotify::Scope::UserReadPlaybackPosition\n                }\n            ).c_str();\n            networkState.spotify_linked = false;\n            networkState.show_qr_trigger = true;\n        }\n    }\n}\n\n// Helpers\nvoid SpotifyManager::loadSpotifySecrets() {\n    if (!LittleFS.exists(\"/secrets.json\")) {\n        Serial.println(\"Spotify: secrets.json NOT FOUND!\");\n        deviceState.fatal_error_trigger = true;\n        return;\n    }\n\n    File file = LittleFS.open(\"/secrets.json\", \"r\");\n    JsonDocument doc;\n    DeserializationError error = deserializeJson(doc, file);\n    file.close();\n\n    if (error) {\n        Serial.println(\"Spotify: Failed to parse secrets.json\");\n        deviceState.fatal_error_trigger = true;\n        return;\n    }\n\n    String id = doc[\"spotify_client_id\"].as<String>();\n    String secret = doc[\"spotify_client_secret\"].as<String>();\n\n    // Check for a token\n    refresh_token = doc[\"spotify_refresh_token\"].as<String>();\n\n    if (id.length() > 0 && secret.length() > 0) {\n        // Dynamically create the Auth object\n        spotifyAuth = new Spotify::Auth({id.c_str(), secret.c_str()});\n        Serial.println(\"Spotify: Auth object ready with secrets.\");\n    }\n}\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/spotify/spotifyManager.cpp b/src/spotify/spotifyManager.cpp
+--- a/src/spotify/spotifyManager.cpp	(revision b8d6ec0c89b4c49e621612045c281993a443d60d)
++++ b/src/spotify/spotifyManager.cpp	(date 1767746903917)
+@@ -2,74 +2,4 @@
+ // Created by Harry Skerritt on 06/01/2026.
+ //
+ 
+-#include "spotifyManager.h"
+-#include <LittleFS.h>
+-#include <WiFi.h>
+-
+-#include "global_state.h"
+-
+-Spotify::Auth spotify({ "", "" });
+-
+-void SpotifyManager::init() {
+-    loadSpotifySecrets();
+-
+-    if (spotifyAuth != nullptr) {
+-        // Is linked?
+-        if (refresh_token.length() > 0) {
+-            Serial.println("Spotify: Loaded existing refresh token.");
+-            networkState.spotify_linked = true;
+-            //networkState.show_success_trigger = true;
+-        } else {
+-            Serial.println("Spotify: No saved token. Starting Linking");
+-
+-            String ip = WiFi.localIP().toString().c_str();
+-            String redirect = "http://" + ip + ":8888/callback";
+-
+-            networkState.spotify_auth_url = spotifyAuth->createAuthoriseURL(redirect.c_str(),
+-                {
+-                    Spotify::Scope::UserReadPrivate,
+-                    Spotify::Scope::UserReadEmail,
+-                    Spotify::Scope::UserReadCurrentlyPlaying,
+-                    Spotify::Scope::UserReadPlaybackState,
+-                    Spotify::Scope::UserReadPlaybackPosition
+-                }
+-            ).c_str();
+-            networkState.spotify_linked = false;
+-            networkState.show_qr_trigger = true;
+-        }
+-    }
+-}
+-
+-// Helpers
+-void SpotifyManager::loadSpotifySecrets() {
+-    if (!LittleFS.exists("/secrets.json")) {
+-        Serial.println("Spotify: secrets.json NOT FOUND!");
+-        deviceState.fatal_error_trigger = true;
+-        return;
+-    }
+-
+-    File file = LittleFS.open("/secrets.json", "r");
+-    JsonDocument doc;
+-    DeserializationError error = deserializeJson(doc, file);
+-    file.close();
+-
+-    if (error) {
+-        Serial.println("Spotify: Failed to parse secrets.json");
+-        deviceState.fatal_error_trigger = true;
+-        return;
+-    }
+-
+-    String id = doc["spotify_client_id"].as<String>();
+-    String secret = doc["spotify_client_secret"].as<String>();
+-
+-    // Check for a token
+-    refresh_token = doc["spotify_refresh_token"].as<String>();
+-
+-    if (id.length() > 0 && secret.length() > 0) {
+-        // Dynamically create the Auth object
+-        spotifyAuth = new Spotify::Auth({id.c_str(), secret.c_str()});
+-        Serial.println("Spotify: Auth object ready with secrets.");
+-    }
+-}
+-
+-
++#include "SpotifyManager.h"

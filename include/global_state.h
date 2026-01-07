@@ -9,49 +9,39 @@
 #include <Arduino.h>
 #include <vector>
 
-#include "spotify/models/AuthModels.hpp"
+// --- Command Bitmasks ---
+#define CMD_WIFI_SCAN    (1 << 0)
+#define CMD_WIFI_CONN    (1 << 1)
+#define CMD_WIFI_RESET   (1 << 2)
 
-struct NetworkState {
-    // Current Wifi Status
-    bool wifi_connected = false;
-    String ip = "0.0.0.0";
-    bool setup_complete = false;
-
-    // Spotify Auth Flags
-    bool spotify_linked = false; // From Config.json
-    String spotify_auth_url = "";
-    volatile bool show_qr_trigger = false;
-
-    // Scanning Flags
-    volatile bool start_scan_trigger = false;
-    volatile bool scan_complete = false;
-    std::vector<String> found_ssids;
-
-    // Connection Flags
-    volatile bool start_connect_trigger = false;
-    String selected_ssid;
-    String selected_pass;
-
-    // WiFi Status Flags
-    volatile bool failed_to_connect_trigger = false;
-    volatile bool show_success_trigger = false;
-    uint32_t success_shown_at = 0;
-};
+// --- Task Handles ---
+extern TaskHandle_t systemTaskHandle;
 
 struct SystemState {
-
-    volatile bool fatal_error_trigger = false;
-
-    String current_track = "Idle";
-    String artist = "Waiting...";
-    int volume = 50;
-    bool is_playing = false;
+    bool setup_complete = false;
+    bool spotify_linked = false;
 };
 
 
+enum WifiStatus {
+    WIFI_IDLE,
+    WIFI_SCANNING,
+    WIFI_SCAN_RESULTS,
+    WIFI_CONNECTING,
+    WIFI_CONNECTED,
+    WIFI_ERROR
+};
+struct NetworkState {
+    WifiStatus status = WIFI_IDLE;
+    bool wifi_connected = false;
+    String ip = "0.0.0.0";
 
-// Declare a global instance that all files can see
-extern SystemState deviceState;
+    String selected_ssid = "";
+    String selected_pass = "";
+    std::vector<String> found_ssids;
+};
+
+extern SystemState systemState;
 extern NetworkState networkState;
-extern Spotify::AuthResponse spotifyAuth;
+
 #endif //GLOBAL_STATE_H
