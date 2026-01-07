@@ -64,7 +64,6 @@ void TaskGraphics(void *pvParameters) {
 
     handleHardResetCheck();
 
-
     for (;;) {
 
         UIManager::getInstance().update();

@@ -31,6 +31,7 @@ enum WifiStatus {
     WIFI_CONNECTED,
     WIFI_ERROR
 };
+
 struct NetworkState {
     WifiStatus status = WIFI_IDLE;
     bool wifi_connected = false;

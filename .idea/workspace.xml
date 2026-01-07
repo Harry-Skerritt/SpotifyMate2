@@ -24,8 +24,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Tried abstracting">
-      <change beforePath="$PROJECT_DIR$/src/spotify/spotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/spotifyManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/spotify/spotifyManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/spotifyManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/spotifyManager.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/spotifyManager.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,17 +64,17 @@
     &quot;state&quot;: &quot;OPEN&quot;
   }
 }</component>
-  <component name="GitHubPullRequestState"><![CDATA[{
-  "prStates": [
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: [
     {
-      "id": {
-        "id": "PR_kwDOQ0LHSM670PKe",
-        "number": 2
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOQ0LHSM670PKe&quot;,
+        &quot;number&quot;: 2
       },
-      "lastSeen": 1767746807431
+      &quot;lastSeen&quot;: 1767746807431
     }
   ]
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Harry-Skerritt/SpotifyMate2.git&quot;,
@@ -138,7 +142,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "#2 on Fix-Core-0",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "/Volumes/Data/Code/C++/2026/SpotifyMate2/src",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
