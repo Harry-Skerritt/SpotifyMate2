@@ -8,7 +8,7 @@
 #define LV_COLOR_DEPTH 16
 #define LV_MEM_CUSTOM 1   /* Use malloc() which uses our 8MB PSRAM */
 #define LV_USE_FS_MEMFS 1
-#define LV_MEM_SIZE (256 * 1024u)
+#define LV_MEM_SIZE (512 * 1024u)
 #define LV_TICK_CUSTOM 1  /* Simplifies timing for Arduino */
 #define LV_COLOR_16_SWAP 0
 

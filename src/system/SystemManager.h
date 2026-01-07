@@ -16,6 +16,7 @@ public:
     }
 
     void init();
+    void update();
 
 
     // For Config.json
@@ -36,6 +37,8 @@ public:
 private:
 
     SystemManager() {}
+
+    bool connectionRequested = false;
 
 
     SystemManager(const SystemManager&) = delete;

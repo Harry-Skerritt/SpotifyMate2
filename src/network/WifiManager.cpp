@@ -29,12 +29,15 @@ void WifiManager::requestConnect(uint32_t timeoutMs) {
     pass_to_connect = networkState.selected_pass;
     connect_timeout = timeoutMs;
 
+    Serial.println("WifiManager::requestConnect");
+
     if (systemTaskHandle != NULL) {
         xTaskNotify(systemTaskHandle, CMD_WIFI_CONN, eSetBits);
     }
 }
 
 void WifiManager::processConnect() {
+    Serial.println("WifiManager::processConnect");
     networkState.status = WIFI_CONNECTING;
     Serial.printf("Connecting to %s...\n", ssid_to_connect.c_str());
 

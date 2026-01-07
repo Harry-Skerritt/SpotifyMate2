@@ -9,7 +9,7 @@
 #include "spotify/SpotifyManager.h"
 #include "system/SystemManager.h"
 
-static uint8_t tjpg_workspace[3100];
+static uint8_t tjpg_workspace[4096];
 
 lv_img_dsc_t UIManager::album_dsc;
 uint16_t* UIManager::album_buffer = nullptr;
@@ -36,13 +36,15 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
         lv_obj_t* img = UIManager::getInstance().ui_album_art;
         if (!img) return;
 
+        short t_size = 365;
+
 
         // Zoom
-        if (!zoom_buffer) zoom_buffer = (lv_color_t*) ps_malloc(365 * 365 * sizeof(lv_color_t));
+        if (!zoom_buffer) zoom_buffer = (lv_color_t*) ps_malloc(t_size * t_size * sizeof(lv_color_t));
 
         // Create A TEMP Canvas
         lv_obj_t* canvas = lv_canvas_create(lv_scr_act());
-        lv_canvas_set_buffer(canvas, zoom_buffer, 365, 356, LV_IMG_CF_TRUE_COLOR);
+        lv_canvas_set_buffer(canvas, zoom_buffer, t_size, t_size, LV_IMG_CF_TRUE_COLOR);
         lv_obj_add_flag(canvas, LV_OBJ_FLAG_HIDDEN);
 
         // Draw & scaling
@@ -53,11 +55,12 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
         lv_canvas_draw_img(canvas, 0, 0, &UIManager::album_dsc, &draw_dsc);
 
         static lv_img_dsc_t final_dsc;
+        memset(&final_dsc, 0, sizeof(lv_img_dsc_t));
         final_dsc.header.always_zero = 0;
         final_dsc.header.cf = LV_IMG_CF_TRUE_COLOR;
-        final_dsc.header.w = 365;
-        final_dsc.header.h = 356;
-        final_dsc.data_size = 365 * 365 * sizeof(lv_color_t);
+        final_dsc.header.w = t_size;
+        final_dsc.header.h = t_size;
+        final_dsc.data_size = t_size * t_size * sizeof(lv_color_t);
         final_dsc.data = (const uint8_t*) zoom_buffer;
 
         // Set IMG to canvas
@@ -77,8 +80,9 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
 
 void UIManager::init() {
     initStyles();
-    lv_img_cache_set_size(4);
     lv_split_jpeg_init();
+    lv_img_cache_set_size(4);
+
 }
 
 void UIManager::update() {
@@ -538,7 +542,6 @@ void UIManager::showMainPlayer() {
 
     // Load Image
     String testURL = "https://i.scdn.co/image/ab67616d00001e02eeacad9436d5ba5052d46c43"; //300
-    //String testURL = "https://www.elbecgardenbuildings.co.uk/images/products/large/6908_483.jpg";
     SpotifyManager::getInstance().loadAlbumArt(testURL, 365);
 }
 

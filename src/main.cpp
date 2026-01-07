@@ -109,6 +109,7 @@ void TaskSystem(void *pvParameters) {
 
         // Non-Command Logic (e.g. Checking Wi-Fi status)
         WifiManager::getInstance().update();
+        SystemManager::getInstance().update();
 
 
         // Only update if on WiFi

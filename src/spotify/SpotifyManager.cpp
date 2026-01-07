@@ -159,8 +159,7 @@ void SpotifyManager::loadAlbumArt(String &url, uint32_t target_size) {
     WiFiClientSecure client;
     client.setInsecure();
     HTTPClient http;
-
-    http.setUserAgent("ESP32-Spotify-Mate"); // Some servers block empty UAs
+    http.setUserAgent("ESP32-Spotify-Mate");
 
     if (http.begin(client, url)) {
         int httpCode = http.GET();
@@ -171,18 +170,30 @@ void SpotifyManager::loadAlbumArt(String &url, uint32_t target_size) {
             uint8_t* temp_jpg = (uint8_t*)ps_malloc(len);
             if (!temp_jpg) return;
 
-            // Use readBytesFully to ensure we get the whole file
-            int downloaded = http.getStream().readBytes(temp_jpg, len);
+            WiFiClient* stream = http.getStreamPtr();
+            int downloaded = 0;
+            unsigned long timeout = millis();
+
+            // Loop until we have all the bytes or hit a timeout (5 seconds)
+            while (http.connected() && downloaded < len && (millis() - timeout < 5000)) {
+                size_t size = stream->available();
+                if (size) {
+                    int c = stream->readBytes(&temp_jpg[downloaded], size);
+                    downloaded += c;
+                    timeout = millis(); // Reset timeout on successful read
+                }
+                delay(1); // Let the network stack breathe
+            }
 
             Serial.printf("Spotify: Downloaded %d of %d bytes\n", downloaded, len);
 
-            if (downloaded > 0) {
+            if (downloaded == len) {
+                // Only pass to UI if we have 100% of the file
                 UIManager::getInstance().updateAlbumArt(temp_jpg, len);
+            } else {
+                Serial.println("Spotify: Download incomplete, discarding buffer");
+                free(temp_jpg);
             }
-
-            //free(temp_jpg);
-        } else {
-            Serial.printf("Spotify: HTTP Error %d\n", httpCode);
         }
         http.end();
     }

@@ -55,7 +55,8 @@ void SystemManager::init() {
         {
             networkState.status = WIFI_CONNECTING; // Preempt the connection and hopefully avoid errors
 
-            WifiManager::getInstance().requestConnect();
+            //WifiManager::getInstance().requestConnect();
+            connectionRequested = true;
             String msg = "Connecting to " + networkState.selected_ssid;
             UIManager::getInstance().showSpinner(msg.c_str());
         }
@@ -66,6 +67,13 @@ void SystemManager::init() {
     } else {
         // Device has not been set up - initiate onboarding
         networkState.status = WIFI_IDLE;
+    }
+}
+
+void SystemManager::update() {
+    if (connectionRequested) {
+        WifiManager::getInstance().requestConnect();
+        connectionRequested = false;
     }
 }
 
