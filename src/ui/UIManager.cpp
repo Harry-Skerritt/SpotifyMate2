@@ -8,7 +8,6 @@
 #include "network/WifiManager.h"
 #include "spotify/SpotifyManager.h"
 #include "system/SystemManager.h"
-#include <TJpg_Decoder.h>
 
 static uint8_t tjpg_workspace[3100];
 
@@ -47,83 +46,49 @@ bool UIManager::tjpg_callback(int16_t x, int16_t y, uint16_t w, uint16_t h, uint
 
 
 void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
-    Serial.println("UI: Starting Album Art Decode...");
+    if (!jpgData) return;
 
-    if (jpgData == nullptr || len < 4) return;
+    static uint8_t* persistent_buffer = nullptr;
+    if (persistent_buffer != nullptr) free(persistent_buffer);
+    persistent_buffer = jpgData;
 
-    uint16_t w = 0, h = 0;
+    album_dsc.header.always_zero = 0;
+    album_dsc.header.cf = LV_IMG_CF_RAW;
+    album_dsc.data_size = len;
+    album_dsc.data = persistent_buffer;
 
-    int result = TJpgDec.getJpgSize(&w, &h, jpgData, len);
-
-    if (result != uint8_t(0)) { // TJpgDec returns 0 for success
-        Serial.printf("UI: TJpgDec rejected header. Result code: %d\n", result);
-        return;
-    }
-    Serial.printf("UI: Image Size Found: %dx%d\n", w, h);
-
-    // Spotify 640px -> 320px
-    uint8_t scale = (w >= 600) ? 2 : 1;
-    current_w = w / scale;
-    current_h = h / scale;
-
-    // Allocate PSRAM
-    if (album_buffer) free(album_buffer);
-    album_buffer = (uint16_t*)ps_malloc(current_w * current_h * 2);
-    if (!album_buffer) {
-        Serial.println("UI: PSRAM ALLOCATION FAILED!");
-        return;
-    }
-
-    TJpgDec.setCallback(tjpg_callback);
-    TJpgDec.setJpgScale(scale);
-    //TJpgDec.setSwapBytes(true);
-
-    int drawResult = TJpgDec.drawJpg(0, 0, jpgData, len);
-
-    Serial.printf("UI: Original JPG: %dx%d | Scaling by: %d | Final Buffer: %dx%d\n",
-              w, h, scale, current_w, current_h);
-
-    for(int i=0; i<50; i++) {
-        for(int j=0; j<50; j++) {
-            // Pure Spotify Green in RGB565: R=3, G=57, B=13 -> 0x1ED760
-            // Packed as 16-bit: 0x1EB3
-            //album_buffer[j * current_w + i] = rgbToBGRHex(0x1ED760).full;
-        }
-    }
-
-    if (drawResult == 0) {
-        Serial.println("UI: Decode Draw Successful!");
-
-
-        // Prepare Descriptor
-        album_dsc.header.always_zero = 0;
-        album_dsc.header.w = current_w;
-        album_dsc.header.h = current_h;
-        album_dsc.header.cf = LV_IMG_CF_TRUE_COLOR;
-        album_dsc.data_size = current_w * current_h * 2;
-        album_dsc.data = (uint8_t*)album_buffer;
-
-        // Force UI Refresh
-        lv_async_call([](void* p) {
-            lv_obj_t* img = UIManager::getInstance().ui_album_art;
-            if (img) {
-                lv_img_cache_invalidate_src(&UIManager::album_dsc);
-                lv_img_set_src(img, &UIManager::album_dsc);
-                // Clear the blue box background so we can see the image
-                lv_obj_set_style_bg_opa(img, 0, 0);
-                lv_obj_invalidate(img);
-                Serial.println("UI: Object Refreshed on Screen");
-            }
-        }, NULL);
+    // --- DEBUG START ---
+    lv_img_decoder_dsc_t decode_test_dsc;
+    lv_res_t res = lv_img_decoder_get_info(&album_dsc, &decode_test_dsc.header);
+    if(res != LV_RES_OK) {
+        Serial.println("UI: NATIVE DECODER REJECTED THIS DATA");
     } else {
-        Serial.printf("UI: Draw Failed with code: %d\n", drawResult);
+        Serial.printf("UI: Decoder found image: %dx%d\n",
+                      decode_test_dsc.header.w, decode_test_dsc.header.h);
     }
+    // --- DEBUG END ---
+
+    lv_async_call([](void* p) {
+        lv_obj_t* img = UIManager::getInstance().ui_album_art;
+        if (img) {
+            lv_img_set_src(img, NULL);
+            lv_img_cache_invalidate_src(&UIManager::album_dsc);
+            lv_img_set_src(img, &UIManager::album_dsc);
+
+            //lv_img_set_zoom(img, 146);
+            lv_obj_set_style_bg_opa(img, 0, 0); // Hide the blue/red background
+            lv_obj_invalidate(img);
+        }
+    }, NULL);
+
 }
 
 
 void UIManager::init() {
     initStyles();
-    TJpgDec.setCallback(tjpg_callback);
+    lv_img_cache_set_size(4);
+    lv_split_jpeg_init();
+    //TJpgDec.setCallback(tjpg_callback);
 }
 
 void UIManager::update() {
@@ -583,7 +548,7 @@ void UIManager::showMainPlayer() {
 
 
     // Load Image
-    String testURL = "https://i.scdn.co/image/ab67616d0000b273eeacad9436d5ba5052d46c43"; //640
+    String testURL = "https://i.scdn.co/image/ab67616d00001e02eeacad9436d5ba5052d46c43"; //300
     //String testURL = "https://www.elbecgardenbuildings.co.uk/images/products/large/6908_483.jpg";
     SpotifyManager::getInstance().loadAlbumArt(testURL);
 }

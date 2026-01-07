@@ -29,7 +29,7 @@ static TAMC_GT911 ts = TAMC_GT911(TOUCH_SDA, TOUCH_SCL, 43, -1, SCREEN_WIDTH, SC
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p) {
     uint32_t w = (area->x2 - area->x1 + 1);
     uint32_t h = (area->y2 - area->y1 + 1);
-    gfx->draw16bitBeRGBBitmap(area->x1, area->y1, (uint16_t *)&color_p->full, w, h);
+    gfx->draw16bitRGBBitmap(area->x1, area->y1, (uint16_t *)&color_p->full, w, h);
     lv_disp_flush_ready(disp);
 }
 

@@ -6,7 +6,6 @@
 
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
-#include <TJpg_Decoder.h>
 
 #include "global_state.h"
 #include "system/SystemManager.h"
@@ -181,7 +180,7 @@ void SpotifyManager::loadAlbumArt(String &url) {
                 UIManager::getInstance().updateAlbumArt(temp_jpg, len);
             }
 
-            free(temp_jpg);
+            //free(temp_jpg);
         } else {
             Serial.printf("Spotify: HTTP Error %d\n", httpCode);
         }
