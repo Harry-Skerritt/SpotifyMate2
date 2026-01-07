@@ -21,6 +21,20 @@ void SpotifyManager::init() {
 
     sp_auth = new Spotify::Auth(credentials);
 
+    //Todo: Change redirectURI - just for visual testing
+    spotifyState.auth_url = sp_auth->createAuthoriseURL(
+        "http://127.0.0.1:8888/callback",
+        {
+            Spotify::Scope::UserReadEmail,
+            Spotify::Scope::UserReadPrivate,
+            Spotify::Scope::UserReadPlaybackState,
+            Spotify::Scope::UserReadCurrentlyPlaying,
+            Spotify::Scope::UserModifyPlaybackState,
+            Spotify::Scope::UserReadRecentlyPlayed,
+            Spotify::Scope::UserLibraryModify
+        }
+    ).c_str();
+
 }
 
 void SpotifyManager::update() {

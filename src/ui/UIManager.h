@@ -44,6 +44,9 @@ public:
     void showPasswordEntry(const String& ssid);
     void showWifiError();
 
+    // Spotify Screens
+    void showSpotifyLinking(const char* auth_url);
+
 
 private:
     UIManager() {}

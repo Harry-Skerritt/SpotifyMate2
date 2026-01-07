@@ -20,7 +20,7 @@ extern TaskHandle_t systemTaskHandle;
 enum SpotifyStatus {
     SPOTIFY_IDLE,          // Not doing anything yet
     SPOTIFY_INITIALIZING,  // Checking if the saved token works
-    SPOTIFY_NEED_LINK,     // WiFi is up, but no token found
+    SPOTIFY_NEED_LINK,     // Wi-Fi is up, but no token found
     SPOTIFY_LINKING,       // QR code is on screen, waiting for user
     SPOTIFY_AUTHENTICATING,// User scanned QR, ESP32 is exchanging code for token
     SPOTIFY_READY,         // Token validated, go to player

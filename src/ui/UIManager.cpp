@@ -72,8 +72,8 @@ void UIManager::update() {
     if (wifi_ready_for_spotify && (spotifyState.status != last_spotify_status)) {
         switch (spotifyState.status) {
             case SPOTIFY_NEED_LINK:
-                showContextScreen("Spotify Link Screen");
-                //showSpotifyLinking(spotifyState.auth_url.c_str());
+                showSpotifyLinking(spotifyState.auth_url.c_str());
+                // Needs to start a web server and listen
                 break;
 
             case SPOTIFY_AUTHENTICATING:
@@ -549,4 +549,31 @@ void UIManager::populateWifiList(lv_obj_t* list_cont, const std::vector<String>&
     lv_obj_set_style_border_width(spacer, 0, 0);
 
     lv_obj_scroll_to_y(list_cont, 0, LV_ANIM_OFF);
+}
+
+
+// --- Spotify ---
+void UIManager::showSpotifyLinking(const char *auth_url) {
+    clearScreen();
+
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    // Header Title
+    lv_obj_t* title = lv_label_create(current_screen);
+    lv_label_set_text(title, "Link with Spotify");
+    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(title, &font_gotham_medium_60, 0);
+    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 30);
+
+    // Message
+    lv_obj_t * body = lv_label_create(current_screen);
+    lv_label_set_text(body, "Scan the QR code and follow the \ninstructions to link your Spotify!");
+    lv_obj_set_style_text_color(body, SPOTIFY_GREY, 0);
+    lv_obj_set_style_text_font(body, &font_gotham_medium_40, 0);
+    lv_obj_align(body, LV_ALIGN_TOP_LEFT, 30, 115);
+
+    // QR Code
+    lv_obj_t* auth_qr = createCustomQRCode(current_screen, auth_url, 215);
+    lv_obj_align(auth_qr, LV_ALIGN_BOTTOM_MID, 0, -27);
+
 }

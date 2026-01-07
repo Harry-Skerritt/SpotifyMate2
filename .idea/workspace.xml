@@ -23,17 +23,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Rebased the fix onto master and confirmed">
-      <change afterPath="$PROJECT_DIR$/data/tokens.json" afterDir="false" />
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Started adding the spotify manager, and so far tested from setup to link screen">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/WifiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/WifiManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system/SystemManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/SystemManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system/SystemManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/SystemManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -213,7 +209,7 @@
       <workItem from="1767716699504" duration="53000" />
       <workItem from="1767716793957" duration="803000" />
       <workItem from="1767733927320" duration="1486000" />
-      <workItem from="1767747435141" duration="2320000" />
+      <workItem from="1767747435141" duration="2841000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -407,7 +403,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767747296799</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Started adding the spotify manager, and so far tested from setup to link screen">
+      <option name="closed" value="true" />
+      <created>1767749864024</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1767749864024</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -425,7 +429,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Got LVGL working with the display" />
     <MESSAGE value="Tested WiFi" />
     <MESSAGE value="Added a filesystem and a config file to load wifi creds" />
     <MESSAGE value="Set up the project structure, and abstracted. Also added FreeRTOS" />
@@ -450,6 +453,7 @@
     <MESSAGE value="Tried abstracting" />
     <MESSAGE value="Updated Spotify Manager?" />
     <MESSAGE value="Rebased the fix onto master and confirmed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Rebased the fix onto master and confirmed" />
+    <MESSAGE value="Started adding the spotify manager, and so far tested from setup to link screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="Started adding the spotify manager, and so far tested from setup to link screen" />
   </component>
 </project>
