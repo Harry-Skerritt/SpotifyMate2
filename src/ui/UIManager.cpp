@@ -16,33 +16,6 @@ uint16_t* UIManager::album_buffer = nullptr;
 uint16_t UIManager::current_w = 0;
 uint16_t UIManager::current_h = 0;
 
-bool UIManager::tjpg_callback(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* bitmap) {
-    if (!album_buffer) return false;
-
-    for (int j = 0; j < h; j++) {
-        int canvas_y = y + j;
-        if (canvas_y >= current_h) break;
-
-        uint32_t row_index = (uint32_t)canvas_y * current_w;
-
-        for (int i = 0; i < w; i++) {
-            int canvas_x = x + i;
-            if (canvas_x >= current_w) break;
-
-            uint16_t pixel = bitmap[i + (j * w)];
-
-            uint16_t r = (pixel >> 11) & 0x1F;
-            uint16_t g = (pixel >> 5) & 0x3F;
-            uint16_t b = pixel & 0x1F;
-
-            uint16_t corrected = (b << 11) | (g << 5) | r;
-
-            album_buffer[row_index + canvas_x] = corrected; //bitmap[i + (j*w)];
-        }
-    }
-    return true;
-}
-
 
 
 void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
@@ -57,16 +30,6 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
     album_dsc.data_size = len;
     album_dsc.data = persistent_buffer;
 
-    // --- DEBUG START ---
-    lv_img_decoder_dsc_t decode_test_dsc;
-    lv_res_t res = lv_img_decoder_get_info(&album_dsc, &decode_test_dsc.header);
-    if(res != LV_RES_OK) {
-        Serial.println("UI: NATIVE DECODER REJECTED THIS DATA");
-    } else {
-        Serial.printf("UI: Decoder found image: %dx%d\n",
-                      decode_test_dsc.header.w, decode_test_dsc.header.h);
-    }
-    // --- DEBUG END ---
 
     lv_async_call([](void* p) {
         lv_obj_t* img = UIManager::getInstance().ui_album_art;
@@ -75,7 +38,6 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
             lv_img_cache_invalidate_src(&UIManager::album_dsc);
             lv_img_set_src(img, &UIManager::album_dsc);
 
-            //lv_img_set_zoom(img, 146);
             lv_obj_set_style_bg_opa(img, 0, 0); // Hide the blue/red background
             lv_obj_invalidate(img);
         }
@@ -88,7 +50,6 @@ void UIManager::init() {
     initStyles();
     lv_img_cache_set_size(4);
     lv_split_jpeg_init();
-    //TJpgDec.setCallback(tjpg_callback);
 }
 
 void UIManager::update() {
@@ -507,18 +468,17 @@ void UIManager::showSpotifyLinking(const char *auth_url) {
 void UIManager::showMainPlayer() {
     clearScreen();
 
-    lv_obj_set_style_bg_color(current_screen, rgbToBGRHex(0x942219), 0);
+    lv_obj_set_style_bg_color(current_screen, lv_color_hex(0x942219), 0);
 
     // Album Art
     ui_album_art = lv_img_create(current_screen);
-    lv_obj_set_style_bg_color(ui_album_art, lv_color_hex(0x0000FF), 0); // Blue box
-    lv_obj_set_style_bg_opa(ui_album_art, LV_OPA_COVER, 0);
 
     lv_img_set_src(ui_album_art, &album_dsc);
     lv_obj_set_size(ui_album_art, 365, 365);
     lv_obj_align(ui_album_art, LV_ALIGN_LEFT_MID, 40, 0);
     lv_obj_set_style_radius(ui_album_art, 15, 0);
     lv_obj_set_style_clip_corner(ui_album_art, true, 0);
+    //lv_img_set_zoom(ui_album_art, 128);
     lv_obj_move_foreground(ui_album_art);
 
     // Song Title
@@ -550,7 +510,7 @@ void UIManager::showMainPlayer() {
     // Load Image
     String testURL = "https://i.scdn.co/image/ab67616d00001e02eeacad9436d5ba5052d46c43"; //300
     //String testURL = "https://www.elbecgardenbuildings.co.uk/images/products/large/6908_483.jpg";
-    SpotifyManager::getInstance().loadAlbumArt(testURL);
+    SpotifyManager::getInstance().loadAlbumArt(testURL, 365);
 }
 
 
@@ -749,16 +709,5 @@ void UIManager::populateWifiList(lv_obj_t* list_cont, const std::vector<String>&
     lv_obj_scroll_to_y(list_cont, 0, LV_ANIM_OFF);
 }
 
-lv_color_t UIManager::rgbToBGRHex(uint32_t c) {
-
-    uint32_t r = (c & 0xFF0000) >> 16; // Red
-    uint32_t g = (c & 0x00FF00);       // Green
-    uint32_t b = (c & 0x0000FF);       // Blue
-
-    uint32_t bgr = (b << 16) | g | r;
-
-    return lv_color_hex(bgr);
-
-}
 
 

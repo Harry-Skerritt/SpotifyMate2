@@ -155,7 +155,7 @@ void SpotifyManager::handleAuthCodeExchange() {
 
 }
 
-void SpotifyManager::loadAlbumArt(String &url) {
+void SpotifyManager::loadAlbumArt(String &url, uint32_t target_size) {
     WiFiClientSecure client;
     client.setInsecure();
     HTTPClient http;

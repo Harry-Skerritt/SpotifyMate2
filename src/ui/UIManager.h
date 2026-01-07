@@ -10,11 +10,11 @@
 
 
 // --- Global Colours ---
-#define SPOTIFY_GREEN rgbToBGRHex(0x1ED760)
-#define SPOTIFY_GREEN_DARKER rgbToBGRHex(0x1DB954)
-#define BACKGROUND_GREY rgbToBGRHex(0x1E1E1E)
-#define SPOTIFY_WHITE rgbToBGRHex(0xFFFFFF)
-#define SPOTIFY_GREY rgbToBGRHex(0xCCCCCC)
+#define SPOTIFY_GREEN lv_color_hex(0x1ED760)
+#define SPOTIFY_GREEN_DARKER lv_color_hex(0x1DB954)
+#define BACKGROUND_GREY lv_color_hex(0x1E1E1E)
+#define SPOTIFY_WHITE lv_color_hex(0xFFFFFF)
+#define SPOTIFY_GREY lv_color_hex(0xCCCCCC)
 
 // --- Global fonts ---
 LV_FONT_DECLARE(font_gotham_medium_20);
@@ -49,6 +49,7 @@ public:
     void showWifiError();
 
     // Spotify Screens
+    // Spotify Screens
     void showSpotifyLinkError();
     void showSpotifyLinking(const char* auth_url);
 
@@ -79,16 +80,17 @@ private:
 
     lv_style_t style_network_card;
 
-    lv_obj_t* ui_album_art = nullptr;
-    static bool tjpg_callback(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* bitmap);
 
+
+
+    lv_obj_t* ui_album_art = nullptr;
+    uint16_t imageWidth;
 
     // Internal Helpers
     lv_obj_t* createSpotifyBtn(lv_obj_t* parent, lv_event_cb_t cb, const char* text, lv_align_t align, int x, int y, bool is_green);
     lv_obj_t* createLogo(lv_obj_t* parent, const lv_font_t* font, lv_align_t align, int x, int y);
     lv_obj_t* createNetworkItem(lv_obj_t* parent, const char* ssid);
     lv_obj_t* createCustomQRCode(lv_obj_t* parent, const char* url, int size);
-    lv_color_t rgbToBGRHex(uint32_t c);
 
     void populateWifiList(lv_obj_t* list_cont, const std::vector<String>& networks);
 

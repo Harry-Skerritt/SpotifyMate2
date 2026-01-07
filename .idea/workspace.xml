@@ -23,13 +23,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Got an iamge drawing to the screen, with incorrect colours">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Image drawing to the screen okay Red and Blue swapped">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hal/display.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/hal/display.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lv_conf.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/lv_conf.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -213,7 +213,7 @@
       <workItem from="1767716793957" duration="803000" />
       <workItem from="1767733927320" duration="1486000" />
       <workItem from="1767747435141" duration="15383000" />
-      <workItem from="1767802308495" duration="10575000" />
+      <workItem from="1767802308495" duration="15659000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -455,7 +455,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767810273744</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Image drawing to the screen okay Red and Blue swapped">
+      <option name="closed" value="true" />
+      <created>1767813131528</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1767813131528</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -473,7 +481,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Rolled back to when it worked - no TinyTTF" />
     <MESSAGE value="Adding missed files" />
     <MESSAGE value="Fully reverted back to a 'stable' point" />
     <MESSAGE value="Added the network failure screen - not added button functionality" />
@@ -498,6 +505,7 @@
     <MESSAGE value="Added spotify authentication through a proxy" />
     <MESSAGE value="Started adding the PlayScreen (hardcoded for testing)" />
     <MESSAGE value="Got an iamge drawing to the screen, with incorrect colours" />
-    <option name="LAST_COMMIT_MESSAGE" value="Got an iamge drawing to the screen, with incorrect colours" />
+    <MESSAGE value="Image drawing to the screen okay Red and Blue swapped" />
+    <option name="LAST_COMMIT_MESSAGE" value="Image drawing to the screen okay Red and Blue swapped" />
   </component>
 </project>

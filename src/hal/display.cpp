@@ -8,7 +8,10 @@
 
 // --- Hardware Objects ---
 static Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
-    5, 3, 46, 7, 14, 38, 18, 17, 10, 39, 0, 45, 48, 47, 21, 1, 2, 42, 41, 40,
+    5, 3, 46,7,
+    1, 2, 42, 41, 40,
+    39, 0, 45, 48, 47, 21,
+    14, 38, 18, 17, 10,
     1,
     40,
     48,
@@ -18,7 +21,8 @@ static Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     1,
     31,
     1,
-    14000000L);
+    14000000L
+    );
 
 static Arduino_GFX *gfx = new Arduino_RGB_Display(SCREEN_WIDTH, SCREEN_HEIGHT, bus, 0, true);
 static TAMC_GT911 ts = TAMC_GT911(TOUCH_SDA, TOUCH_SCL, 43, -1, SCREEN_WIDTH, SCREEN_HEIGHT);

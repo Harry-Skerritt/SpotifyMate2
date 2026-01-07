@@ -24,7 +24,7 @@ public:
 
     void buildAuthURL();
 
-    void loadAlbumArt(String& url);
+    void loadAlbumArt(String& url, uint32_t target_size);
 
 
 private:
