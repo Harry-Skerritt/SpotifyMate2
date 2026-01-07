@@ -376,6 +376,91 @@ void UIManager::showPasswordEntry(const String &ssid) {
 
 
 
+// --- Spotify ---
+void UIManager::showSpotifyLinkError() {
+    clearScreen();
+
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    // Header Title
+    lv_obj_t* title = lv_label_create(current_screen);
+    lv_label_set_text(title, "Can't connect to Spotify");
+    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(title, &font_gotham_medium_60, 0);
+    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 30);
+
+    // Message
+    lv_obj_t * body = lv_label_create(current_screen);
+    lv_label_set_text(body, "Something has gone wrong! \nPress the button below and follow the instructions to re-link your Spotify account");
+    lv_obj_set_style_text_color(body, SPOTIFY_GREY, 0);
+    lv_obj_set_style_text_font(body, &font_gotham_medium_40, 0);
+    lv_obj_align(body, LV_ALIGN_TOP_LEFT, 30, 115);
+
+    spotify_link_error_btn_ptr = createSpotifyBtn(current_screen, errorEventHandler, "Re-link", LV_ALIGN_BOTTOM_MID, 0, -32, true);
+}
+
+
+void UIManager::showSpotifyLinking(const char *auth_url) {
+    clearScreen();
+
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    // Header Title
+    lv_obj_t* title = lv_label_create(current_screen);
+    lv_label_set_text(title, "Link with Spotify");
+    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(title, &font_gotham_medium_60, 0);
+    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 30);
+
+    // Message
+    lv_obj_t * body = lv_label_create(current_screen);
+    lv_label_set_text(body, "Scan the QR code and follow the \ninstructions to link your Spotify!");
+    lv_obj_set_style_text_color(body, SPOTIFY_GREY, 0);
+    lv_obj_set_style_text_font(body, &font_gotham_medium_40, 0);
+    lv_obj_align(body, LV_ALIGN_TOP_LEFT, 30, 115);
+
+    // QR Code
+    lv_obj_t* auth_qr = createCustomQRCode(current_screen, auth_url, 215);
+    lv_obj_align(auth_qr, LV_ALIGN_BOTTOM_MID, 0, -27);
+
+}
+
+
+// --- Main Functionality ---
+void UIManager::showMainPlayer() {
+    clearScreen();
+
+    lv_obj_set_style_bg_color(current_screen, rgbToBGRHex(0x942219), 0);
+
+    // Song Title
+    lv_obj_t* song_title = lv_label_create(current_screen);
+    lv_label_set_text(song_title, "Rock Believer");
+    lv_obj_set_style_text_color(song_title, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(song_title, &font_gotham_medium_50, 0);
+    lv_obj_align(song_title, LV_ALIGN_BOTTOM_MID, 8, -155);
+
+
+    // Song Artist
+    lv_obj_t* song_artist = lv_label_create(current_screen);
+    lv_label_set_text(song_artist, "Scorpions");
+    lv_obj_set_style_text_color(song_artist, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(song_artist, &font_gotham_medium_30, 0);
+    lv_obj_align(song_artist, LV_ALIGN_BOTTOM_MID, 8, -105);
+
+    // Device Icon
+
+
+    // Device Name
+    lv_obj_t* device_name = lv_label_create(current_screen);
+    lv_label_set_text(device_name, "Harry's Mac Mini");
+    lv_obj_set_style_text_color(device_name, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(device_name, &font_gotham_medium_20, 0);
+    lv_obj_align(device_name, LV_ALIGN_BOTTOM_MID, 50, -190);
+}
+
+
+
+
 // --- PRIVATE ---
 void UIManager::initStyles() {
     // Transition
@@ -568,52 +653,16 @@ void UIManager::populateWifiList(lv_obj_t* list_cont, const std::vector<String>&
     lv_obj_scroll_to_y(list_cont, 0, LV_ANIM_OFF);
 }
 
+lv_color_t UIManager::rgbToBGRHex(uint32_t c) {
 
-// --- Spotify ---
-void UIManager::showSpotifyLinkError() {
-    clearScreen();
+    uint32_t r = (c & 0xFF0000) >> 16; // Red
+    uint32_t g = (c & 0x00FF00);       // Green
+    uint32_t b = (c & 0x0000FF);       // Blue
 
-    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+    uint32_t bgr = (b << 16) | g | r;
 
-    // Header Title
-    lv_obj_t* title = lv_label_create(current_screen);
-    lv_label_set_text(title, "Can't connect to Spotify");
-    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
-    lv_obj_set_style_text_font(title, &font_gotham_medium_60, 0);
-    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 30);
-
-    // Message
-    lv_obj_t * body = lv_label_create(current_screen);
-    lv_label_set_text(body, "Something has gone wrong! \nPress the button below and follow the instructions to re-link your Spotify account");
-    lv_obj_set_style_text_color(body, SPOTIFY_GREY, 0);
-    lv_obj_set_style_text_font(body, &font_gotham_medium_40, 0);
-    lv_obj_align(body, LV_ALIGN_TOP_LEFT, 30, 115);
-
-    spotify_link_error_btn_ptr = createSpotifyBtn(current_screen, errorEventHandler, "Re-link", LV_ALIGN_BOTTOM_MID, 0, -32, true);
-}
-
-
-void UIManager::showSpotifyLinking(const char *auth_url) {
-    clearScreen();
-
-    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
-
-    // Header Title
-    lv_obj_t* title = lv_label_create(current_screen);
-    lv_label_set_text(title, "Link with Spotify");
-    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
-    lv_obj_set_style_text_font(title, &font_gotham_medium_60, 0);
-    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 30);
-
-    // Message
-    lv_obj_t * body = lv_label_create(current_screen);
-    lv_label_set_text(body, "Scan the QR code and follow the \ninstructions to link your Spotify!");
-    lv_obj_set_style_text_color(body, SPOTIFY_GREY, 0);
-    lv_obj_set_style_text_font(body, &font_gotham_medium_40, 0);
-    lv_obj_align(body, LV_ALIGN_TOP_LEFT, 30, 115);
-
-    // QR Code
-    lv_obj_t* auth_qr = createCustomQRCode(current_screen, auth_url, 215);
-    lv_obj_align(auth_qr, LV_ALIGN_BOTTOM_MID, 0, -27);
+    return lv_color_hex(bgr);
 
 }
+
+

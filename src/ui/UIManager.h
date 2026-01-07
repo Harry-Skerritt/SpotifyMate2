@@ -10,15 +10,17 @@
 
 
 // --- Global Colours ---
-#define SPOTIFY_GREEN lv_color_hex(0x1ED760)
-#define SPOTIFY_GREEN_DARKER lv_color_hex(0x1DB954)
-#define BACKGROUND_GREY lv_color_hex(0x1E1E1E)
-#define SPOTIFY_WHITE lv_color_hex(0xFFFFFF)
-#define SPOTIFY_GREY lv_color_hex(0xCCCCCC)
+#define SPOTIFY_GREEN rgbToBGRHex(0x1ED760)
+#define SPOTIFY_GREEN_DARKER rgbToBGRHex(0x1DB954)
+#define BACKGROUND_GREY rgbToBGRHex(0x1E1E1E)
+#define SPOTIFY_WHITE rgbToBGRHex(0xFFFFFF)
+#define SPOTIFY_GREY rgbToBGRHex(0xCCCCCC)
 
 // --- Global fonts ---
 LV_FONT_DECLARE(font_gotham_medium_20);
+LV_FONT_DECLARE(font_gotham_medium_30);
 LV_FONT_DECLARE(font_gotham_medium_40);
+LV_FONT_DECLARE(font_gotham_medium_50);
 LV_FONT_DECLARE(font_gotham_medium_60);
 LV_FONT_DECLARE(font_gotham_medium_80);
 
@@ -48,6 +50,9 @@ public:
     void showSpotifyLinkError();
     void showSpotifyLinking(const char* auth_url);
 
+    // Main Funciton
+    void showMainPlayer();
+
 
 private:
     UIManager() {}
@@ -71,6 +76,7 @@ private:
     lv_obj_t* createLogo(lv_obj_t* parent, const lv_font_t* font, lv_align_t align, int x, int y);
     lv_obj_t* createNetworkItem(lv_obj_t* parent, const char* ssid);
     lv_obj_t* createCustomQRCode(lv_obj_t* parent, const char* url, int size);
+    lv_color_t rgbToBGRHex(uint32_t c);
 
     void populateWifiList(lv_obj_t* list_cont, const std::vector<String>& networks);
 

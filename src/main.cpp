@@ -66,13 +66,14 @@ void handleHardResetCheck() {
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
 
-    UIManager::getInstance().showSplashScreen();
+    //UIManager::getInstance().showSplashScreen();
+    UIManager::getInstance().showMainPlayer();
 
     handleHardResetCheck();
 
     for (;;) {
 
-        UIManager::getInstance().update();
+        //UIManager::getInstance().update();
 
         lv_timer_handler();
         vTaskDelay(pdMS_TO_TICKS(25));
