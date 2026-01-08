@@ -244,13 +244,13 @@ void UIManager::update() {
     if (spotifyState.status == SPOTIFY_READY && wifi_ready_for_spotify && ui_song_title != nullptr) {
         static String last_ui_track_id = "INIT_VAL";
         static String last_ui_device_name = "INIT_VAL";
+        static String last_ui_url = "INIT_VAL";
+        static uint32_t last_ui_colour = 0;
 
+        // Check Track
         if (spotifyState.current_track_id != last_ui_track_id) {
             last_ui_track_id = spotifyState.current_track_id;
             Serial.println("UI: Track change detected, refreshing labels...");
-
-            // Update Screen Colour
-            lv_obj_set_style_bg_color(current_screen, lv_color_hex(spotifyState.album_average_colour), 0);
 
             // Update the Text
             lv_label_set_text(ui_song_title, spotifyState.current_track_title.c_str());
@@ -259,6 +259,21 @@ void UIManager::update() {
 
             // Reset the Marquee pause for the new title
             resetMarquee(ui_song_title);
+        }
+
+
+        if (spotifyState.album_average_colour != last_ui_colour) {
+            last_ui_colour = spotifyState.album_average_colour;
+            Serial.printf("UI: Applying new pallete colour: 0x%06X\n", last_ui_colour);
+
+            // Update Screen Colour
+            lv_obj_set_style_bg_color(current_screen, lv_color_hex(last_ui_colour), 0);
+        }
+
+        // Check Album URL
+        if (spotifyState.current_track_url != last_ui_url) {
+            last_ui_url = spotifyState.current_track_url;
+            Serial.println("UI: Album URL change detected, downloading art...");
 
             // Trigger the image download for the new song
             if (!spotifyState.current_track_url.isEmpty()) {
@@ -266,6 +281,8 @@ void UIManager::update() {
             }
         }
 
+
+        // Check device name change
         if (spotifyState.current_track_device_name != last_ui_device_name) {
             last_ui_device_name = spotifyState.current_track_device_name;
             Serial.println("UI: Device change detected, refreshing label...");
@@ -597,7 +614,7 @@ void UIManager::showSpotifyLinking(const char *auth_url) {
 void UIManager::showMainPlayer() {
     clearScreen();
 
-    lv_obj_set_style_bg_color(current_screen, lv_color_hex(0x191414), 0);
+    lv_obj_set_style_bg_color(current_screen, lv_color_hex(spotifyState.album_average_colour), 0);
     lv_obj_clear_flag(current_screen, LV_OBJ_FLAG_SCROLLABLE);
 
     // Main Container
@@ -623,9 +640,19 @@ void UIManager::showMainPlayer() {
     lv_obj_set_style_radius(ui_album_art, 15, 0);
     lv_obj_set_style_clip_corner(ui_album_art, true, 0);
     lv_obj_move_foreground(ui_album_art);
-    lv_obj_set_style_shadow_width(ui_album_art, 20, 0);
-    lv_obj_set_style_shadow_color(ui_album_art, lv_color_hex(0x000000), 0);
-    lv_obj_set_style_shadow_opa(ui_album_art, LV_OPA_50, 0);
+
+
+    // Album Shadow
+    static lv_style_t style_shadow;
+    lv_style_init(&style_shadow);
+    lv_style_set_shadow_color(&style_shadow, lv_color_hex(0x000000));
+    lv_style_set_shadow_opa(&style_shadow, 64);
+    lv_style_set_shadow_ofs_x(&style_shadow, 0);
+    lv_style_set_shadow_ofs_y(&style_shadow, 0);
+    lv_style_set_shadow_spread(&style_shadow, 7);
+    lv_style_set_shadow_width(&style_shadow, 21);
+
+    lv_obj_add_style(ui_album_art, &style_shadow, 0);
 
 
     // Text Container
@@ -667,9 +694,10 @@ void UIManager::showMainPlayer() {
 
     // Device Name
     ui_device_name = lv_label_create(device_con);
-    lv_label_set_text(ui_device_name,
-        !spotifyState.current_track_device_name.isEmpty() ?
-        spotifyState.current_track_device_name.c_str() : "Not Playing");
+    const char* device = !spotifyState.current_track_device_name.length() > 0
+                        ? spotifyState.current_track_device_name.c_str()
+                        : "Not Playing";
+    lv_label_set_text(ui_device_name, device);
     lv_obj_set_style_text_color(ui_device_name, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(ui_device_name, &font_gotham_medium_20, 0);
     lv_obj_set_width(ui_device_name, 180);
@@ -679,9 +707,10 @@ void UIManager::showMainPlayer() {
 
     // --- Song Title ---
     ui_song_title = lv_label_create(info_con);
-    lv_label_set_text(ui_song_title,
-        !spotifyState.current_track_title.isEmpty() ?
-        spotifyState.current_track_title.c_str() : "Nothing Playing");
+    const char* title = !spotifyState.current_track_title.length() > 0
+                        ? spotifyState.current_track_title.c_str()
+                        : "Nothing Playing";
+    lv_label_set_text(ui_song_title, title);
     lv_obj_set_style_text_color(ui_song_title, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(ui_song_title, &font_metropolis_black_45, 0);
     lv_obj_set_width(ui_song_title, 370);
@@ -692,9 +721,10 @@ void UIManager::showMainPlayer() {
 
     // Song Artist
     ui_song_artist = lv_label_create(info_con);
-    lv_label_set_text(ui_song_artist,
-        !spotifyState.current_track_artist.isEmpty() ?
-        spotifyState.current_track_artist.c_str() : "-");
+    const char* artist = !spotifyState.current_track_artist.length() > 0
+                         ? spotifyState.current_track_artist.c_str()
+                         : "-";
+    lv_label_set_text(ui_song_artist, artist);
     lv_obj_set_style_text_color(ui_song_artist, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(ui_song_artist, &font_gotham_medium_30, 0);
     lv_obj_set_width(ui_song_artist, 370);

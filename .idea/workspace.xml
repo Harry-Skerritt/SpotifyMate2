@@ -23,12 +23,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Positioned the screen layout">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added functionality to get tracks from spotify">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,7 +212,7 @@
       <workItem from="1767733927320" duration="1486000" />
       <workItem from="1767747435141" duration="15383000" />
       <workItem from="1767802308495" duration="22153000" />
-      <workItem from="1767831591892" duration="15216000" />
+      <workItem from="1767831591892" duration="21651000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -533,7 +534,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767891218138</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Added functionality to get tracks from spotify">
+      <option name="closed" value="true" />
+      <created>1767893656629</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1767893656629</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -551,7 +560,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added WiFi scanning and the displaying of networks" />
     <MESSAGE value="Added network onboarding" />
     <MESSAGE value="Added wifi handling for existing credentials, and added a factory reset option" />
     <MESSAGE value="Added the spotify linking page" />
@@ -576,6 +584,7 @@
     <MESSAGE value="Got the layout of the now playing screen mostly complete - need to account for longer titles, and lock some positions." />
     <MESSAGE value="Mediated some screen flickering" />
     <MESSAGE value="Positioned the screen layout" />
-    <option name="LAST_COMMIT_MESSAGE" value="Positioned the screen layout" />
+    <MESSAGE value="Added functionality to get tracks from spotify" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added functionality to get tracks from spotify" />
   </component>
 </project>

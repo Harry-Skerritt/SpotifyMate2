@@ -222,30 +222,68 @@ void SpotifyManager::loadAlbumArt(String &url, short target_size) {
 
 
 bool SpotifyManager::getCurrentlyPlaying() {
-    if (sp_client == nullptr) {
-        Serial.println("Spotify: Client not initialized, cannot get current play state");
-        return false;
-    }
+    if (sp_client == nullptr) return false;
 
-    Serial.println("Spotify: Getting current playing state");
+    Serial.println("Spotify: Polling...");
 
     try {
         auto pb = sp_client->player().getPlaybackState();
 
         if (pb.has_value()) {
             spotifyState.current_track_device_name = sanitizeString(pb->device.name.c_str());
-            spotifyState.is_playing = pb->is_playing;
             spotifyState.current_track_progress_ms = pb->progress_ms;
+            spotifyState.is_playing = pb->is_playing;
 
             auto track = pb->asTrack();
             if (track) {
-                if (spotifyState.current_track_id != sanitizeString(track->id.c_str())) {
-                    spotifyState.current_track_id = sanitizeString(track->id.c_str());
+                String newId = sanitizeString(track->id.c_str());
+                String newUrl = track->album.images.at(0).url.c_str();
+
+                // Track ID Changed
+                if (spotifyState.current_track_id != newId) {
+                    Serial.println("Spotify: New Track Detectect...");
+                    spotifyState.current_track_id = newId;
                     spotifyState.current_track_title = sanitizeString(track->name.c_str());
                     spotifyState.current_track_artist = sanitizeString(track->artists.at(0).name.c_str());
-                    spotifyState.current_track_url = track->album.images.at(0).url.c_str();
                     spotifyState.current_track_duration_ms = track->duration_ms; // Total length
                 }
+
+                // Check if Album Art changed
+                if (spotifyState.current_track_url != newUrl) {
+                    Serial.println("Spotify: New Album Art detected...");
+
+                    try {
+                        Spotify::Extensions::ImagePalette palette =
+                            Spotify::Extensions::VisualAPI().getImagePalette(newUrl.c_str());
+
+                        spotifyState.album_average_colour = palette.average.to0x();
+                    } catch (...) {
+                        Serial.println("Spotify: Image Palette Error - Couldn't get colour");
+                        spotifyState.album_average_colour = 0x191414; // Fallback
+                    }
+
+                    spotifyState.current_track_url = newUrl;
+
+                }
+            }
+            return true;
+
+        } else {
+            // Check if we were previously playing something.
+            // Only update if we aren't already in the NOT_PLAYING state.
+            if (spotifyState.current_track_id != "NOT_PLAYING") {
+                Serial.println("Spotify: Nothing is playing");
+                spotifyState.current_track_id = "NOT_PLAYING";
+                spotifyState.current_track_title = "Nothing Playing";
+                spotifyState.current_track_artist = "-";
+                spotifyState.current_track_device_name = "No Device";
+
+                spotifyState.current_track_url = "https://raw.githubusercontent.com/Harry-Skerritt/files/refs/heads/main/not_playing_album.jpg";
+                spotifyState.album_average_colour = 0x13B94E;
+
+                spotifyState.current_track_progress_ms = 0;
+                spotifyState.current_track_duration_ms = 0;
+                spotifyState.is_playing = false;
             }
             return true;
         }

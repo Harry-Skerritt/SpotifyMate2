@@ -36,10 +36,10 @@ struct SpotifyState {
     String auth_url = "";
 
     String current_track_id = "";
-    String current_track_title = "";
-    String current_track_artist = "";
+    String current_track_title =  "Nothing Playing";
+    String current_track_artist = "-";
     String current_track_url = "";
-    String current_track_device_name = "";
+    String current_track_device_name = "No Device";
     int current_track_duration_ms = 0;
     int current_track_progress_ms = 0;
     bool is_playing = false;

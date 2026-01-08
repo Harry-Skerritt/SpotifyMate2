@@ -6,6 +6,7 @@
 #define SPOTIFYMANAGER_H
 
 #include <spotify/spotify.hpp>
+#include <spotify/extensions/VisualAPI.hpp>
 #include <lvgl.h>
 
 extern  lv_img_dsc_t spotify_img_dsc;
