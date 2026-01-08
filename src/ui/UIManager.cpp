@@ -45,6 +45,13 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len, short t_size) {
     lv_async_call([](void* p) {
         short target_dim = (short)(uintptr_t)p;
 
+        // --- SAFETY CHECK ---
+        if (UIManager::getInstance().ui_album_art == nullptr) {
+            Serial.println("UI: Art decode cancelled - ui_album_art is null");
+            return;
+        }
+
+
         lv_img_header_t header;
         if (lv_img_decoder_get_info(&UIManager::album_dsc, &header) != LV_RES_OK) {
             Serial.println("Error: JPG Header decode failed");
@@ -116,8 +123,10 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len, short t_size) {
         final_dsc.data_size = needed_size;
         final_dsc.data = (const uint8_t*)zoom_buffer;
 
-        lv_img_set_src(UIManager::getInstance().ui_album_art, &final_dsc);
-        lv_obj_set_size(UIManager::getInstance().ui_album_art, target_dim, target_dim);
+        if (UIManager::getInstance().ui_album_art != nullptr) {
+            lv_img_set_src(UIManager::getInstance().ui_album_art, &final_dsc);
+            lv_obj_set_size(UIManager::getInstance().ui_album_art, target_dim, target_dim);
+        }
 
         // Cleanup temporary decoding objects
         lv_obj_del(temp_canvas);
@@ -213,7 +222,9 @@ void UIManager::update() {
 
             case SPOTIFY_READY:
                 showMainPlayer();
-                resetMarquee(ui_song_title);
+                if (ui_song_title != nullptr)
+                    resetMarquee(ui_song_title);
+
                 break;
 
             case SPOTIFY_LINK_ERROR:
@@ -228,6 +239,38 @@ void UIManager::update() {
             default: break;
         }
         last_spotify_status = spotifyState.status;
+    }
+
+    if (spotifyState.status == SPOTIFY_READY && wifi_ready_for_spotify && ui_song_title != nullptr) {
+        static String last_ui_track_id = "INIT_VAL";
+        static String last_ui_device_name = "INIT_VAL";
+
+        if (spotifyState.current_track_id != last_ui_track_id) {
+            last_ui_track_id = spotifyState.current_track_id;
+            Serial.println("UI: Track change detected, refreshing labels...");
+
+            // Update Screen Colour
+            lv_obj_set_style_bg_color(current_screen, lv_color_hex(spotifyState.album_average_colour), 0);
+
+            // Update the Text
+            lv_label_set_text(ui_song_title, spotifyState.current_track_title.c_str());
+            lv_label_set_text(ui_song_artist, spotifyState.current_track_artist.c_str());
+            lv_label_set_text(ui_device_name, spotifyState.current_track_device_name.c_str());
+
+            // Reset the Marquee pause for the new title
+            resetMarquee(ui_song_title);
+
+            // Trigger the image download for the new song
+            if (!spotifyState.current_track_url.isEmpty()) {
+                SpotifyManager::getInstance().loadAlbumArt(spotifyState.current_track_url, 365);
+            }
+        }
+
+        if (spotifyState.current_track_device_name != last_ui_device_name) {
+            last_ui_device_name = spotifyState.current_track_device_name;
+            Serial.println("UI: Device change detected, refreshing label...");
+            lv_label_set_text(ui_device_name, spotifyState.current_track_device_name.c_str());
+        }
     }
 
     first_run = false;
@@ -554,7 +597,7 @@ void UIManager::showSpotifyLinking(const char *auth_url) {
 void UIManager::showMainPlayer() {
     clearScreen();
 
-    lv_obj_set_style_bg_color(current_screen, lv_color_hex(0xB1A69D), 0);
+    lv_obj_set_style_bg_color(current_screen, lv_color_hex(0x191414), 0);
     lv_obj_clear_flag(current_screen, LV_OBJ_FLAG_SCROLLABLE);
 
     // Main Container
@@ -623,15 +666,15 @@ void UIManager::showMainPlayer() {
     lv_img_set_antialias(current_device_icon, true);
 
     // Device Name
-    lv_obj_t* device_name = lv_label_create(device_con);
-    lv_label_set_text(device_name,
+    ui_device_name = lv_label_create(device_con);
+    lv_label_set_text(ui_device_name,
         !spotifyState.current_track_device_name.isEmpty() ?
         spotifyState.current_track_device_name.c_str() : "Not Playing");
-    lv_obj_set_style_text_color(device_name, SPOTIFY_WHITE, 0);
-    lv_obj_set_style_text_font(device_name, &font_gotham_medium_20, 0);
-    lv_obj_set_width(device_name, 180);
-    lv_obj_set_style_max_height(device_name, 30, 0);
-    lv_label_set_long_mode(device_name, LV_LABEL_LONG_DOT);
+    lv_obj_set_style_text_color(ui_device_name, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(ui_device_name, &font_gotham_medium_20, 0);
+    lv_obj_set_width(ui_device_name, 180);
+    lv_obj_set_style_max_height(ui_device_name, 30, 0);
+    lv_label_set_long_mode(ui_device_name, LV_LABEL_LONG_DOT);
 
 
     // --- Song Title ---
@@ -648,14 +691,14 @@ void UIManager::showMainPlayer() {
 
 
     // Song Artist
-    lv_obj_t* song_artist = lv_label_create(info_con);
-    lv_label_set_text(song_artist,
+    ui_song_artist = lv_label_create(info_con);
+    lv_label_set_text(ui_song_artist,
         !spotifyState.current_track_artist.isEmpty() ?
         spotifyState.current_track_artist.c_str() : "-");
-    lv_obj_set_style_text_color(song_artist, SPOTIFY_WHITE, 0);
-    lv_obj_set_style_text_font(song_artist, &font_gotham_medium_30, 0);
-    lv_obj_set_width(song_artist, 370);
-    lv_label_set_long_mode(song_artist, LV_LABEL_LONG_SCROLL);
+    lv_obj_set_style_text_color(ui_song_artist, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(ui_song_artist, &font_gotham_medium_30, 0);
+    lv_obj_set_width(ui_song_artist, 370);
+    lv_label_set_long_mode(ui_song_artist, LV_LABEL_LONG_SCROLL);
 
 
     // Load Image
@@ -665,6 +708,7 @@ void UIManager::showMainPlayer() {
         String np_url = "https://raw.githubusercontent.com/Harry-Skerritt/files/refs/heads/main/not_playing_album.jpg";
         SpotifyManager::getInstance().loadAlbumArt(np_url, 365);
     }
+    resetMarquee(ui_song_title);
 }
 
 
@@ -714,6 +758,9 @@ void UIManager::initStyles() {
 
 void UIManager::clearScreen() {
     ui_album_art = nullptr;
+    ui_song_title = nullptr;
+    ui_song_artist = nullptr;
+    ui_device_name = nullptr;
     lv_obj_t* old_scr = lv_scr_act();
     current_screen = lv_obj_create(NULL);
 

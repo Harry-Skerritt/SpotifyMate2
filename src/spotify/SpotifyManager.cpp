@@ -11,6 +11,12 @@
 #include "system/SystemManager.h"
 #include "ui/UIManager.h"
 
+String sanitizeString(String str) {
+    str.replace("\xe2\x80\x99", "'");
+    str.replace("&#39;", "'");
+    return str;
+}
+
 void SpotifyManager::init() {
 
     // Create the spotify auth object
@@ -27,6 +33,7 @@ void SpotifyManager::init() {
 }
 
 void SpotifyManager::update() {
+
 
     switch (spotifyState.status) {
 
@@ -48,16 +55,15 @@ void SpotifyManager::update() {
             break;
 
         case SPOTIFY_READY:
-            {
-                static uint32_t lastPollTime = 0;
-                uint32_t now = millis();
+        {
+            static uint32_t lastPollTime = 0;
+            uint32_t now = millis();
 
-                // Poll every 2 seconds (2000ms)
-                if (now - lastPollTime > 2000) {
-                    lastPollTime = now;
-                    getCurrentlyPlaying();
-                }
+            if (now - lastPollTime > 2000) {
+                lastPollTime = now;
+                getCurrentlyPlaying();
             }
+        }
             break;
 
         default:
@@ -94,6 +100,9 @@ void SpotifyManager::handleRefreshValidation() {
     Serial.println("Spotify: Attempting to refresh saved token...");
 
     if (sp_auth->begin(spotifyState.refresh_token.c_str())) {
+
+        sp_client = new Spotify::Client(*sp_auth);
+
         spotifyState.refresh_token = sp_auth->getRefreshToken().c_str();
         Serial.println("Spotify: Refresh successful!");
         spotifyState.status = SPOTIFY_READY;
@@ -214,25 +223,26 @@ void SpotifyManager::loadAlbumArt(String &url, short target_size) {
 
 bool SpotifyManager::getCurrentlyPlaying() {
     if (sp_client == nullptr) {
-        UIManager::getInstance().showFailure();
-        spotifyState.status = SPOTIFY_ERROR;
+        Serial.println("Spotify: Client not initialized, cannot get current play state");
         return false;
     }
+
+    Serial.println("Spotify: Getting current playing state");
 
     try {
         auto pb = sp_client->player().getPlaybackState();
 
         if (pb.has_value()) {
-            spotifyState.current_track_device_name = pb->device.name.c_str();
+            spotifyState.current_track_device_name = sanitizeString(pb->device.name.c_str());
             spotifyState.is_playing = pb->is_playing;
             spotifyState.current_track_progress_ms = pb->progress_ms;
 
             auto track = pb->asTrack();
             if (track) {
-                if (spotifyState.current_track_id != track->id.c_str()) {
-                    spotifyState.current_track_id = track->id.c_str();
-                    spotifyState.current_track_title = track->name.c_str();
-                    spotifyState.current_track_artist = track->artists.at(0).name.c_str();
+                if (spotifyState.current_track_id != sanitizeString(track->id.c_str())) {
+                    spotifyState.current_track_id = sanitizeString(track->id.c_str());
+                    spotifyState.current_track_title = sanitizeString(track->name.c_str());
+                    spotifyState.current_track_artist = sanitizeString(track->artists.at(0).name.c_str());
                     spotifyState.current_track_url = track->album.images.at(0).url.c_str();
                     spotifyState.current_track_duration_ms = track->duration_ms; // Total length
                 }

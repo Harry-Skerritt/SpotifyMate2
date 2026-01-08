@@ -43,6 +43,8 @@ struct SpotifyState {
     int current_track_duration_ms = 0;
     int current_track_progress_ms = 0;
     bool is_playing = false;
+    uint32_t album_average_colour  = 0x3F5C67;
+    //uint32_t album_average_colour  = 0xB1A69D;
 };
 
 

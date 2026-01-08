@@ -64,6 +64,11 @@ public:
     static uint16_t* album_buffer;
     static uint16_t current_w;
     static uint16_t current_h;
+    lv_obj_t* ui_album_art = nullptr;
+    uint16_t imageWidth;
+    lv_obj_t* ui_song_title = nullptr;
+    lv_obj_t* ui_song_artist = nullptr;
+    lv_obj_t* ui_device_name = nullptr;
 
 private:
     UIManager() {}
@@ -79,14 +84,8 @@ private:
     lv_style_t style_btn_outline;
     lv_style_transition_dsc_t trans_btn;
 
+
     lv_style_t style_network_card;
-
-
-
-
-    lv_obj_t* ui_album_art = nullptr;
-    uint16_t imageWidth;
-    lv_obj_t* ui_song_title = nullptr;
 
     // Internal Helpers
     lv_obj_t* createSpotifyBtn(lv_obj_t* parent, lv_event_cb_t cb, const char* text, lv_align_t align, int x, int y, bool is_green);
