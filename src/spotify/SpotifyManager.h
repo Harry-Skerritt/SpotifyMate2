@@ -45,6 +45,8 @@ private:
 
     void handleRefreshValidation();
 
+    uint32_t calculateSmartBackground(const Spotify::Extensions::ImagePalette& palette);
+
 
     SpotifyManager(const SpotifyManager&) = delete;
     void operator=(const SpotifyManager&) = delete;

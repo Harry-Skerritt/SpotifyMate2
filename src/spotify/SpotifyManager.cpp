@@ -256,7 +256,7 @@ bool SpotifyManager::getCurrentlyPlaying() {
                         Spotify::Extensions::ImagePalette palette =
                             Spotify::Extensions::VisualAPI().getImagePalette(newUrl.c_str());
 
-                        spotifyState.album_average_colour = palette.average.to0x();
+                        spotifyState.album_average_colour = calculateSmartBackground(palette);
                     } catch (...) {
                         Serial.println("Spotify: Image Palette Error - Couldn't get colour");
                         spotifyState.album_average_colour = 0x191414; // Fallback
@@ -294,4 +294,24 @@ bool SpotifyManager::getCurrentlyPlaying() {
 }
 
 
+
+// Helper
+uint32_t SpotifyManager::calculateSmartBackground(const Spotify::Extensions::ImagePalette& palette) {
+
+    float luma = (0.299f * palette.average.r) +
+                 (0.587f * palette.average.g) +
+                 (0.114f * palette.average.b);
+
+    if (luma > 200) {
+        // Too bright
+        return palette.darker_1.to0x();
+    }
+    if (luma < 40) {
+        // Too dark
+        return palette.lighter_1.to0x();
+    }
+
+    // Fine
+    return palette.average.to0x();
+}
 

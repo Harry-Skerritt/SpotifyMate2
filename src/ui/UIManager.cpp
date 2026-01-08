@@ -641,6 +641,11 @@ void UIManager::showMainPlayer() {
     lv_obj_set_style_clip_corner(ui_album_art, true, 0);
     lv_obj_move_foreground(ui_album_art);
 
+    // Inner Border
+    lv_obj_set_style_border_width(ui_album_art, 1, 0);
+    lv_obj_set_style_border_color(ui_album_art, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_border_opa(ui_album_art, LV_OPA_10, 0);
+
 
     // Album Shadow
     static lv_style_t style_shadow;
