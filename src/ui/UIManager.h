@@ -66,6 +66,7 @@ public:
     static uint16_t current_h;
     lv_obj_t* ui_album_art = nullptr;
     uint16_t imageWidth;
+
     lv_obj_t* ui_song_title = nullptr;
     lv_obj_t* ui_song_artist = nullptr;
     lv_obj_t* ui_device_name = nullptr;

@@ -45,6 +45,9 @@ struct SpotifyState {
     bool is_playing = false;
     uint32_t album_average_colour  = 0x3F5C67;
     //uint32_t album_average_colour  = 0xB1A69D;
+
+    bool needs_art_update = false;
+    bool needs_text_update = false;
 };
 
 

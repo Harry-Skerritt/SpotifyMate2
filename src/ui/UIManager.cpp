@@ -126,6 +126,14 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len, short t_size) {
         if (UIManager::getInstance().ui_album_art != nullptr) {
             lv_img_set_src(UIManager::getInstance().ui_album_art, &final_dsc);
             lv_obj_set_size(UIManager::getInstance().ui_album_art, target_dim, target_dim);
+
+            lv_label_set_text(UIManager::getInstance().ui_song_title, spotifyState.current_track_title.c_str());
+            lv_label_set_text(UIManager::getInstance().ui_song_artist, spotifyState.current_track_artist.c_str());
+            lv_label_set_text(UIManager::getInstance().ui_device_name, spotifyState.current_track_device_name.c_str());
+
+            lv_obj_set_style_bg_color(UIManager::getInstance().current_screen, lv_color_hex(spotifyState.album_average_colour), 0);
+            UIManager::getInstance().resetMarquee(UIManager::getInstance().ui_song_title);
+            Serial.println("UI: Complete atomic update finished.");
         }
 
         // Cleanup temporary decoding objects
@@ -242,45 +250,32 @@ void UIManager::update() {
     }
 
     if (spotifyState.status == SPOTIFY_READY && wifi_ready_for_spotify && ui_song_title != nullptr) {
-        static String last_ui_track_id = "INIT_VAL";
-        static String last_ui_device_name = "INIT_VAL";
-        static String last_ui_url = "INIT_VAL";
         static uint32_t last_ui_colour = 0;
+        static String last_ui_device_name = "INIT";
 
-        // Check Track
-        if (spotifyState.current_track_id != last_ui_track_id) {
-            last_ui_track_id = spotifyState.current_track_id;
-            Serial.println("UI: Track change detected, refreshing labels...");
 
-            // Update the Text
+        if (spotifyState.needs_text_update) {
+            Serial.println("UI: Same album detected, updating text labels immediately.");
             lv_label_set_text(ui_song_title, spotifyState.current_track_title.c_str());
             lv_label_set_text(ui_song_artist, spotifyState.current_track_artist.c_str());
             lv_label_set_text(ui_device_name, spotifyState.current_track_device_name.c_str());
 
-            // Reset the Marquee pause for the new title
             resetMarquee(ui_song_title);
+            spotifyState.needs_text_update = false; // Flag consumed
+        }
+
+        if (spotifyState.needs_art_update) {
+            Serial.println("UI: New art needed, starting download sync...");
+            SpotifyManager::getInstance().loadAlbumArt(spotifyState.current_track_url, 365);
+            spotifyState.needs_art_update = false; // Flag consumed
         }
 
 
-        if (spotifyState.album_average_colour != last_ui_colour) {
+        if (!spotifyState.needs_art_update && spotifyState.album_average_colour != last_ui_colour) {
             last_ui_colour = spotifyState.album_average_colour;
             Serial.printf("UI: Applying new pallete colour: 0x%06X\n", last_ui_colour);
-
-            // Update Screen Colour
             lv_obj_set_style_bg_color(current_screen, lv_color_hex(last_ui_colour), 0);
         }
-
-        // Check Album URL
-        if (spotifyState.current_track_url != last_ui_url) {
-            last_ui_url = spotifyState.current_track_url;
-            Serial.println("UI: Album URL change detected, downloading art...");
-
-            // Trigger the image download for the new song
-            if (!spotifyState.current_track_url.isEmpty()) {
-                SpotifyManager::getInstance().loadAlbumArt(spotifyState.current_track_url, 365);
-            }
-        }
-
 
         // Check device name change
         if (spotifyState.current_track_device_name != last_ui_device_name) {
@@ -619,7 +614,7 @@ void UIManager::showMainPlayer() {
 
     // Main Container
     lv_obj_t* main_row = lv_obj_create(current_screen);
-    lv_obj_set_size(main_row, lv_pct(100), 365);
+    lv_obj_set_size(main_row, lv_pct(100), 400); // 365 -> 400
     lv_obj_align(main_row, LV_ALIGN_LEFT_MID, 0, 0);
     lv_obj_set_style_pad_left(main_row, 20, 0);
     lv_obj_set_style_pad_right(main_row, 20, 0);
@@ -655,7 +650,7 @@ void UIManager::showMainPlayer() {
     lv_style_set_shadow_ofs_x(&style_shadow, 0);
     lv_style_set_shadow_ofs_y(&style_shadow, 0);
     lv_style_set_shadow_spread(&style_shadow, 7);
-    lv_style_set_shadow_width(&style_shadow, 21);
+    lv_style_set_shadow_width(&style_shadow, 42);
 
     lv_obj_add_style(ui_album_art, &style_shadow, 0);
 
@@ -663,12 +658,12 @@ void UIManager::showMainPlayer() {
     // Text Container
     lv_obj_t* info_con = lv_obj_create(main_row);
     lv_obj_set_flex_grow(info_con, 1);
-    lv_obj_set_height(info_con, 365);
+    lv_obj_set_height(info_con, 400); // 365 -> 400
     lv_obj_set_flex_flow(info_con, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(info_con, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_START,LV_FLEX_ALIGN_START);
     lv_obj_clear_flag(info_con, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_style_pad_row(info_con, 0, 0);
-    lv_obj_set_style_pad_bottom(info_con, 15, 0);
+    lv_obj_set_style_pad_bottom(info_con, 32, 0); // 15 -> 32
     lv_obj_set_style_border_width(info_con, 0, 0);
     lv_obj_set_style_bg_opa(info_con, LV_OPA_TRANSP, 0);
     lv_obj_set_style_shadow_width(info_con, 0 ,0);

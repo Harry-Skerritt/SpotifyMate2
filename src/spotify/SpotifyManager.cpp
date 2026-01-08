@@ -224,7 +224,7 @@ void SpotifyManager::loadAlbumArt(String &url, short target_size) {
 bool SpotifyManager::getCurrentlyPlaying() {
     if (sp_client == nullptr) return false;
 
-    Serial.println("Spotify: Polling...");
+   // Serial.println("Spotify: Polling...");
 
     try {
         auto pb = sp_client->player().getPlaybackState();
@@ -239,31 +239,33 @@ bool SpotifyManager::getCurrentlyPlaying() {
                 String newId = sanitizeString(track->id.c_str());
                 String newUrl = track->album.images.at(0).url.c_str();
 
-                // Track ID Changed
-                if (spotifyState.current_track_id != newId) {
-                    Serial.println("Spotify: New Track Detectect...");
+                bool trackChanged = (spotifyState.current_track_id != newId);
+                bool urlChanged = (spotifyState.current_track_url != newUrl);
+
+                if (trackChanged || urlChanged) {
+                    Serial.println("Spotify: Change detected...");
                     spotifyState.current_track_id = newId;
                     spotifyState.current_track_title = sanitizeString(track->name.c_str());
                     spotifyState.current_track_artist = sanitizeString(track->artists.at(0).name.c_str());
                     spotifyState.current_track_duration_ms = track->duration_ms; // Total length
-                }
 
-                // Check if Album Art changed
-                if (spotifyState.current_track_url != newUrl) {
-                    Serial.println("Spotify: New Album Art detected...");
+                    if (urlChanged) {
+                        Serial.println("Spotify: New Album Art detected...");
+                        try {
+                            Spotify::Extensions::ImagePalette palette =
+                                Spotify::Extensions::VisualAPI().getImagePalette(newUrl.c_str());
 
-                    try {
-                        Spotify::Extensions::ImagePalette palette =
-                            Spotify::Extensions::VisualAPI().getImagePalette(newUrl.c_str());
-
-                        spotifyState.album_average_colour = calculateSmartBackground(palette);
-                    } catch (...) {
-                        Serial.println("Spotify: Image Palette Error - Couldn't get colour");
-                        spotifyState.album_average_colour = 0x191414; // Fallback
+                            spotifyState.album_average_colour = calculateSmartBackground(palette);
+                        } catch (...) {
+                            Serial.println("Spotify: Image Palette Error - Couldn't get colour");
+                            spotifyState.album_average_colour = 0x191414; // Fallback
+                        }
+                        spotifyState.current_track_url = newUrl;
+                        spotifyState.needs_art_update = true;
+                        spotifyState.needs_text_update = false;
+                    } else {
+                        spotifyState.needs_text_update = true;
                     }
-
-                    spotifyState.current_track_url = newUrl;
-
                 }
             }
             return true;
@@ -284,11 +286,15 @@ bool SpotifyManager::getCurrentlyPlaying() {
                 spotifyState.current_track_progress_ms = 0;
                 spotifyState.current_track_duration_ms = 0;
                 spotifyState.is_playing = false;
+
+                spotifyState.needs_art_update = true;
+                spotifyState.needs_text_update = false;
             }
             return true;
         }
     } catch (Spotify::Exception& e) {
         Serial.println("Spotify: Error getting playing state!");
+        Serial.println(e.what());
     }
     return false;
 }
