@@ -816,4 +816,3 @@ void UIManager::populateWifiList(lv_obj_t* list_cont, const std::vector<String>&
 }
 
 
-

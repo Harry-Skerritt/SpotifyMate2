@@ -17,9 +17,9 @@ static Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     48,
     40,
     1,
-    13,
-    1,
-    31,
+    20,
+    30,
+    40,
     1,
     14000000L
     );
@@ -27,7 +27,7 @@ static Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
 static Arduino_GFX *gfx = new Arduino_RGB_Display(SCREEN_WIDTH, SCREEN_HEIGHT, bus, 0, true);
 static TAMC_GT911 ts = TAMC_GT911(TOUCH_SDA, TOUCH_SCL, 43, -1, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-#define DISP_BUF_SIZE 80
+#define DISP_BUF_SIZE 40
 
 // --- Callbacks ---
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p) {
@@ -63,8 +63,15 @@ void halSetup() {
 
     // CH422G I/O Expander Initialization
     Wire.begin(8, 9, 100000);
-    Wire.beginTransmission(0x24); Wire.write(0x01); Wire.endTransmission();
-    Wire.beginTransmission(0x38); Wire.write(0x0F); Wire.endTransmission();
+
+    Wire.beginTransmission(0x24);
+    Wire.write(0x01);
+    Wire.endTransmission();
+    delay(10);
+
+    Wire.beginTransmission(0x38);
+    Wire.write(0x0F);
+    Wire.endTransmission();
     delay(200);
 
     // GFX
@@ -77,9 +84,10 @@ void halSetup() {
     // LVGL Memory
     lv_init();
     // Allocate 40 lines of screen height in PSRAM
-    static lv_color_t *disp_draw_buf = (lv_color_t *)ps_malloc(SCREEN_WIDTH * DISP_BUF_SIZE * sizeof(lv_color_t));
+    static lv_color_t *buf1 = (lv_color_t *)ps_malloc(SCREEN_WIDTH * DISP_BUF_SIZE * sizeof(lv_color_t));
+    static lv_color_t *buf2 = (lv_color_t *)ps_malloc(SCREEN_WIDTH * DISP_BUF_SIZE * sizeof(lv_color_t));
     static lv_disp_draw_buf_t draw_buf;
-    lv_disp_draw_buf_init(&draw_buf, disp_draw_buf, NULL, SCREEN_WIDTH * DISP_BUF_SIZE);
+    lv_disp_draw_buf_init(&draw_buf, buf1, buf2, SCREEN_WIDTH * DISP_BUF_SIZE);
 
     // Register Display Driver
     static lv_disp_drv_t disp_drv;
