@@ -9,14 +9,15 @@
 #include "spotify/SpotifyManager.h"
 #include "system/SystemManager.h"
 
+// Static Images
+LV_IMG_DECLARE(CurrentDeviceLogo);
+
 static uint8_t tjpg_workspace[4096];
 
 lv_img_dsc_t UIManager::album_dsc;
 uint16_t* UIManager::album_buffer = nullptr;
 uint16_t UIManager::current_w = 0;
 uint16_t UIManager::current_h = 0;
-
-
 
 static lv_color_t* zoom_buffer = nullptr;
 static uint32_t current_zoom_buf_size = 0;
@@ -553,48 +554,69 @@ void UIManager::showSpotifyLinking(const char *auth_url) {
 void UIManager::showMainPlayer() {
     clearScreen();
 
-    lv_obj_set_style_bg_color(current_screen, lv_color_hex(0x942219), 0);
+    lv_obj_set_style_bg_color(current_screen, lv_color_hex(0x655a5a), 0);
 
     // Album Art
     ui_album_art = lv_img_create(current_screen);
 
     lv_img_set_src(ui_album_art, &album_dsc);
     lv_obj_set_size(ui_album_art, 365, 365);
-    lv_obj_align(ui_album_art, LV_ALIGN_LEFT_MID, 40, 0);
+    lv_obj_align(ui_album_art, LV_ALIGN_LEFT_MID, 20, 0);
     lv_obj_set_style_radius(ui_album_art, 15, 0);
     lv_obj_set_style_clip_corner(ui_album_art, true, 0);
-    //lv_img_set_zoom(ui_album_art, 128);
     lv_obj_move_foreground(ui_album_art);
 
     // Song Title
     lv_obj_t* song_title = lv_label_create(current_screen);
-    lv_label_set_text(song_title, "Rock Believer");
+    if (!spotifyState.current_track_title.isEmpty()) {
+        lv_label_set_text(song_title, spotifyState.current_track_title.c_str());
+    } else {
+        lv_label_set_text(song_title, "Nothing Playing");
+    }
     lv_obj_set_style_text_color(song_title, SPOTIFY_WHITE, 0);
-    lv_obj_set_style_text_font(song_title, &font_gotham_medium_50, 0);
-    lv_obj_align_to(song_title, ui_album_art, LV_ALIGN_OUT_RIGHT_TOP, 25, 50);
+    lv_obj_set_style_text_font(song_title, &font_metropolis_black_45, 0);
+    lv_obj_align_to(song_title, ui_album_art, LV_ALIGN_OUT_BOTTOM_RIGHT, 350, -90);
 
 
     // Song Artist
     lv_obj_t* song_artist = lv_label_create(current_screen);
-    lv_label_set_text(song_artist, "Scorpions");
+    if (!spotifyState.current_track_artist.isEmpty()) {
+        lv_label_set_text(song_artist, spotifyState.current_track_artist.c_str());
+    } else {
+        lv_label_set_text(song_artist, "-");
+    }
     lv_obj_set_style_text_color(song_artist, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(song_artist, &font_gotham_medium_30, 0);
-    lv_obj_align_to(song_artist, song_title, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);
+    lv_obj_align_to(song_artist, song_title, LV_ALIGN_TOP_LEFT, 0, 45);
 
     // Device Icon
+    lv_obj_t* current_device_icon = lv_img_create(current_screen);
+    lv_img_set_src(current_device_icon, &CurrentDeviceLogo);
+    lv_img_set_pivot(current_device_icon, 0, 0);
+    lv_img_set_zoom(current_device_icon, 59);
+    lv_obj_set_size(current_device_icon, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+    lv_obj_align_to(current_device_icon, song_title, LV_ALIGN_TOP_LEFT, 0, -50);
+    lv_img_set_antialias(current_device_icon, true);
 
 
     // Device Name
     lv_obj_t* device_name = lv_label_create(current_screen);
-    lv_label_set_text(device_name, "Harry's Mac Mini");
+    if (!spotifyState.current_track_device_name.isEmpty()) {
+        lv_label_set_text(device_name, spotifyState.current_track_device_name.c_str());
+    } else {
+        lv_label_set_text(device_name, "Not Playing");
+    }
     lv_obj_set_style_text_color(device_name, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(device_name, &font_gotham_medium_20, 0);
-    lv_obj_align_to(device_name, song_artist, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 40);
-
+    lv_obj_align_to(device_name, current_device_icon, LV_ALIGN_TOP_LEFT, 45, 9);
 
     // Load Image
-    String testURL = "https://i.scdn.co/image/ab67616d00001e02eeacad9436d5ba5052d46c43"; //300
-    SpotifyManager::getInstance().loadAlbumArt(testURL, 365);
+    if (!spotifyState.current_track_url.isEmpty()) {
+        SpotifyManager::getInstance().loadAlbumArt(spotifyState.current_track_url, 365);
+    } else {
+        String np_url = "https://raw.githubusercontent.com/Harry-Skerritt/files/refs/heads/main/not_playing_album.jpg";
+        SpotifyManager::getInstance().loadAlbumArt(np_url, 365);
+    }
 }
 
 

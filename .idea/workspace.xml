@@ -23,9 +23,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Fixed Image Scaling">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Ensured the image scaling is dynamic">
+      <change afterPath="$PROJECT_DIR$/src/ui/fonts/font_metropolis_black_45.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/images/CurrentDeviceLogo.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
     </list>
@@ -80,12 +82,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/dep/uiManager.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/src/spotify/SpotifyManager.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/src/spotify/SpotifyManager.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/src/spotify/SpotifyManager.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/src/ui/UIManager.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Volumes/Data/Code/C++/2026/SpotifyMate2/src/ui/uiManager.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/ui/images/CurrentDeviceLogo.c" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="PlatformioLocalSettings">
     <option name="availableProjects">
@@ -156,18 +153,21 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/ui/images" />
       <recent name="$PROJECT_DIR$/src/ui/fonts" />
       <recent name="$PROJECT_DIR$/dep" />
       <recent name="$PROJECT_DIR$/lib" />
       <recent name="$PROJECT_DIR$/include" />
-      <recent name="$PROJECT_DIR$/src/ui" />
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="PlatformIO" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SpotifyMate2" TARGET_NAME="PlatformIO" CONFIG_NAME="PlatformIO">
+      <method v="2" />
     </configuration>
     <configuration name="PlatformIO" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SpotifyMate2" TARGET_NAME="PlatformIO" CONFIG_NAME="PlatformIO">
       <method v="2" />
@@ -211,7 +211,8 @@
       <workItem from="1767716793957" duration="803000" />
       <workItem from="1767733927320" duration="1486000" />
       <workItem from="1767747435141" duration="15383000" />
-      <workItem from="1767802308495" duration="21396000" />
+      <workItem from="1767802308495" duration="22153000" />
+      <workItem from="1767831591892" duration="1426000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -501,7 +502,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767830664406</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Ensured the image scaling is dynamic">
+      <option name="closed" value="true" />
+      <created>1767830895272</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1767830895272</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -519,7 +528,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed touch screen jittering" />
     <MESSAGE value="Neatened up UIManager" />
     <MESSAGE value="Added the error screen" />
     <MESSAGE value="Started adding the wifi onboarding" />
@@ -544,6 +552,7 @@
     <MESSAGE value="Trying to fix scaling" />
     <MESSAGE value="Trying to fix scaling - still" />
     <MESSAGE value="Fixed Image Scaling" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed Image Scaling" />
+    <MESSAGE value="Ensured the image scaling is dynamic" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ensured the image scaling is dynamic" />
   </component>
 </project>

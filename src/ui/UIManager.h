@@ -24,6 +24,8 @@ LV_FONT_DECLARE(font_gotham_medium_50);
 LV_FONT_DECLARE(font_gotham_medium_60);
 LV_FONT_DECLARE(font_gotham_medium_80);
 
+LV_FONT_DECLARE(font_metropolis_black_45);
+
 
 
 class UIManager {

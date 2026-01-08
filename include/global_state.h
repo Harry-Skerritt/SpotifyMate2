@@ -33,8 +33,14 @@ struct SpotifyState {
     String client_id;
     String client_secret;
     String refresh_token;
-
     String auth_url = "";
+
+    String current_track_title = "Tattooed Millionaire";
+    String current_track_artist = "Bruce Dickinson";
+    String current_track_url = "https://i.scdn.co/image/ab67616d0000b2731213c84c3fdaebba7c5e8e67";
+    String current_track_device_name = "Harry's Mac Mini";
+    int current_track_duration_ms = 0;
+    bool is_playing = false;
 };
 
 
