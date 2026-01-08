@@ -23,14 +23,8 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Got a scaled - but glitchy image">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Trying to fix scaling">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lv_conf.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/lv_conf.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/WifiManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/WifiManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system/SystemManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/SystemManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system/SystemManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/SystemManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -215,7 +209,7 @@
       <workItem from="1767716793957" duration="803000" />
       <workItem from="1767733927320" duration="1486000" />
       <workItem from="1767747435141" duration="15383000" />
-      <workItem from="1767802308495" duration="19979000" />
+      <workItem from="1767802308495" duration="20793000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -481,7 +475,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767825990138</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Trying to fix scaling">
+      <option name="closed" value="true" />
+      <created>1767829586720</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1767829586720</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -499,7 +501,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added the network failure screen - not added button functionality" />
     <MESSAGE value="Started adding screen transitions - bug with touch" />
     <MESSAGE value="Fixed some of the touch bugs for now, still more to fix" />
     <MESSAGE value="Fixed touch screen jittering" />
@@ -524,6 +525,7 @@
     <MESSAGE value="Image drawing to the screen okay Red and Blue swapped" />
     <MESSAGE value="Fix incorrect colours" />
     <MESSAGE value="Got a scaled - but glitchy image" />
-    <option name="LAST_COMMIT_MESSAGE" value="Got a scaled - but glitchy image" />
+    <MESSAGE value="Trying to fix scaling" />
+    <option name="LAST_COMMIT_MESSAGE" value="Trying to fix scaling" />
   </component>
 </project>

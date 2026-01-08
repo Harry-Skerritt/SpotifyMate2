@@ -22,56 +22,65 @@ static lv_color_t* zoom_buffer = nullptr;
 void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
     if (!jpgData) return;
 
-    static uint8_t* persistent_buffer = nullptr;
-    if (persistent_buffer != nullptr) free(persistent_buffer);
-    persistent_buffer = jpgData;
+    static uint8_t* stable_jpg = nullptr;
+    if (stable_jpg) free(stable_jpg);
+    stable_jpg = (uint8_t*)ps_malloc(len);
+    memcpy(stable_jpg, jpgData, len);
 
-    //album_dsc.header.always_zero = 0;
     album_dsc.header.cf = LV_IMG_CF_RAW;
     album_dsc.data_size = len;
-    album_dsc.data = persistent_buffer;
+    album_dsc.data = stable_jpg;
 
 
     lv_async_call([](void* p) {
-        lv_obj_t* img = UIManager::getInstance().ui_album_art;
-        if (!img) return;
-
         short t_size = 365;
+        uint32_t buffer_size = LV_CANVAS_BUF_SIZE_TRUE_COLOR(t_size, t_size);
 
+        if (!zoom_buffer) zoom_buffer = (lv_color_t*) ps_malloc(buffer_size);;
 
-        // Zoom
-        if (!zoom_buffer) zoom_buffer = (lv_color_t*) ps_malloc(t_size * t_size * sizeof(lv_color_t));
+        lv_img_header_t header;
+        if (lv_img_decoder_get_info(&UIManager::album_dsc, &header) != LV_RES_OK) {
+            Serial.println("UIManager: Could not decode JPG header");
+            return;
+        }
 
-        // Create A TEMP Canvas
+        uint32_t max_src_dim = (header.w > header.h) ? header.w : header.h;
+        uint16_t dynamic_zoom = (uint32_t)(t_size * 256) / max_src_dim;
+
         lv_obj_t* canvas = lv_canvas_create(lv_scr_act());
         lv_canvas_set_buffer(canvas, zoom_buffer, t_size, t_size, LV_IMG_CF_TRUE_COLOR);
         lv_obj_add_flag(canvas, LV_OBJ_FLAG_HIDDEN);
 
-        // Draw & scaling
+        lv_canvas_fill_bg(canvas, lv_palette_main(LV_PALETTE_GREY), LV_OPA_COVER);
+
         lv_draw_img_dsc_t draw_dsc;
         lv_draw_img_dsc_init(&draw_dsc);
-        draw_dsc.zoom = 311;
+        draw_dsc.zoom = dynamic_zoom;
+        draw_dsc.antialias = 1;
 
-        lv_canvas_draw_img(canvas, 0, 0, &UIManager::album_dsc, &draw_dsc);
+        draw_dsc.pivot.x = 0;
+        draw_dsc.pivot.y = 0;
+
+        int16_t zoomed_w = (header.w * dynamic_zoom) / 256;
+        int16_t zoomed_h = (header.h * dynamic_zoom) / 256;
+        int16_t x_ofs = (t_size - zoomed_w) / 2;
+        int16_t y_ofs = (t_size - zoomed_h) / 2;
+
+        lv_canvas_draw_img(canvas, x_ofs, y_ofs, &UIManager::album_dsc, &draw_dsc);
 
         static lv_img_dsc_t final_dsc;
-        memset(&final_dsc, 0, sizeof(lv_img_dsc_t));
         final_dsc.header.always_zero = 0;
         final_dsc.header.cf = LV_IMG_CF_TRUE_COLOR;
         final_dsc.header.w = t_size;
         final_dsc.header.h = t_size;
-        final_dsc.data_size = t_size * t_size * sizeof(lv_color_t);
+        final_dsc.data_size = buffer_size;
         final_dsc.data = (const uint8_t*) zoom_buffer;
 
         // Set IMG to canvas
-        lv_img_set_src(img, &final_dsc);
+        lv_img_set_src(UIManager::getInstance().ui_album_art, &final_dsc);
 
         lv_obj_del(canvas);
-
-        lv_obj_invalidate(img);
-        Serial.println("UI: Image Scaled and Converted to True Colour");
-
-
+        lv_obj_invalidate(UIManager::getInstance().ui_album_art);
 
     }, NULL);
 
