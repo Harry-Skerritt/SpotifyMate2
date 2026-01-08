@@ -49,7 +49,6 @@ public:
     void showWifiError();
 
     // Spotify Screens
-    // Spotify Screens
     void showSpotifyLinkError();
     void showSpotifyLinking(const char* auth_url);
 
@@ -57,7 +56,7 @@ public:
     void showMainPlayer();
 
 
-    void updateAlbumArt(uint8_t* jpgData, size_t len);
+    void updateAlbumArt(uint8_t* jpgData, size_t len, short t_size);
 
     static lv_img_dsc_t album_dsc;
     static uint16_t* album_buffer;

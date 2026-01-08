@@ -155,7 +155,7 @@ void SpotifyManager::handleAuthCodeExchange() {
 
 }
 
-void SpotifyManager::loadAlbumArt(String &url, uint32_t target_size) {
+void SpotifyManager::loadAlbumArt(String &url, short target_size) {
     WiFiClientSecure client;
     client.setInsecure();
     HTTPClient http;
@@ -189,7 +189,7 @@ void SpotifyManager::loadAlbumArt(String &url, uint32_t target_size) {
 
             if (downloaded == len) {
                 // Only pass to UI if we have 100% of the file
-                UIManager::getInstance().updateAlbumArt(temp_jpg, len);
+                UIManager::getInstance().updateAlbumArt(temp_jpg, len, target_size);
             } else {
                 Serial.println("Spotify: Download incomplete, discarding buffer");
                 free(temp_jpg);

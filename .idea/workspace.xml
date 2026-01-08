@@ -23,9 +23,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Trying to fix scaling - still">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Fixed Image Scaling">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -209,7 +211,7 @@
       <workItem from="1767716793957" duration="803000" />
       <workItem from="1767733927320" duration="1486000" />
       <workItem from="1767747435141" duration="15383000" />
-      <workItem from="1767802308495" duration="21167000" />
+      <workItem from="1767802308495" duration="21396000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -491,7 +493,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767830414380</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Fixed Image Scaling">
+      <option name="closed" value="true" />
+      <created>1767830664406</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1767830664406</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -509,7 +519,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed some of the touch bugs for now, still more to fix" />
     <MESSAGE value="Fixed touch screen jittering" />
     <MESSAGE value="Neatened up UIManager" />
     <MESSAGE value="Added the error screen" />
@@ -534,6 +543,7 @@
     <MESSAGE value="Got a scaled - but glitchy image" />
     <MESSAGE value="Trying to fix scaling" />
     <MESSAGE value="Trying to fix scaling - still" />
-    <option name="LAST_COMMIT_MESSAGE" value="Trying to fix scaling - still" />
+    <MESSAGE value="Fixed Image Scaling" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed Image Scaling" />
   </component>
 </project>

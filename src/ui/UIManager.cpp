@@ -19,52 +19,73 @@ uint16_t UIManager::current_h = 0;
 
 
 static lv_color_t* zoom_buffer = nullptr;
-void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
-    if (!jpgData) return;
+static uint32_t current_zoom_buf_size = 0;
 
+void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len, short t_size) {
+    if (!jpgData || t_size <= 0) return;
+
+    // 1. Manage the RAW JPG buffer
     static uint8_t* stable_jpg = nullptr;
     if (stable_jpg) { free(stable_jpg); stable_jpg = nullptr; }
+
     stable_jpg = (uint8_t*)ps_malloc(len);
     if (!stable_jpg) return;
     memcpy(stable_jpg, jpgData, len);
 
+    // 2. Prepare the descriptor
     album_dsc.header.cf = LV_IMG_CF_RAW;
     album_dsc.data_size = len;
     album_dsc.data = stable_jpg;
 
+    // Clear cache so the decoder sees the new dimensions/data
     lv_img_cache_invalidate_src(&album_dsc);
 
+    // 3. Pass t_size into the async task
     lv_async_call([](void* p) {
-        short t_size = 365;
+        short target_dim = (short)(uintptr_t)p;
 
         lv_img_header_t header;
         if (lv_img_decoder_get_info(&UIManager::album_dsc, &header) != LV_RES_OK) {
-            Serial.println("Decoder: Header fail");
+            Serial.println("Error: JPG Header decode failed");
             return;
         }
 
+        // --- STEP A: DECODE JPG TO TEMP BITMAP ---
         uint32_t raw_bmp_size = LV_CANVAS_BUF_SIZE_TRUE_COLOR(header.w, header.h);
         lv_color_t* raw_bmp_buf = (lv_color_t*)ps_malloc(raw_bmp_size);
-        if (!raw_bmp_buf) {
-            Serial.println("Decoder: PSRAM Allocation fail");
-            return;
-        }
+        if (!raw_bmp_buf) return;
 
         lv_obj_t* temp_canvas = lv_canvas_create(lv_scr_act());
         lv_canvas_set_buffer(temp_canvas, raw_bmp_buf, header.w, header.h, LV_IMG_CF_TRUE_COLOR);
-
         lv_canvas_fill_bg(temp_canvas, lv_color_hex(0x000000), LV_OPA_COVER);
 
-        lv_draw_img_dsc_t decode_draw_dsc;
-        lv_draw_img_dsc_init(&decode_draw_dsc);
+        lv_draw_img_dsc_t decode_dsc;
+        lv_draw_img_dsc_init(&decode_dsc);
+        lv_canvas_draw_img(temp_canvas, 0, 0, &UIManager::album_dsc, &decode_dsc);
 
-        lv_canvas_draw_img(temp_canvas, 0, 0, &UIManager::album_dsc, &decode_draw_dsc);
+        // --- STEP B: MANAGE DYNAMIC ZOOM BUFFER ---
+        uint32_t needed_size = LV_CANVAS_BUF_SIZE_TRUE_COLOR(target_dim, target_dim);
 
-        uint32_t final_buf_size = LV_CANVAS_BUF_SIZE_TRUE_COLOR(t_size, t_size);
-        if (!zoom_buffer) zoom_buffer = (lv_color_t*) ps_malloc(final_buf_size);
+        // If buffer doesn't exist or is the wrong size, reallocate
+        if (zoom_buffer && current_zoom_buf_size != needed_size) {
+            free(zoom_buffer);
+            zoom_buffer = nullptr;
+        }
 
+        if (!zoom_buffer) {
+            zoom_buffer = (lv_color_t*)ps_malloc(needed_size);
+            current_zoom_buf_size = needed_size;
+        }
+
+        if (!zoom_buffer) {
+            free(raw_bmp_buf);
+            lv_obj_del(temp_canvas);
+            return;
+        }
+
+        // --- STEP C: SCALE TO TARGET SIZE ---
         lv_obj_t* final_canvas = lv_canvas_create(lv_scr_act());
-        lv_canvas_set_buffer(final_canvas, zoom_buffer, t_size, t_size, LV_IMG_CF_TRUE_COLOR);
+        lv_canvas_set_buffer(final_canvas, zoom_buffer, target_dim, target_dim, LV_IMG_CF_TRUE_COLOR);
         lv_canvas_fill_bg(final_canvas, lv_color_hex(0x000000), LV_OPA_COVER);
 
         lv_img_dsc_t decoded_bmp_dsc;
@@ -75,32 +96,36 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len) {
         decoded_bmp_dsc.data = (const uint8_t*)raw_bmp_buf;
         decoded_bmp_dsc.data_size = raw_bmp_size;
 
-        lv_draw_img_dsc_t scale_draw_dsc;
-        lv_draw_img_dsc_init(&scale_draw_dsc);
+        lv_draw_img_dsc_t scale_dsc;
+        lv_draw_img_dsc_init(&scale_dsc);
 
-        float scale = (float)t_size / (float)(header.w > header.h ? header.w : header.h);
-        scale_draw_dsc.zoom = (uint16_t)(scale * 256.0f);
-        scale_draw_dsc.antialias = 1;
+        // Calculate aspect-fill scale
+        float scale = (float)target_dim / (float)(header.w > header.h ? header.w : header.h);
+        scale_dsc.zoom = (uint16_t)(scale * 256.0f);
+        scale_dsc.antialias = 1;
 
-        lv_canvas_draw_img(final_canvas, 0, 0, &decoded_bmp_dsc, &scale_draw_dsc);
+        lv_canvas_draw_img(final_canvas, 0, 0, &decoded_bmp_dsc, &scale_dsc);
 
+        // --- STEP D: FINALIZE ---
         static lv_img_dsc_t final_dsc;
         final_dsc.header.always_zero = 0;
         final_dsc.header.cf = LV_IMG_CF_TRUE_COLOR;
-        final_dsc.header.w = t_size;
-        final_dsc.header.h = t_size;
-        final_dsc.data_size = final_buf_size;
-        final_dsc.data = (const uint8_t*) zoom_buffer;
+        final_dsc.header.w = target_dim;
+        final_dsc.header.h = target_dim;
+        final_dsc.data_size = needed_size;
+        final_dsc.data = (const uint8_t*)zoom_buffer;
 
         lv_img_set_src(UIManager::getInstance().ui_album_art, &final_dsc);
+        lv_obj_set_size(UIManager::getInstance().ui_album_art, target_dim, target_dim);
 
+        // Cleanup temporary decoding objects
         lv_obj_del(temp_canvas);
         lv_obj_del(final_canvas);
         free(raw_bmp_buf);
 
-        Serial.println("UI: Album Art Updated");
+        Serial.printf("UI: Album Art updated to %dx%d\n", target_dim, target_dim);
 
-    }, NULL);
+    }, (void*)(uintptr_t)t_size);
 
 }
 
