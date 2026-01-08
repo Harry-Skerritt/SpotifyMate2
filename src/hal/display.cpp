@@ -96,6 +96,7 @@ void halSetup() {
     disp_drv.ver_res = SCREEN_HEIGHT;
     disp_drv.flush_cb = my_disp_flush;
     disp_drv.draw_buf = &draw_buf;
+    disp_drv.full_refresh = 0;
     lv_disp_drv_register(&disp_drv);
 
     // Register Touch Driver

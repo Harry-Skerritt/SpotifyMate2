@@ -714,7 +714,9 @@ void UIManager::showMainPlayer() {
     lv_obj_set_style_text_color(ui_song_title, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(ui_song_title, &font_metropolis_black_45, 0);
     lv_obj_set_width(ui_song_title, 370);
-    lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_DOT);
+    lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    //lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_DOT);
+    //lv_obj_set_height(ui_song_title, 110);
     lv_obj_set_style_anim_speed(ui_song_title, 35, 0); // Speed for when it eventually scrolls
     lv_obj_set_style_pad_bottom(ui_song_title, 10, 0);
 
@@ -938,17 +940,47 @@ void UIManager::populateWifiList(lv_obj_t* list_cont, const std::vector<String>&
     lv_obj_scroll_to_y(list_cont, 0, LV_ANIM_OFF);
 }
 
+static void marquee_anim_cb(void* var, int32_t v) {
+    lv_obj_set_style_translate_x((lv_obj_t*) var, v, 0);
+}
+
 void UIManager::resetMarquee(lv_obj_t *label) {
-    lv_label_set_long_mode(label, LV_LABEL_LONG_DOT);
+    /*
+    // Stop Existing
+    lv_anim_del(label, (lv_anim_exec_xcb_t)marquee_anim_cb);
 
-    lv_timer_t* timer = lv_timer_create([](lv_timer_t* t) {
-        lv_obj_t* l = (lv_obj_t*)t->user_data;
+    // Reset Pos
+    lv_obj_set_style_translate_x(label, 0, 0);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_CLIP);
 
-        lv_label_set_long_mode(l, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    // Calc scroll
+    lv_point_t size;
+    lv_txt_get_size(&size, lv_label_get_text(label), lv_obj_get_style_text_font(label, 0),
+        0, 0, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
 
-        lv_timer_del(t);
-    }, 1500, label);
+    int32_t obj_width = lv_obj_get_width(label);
+    int32_t scroll_limit = size.x - obj_width;
 
+    if (scroll_limit <= 0) return;
+
+    lv_anim_t a;
+    lv_anim_init(&a);
+    lv_anim_set_var(&a, label);
+    lv_anim_set_values(&a, 0, -scroll_limit - 40);
+
+    lv_anim_set_time(&a, (size.x) * 30);
+
+    lv_anim_set_exec_cb(&a, (lv_anim_exec_xcb_t)marquee_anim_cb);
+    lv_anim_set_path_cb(&a, lv_anim_path_linear);
+
+    // Loop
+    lv_anim_set_delay(&a, 2000);
+    lv_anim_set_playback_time(&a, 0);
+    lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
+    lv_anim_set_repeat_delay(&a, 30000);
+
+    lv_anim_start(&a);
+    */
 }
 
 
