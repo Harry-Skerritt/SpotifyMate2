@@ -26,6 +26,8 @@ public:
 
     void loadAlbumArt(String& url, short target_size);
 
+    bool getCurrentlyPlaying();
+
 
 private:
     SpotifyManager() {}

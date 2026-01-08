@@ -23,10 +23,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Got the layout of the now playing screen mostly complete - need to account for longer titles, and lock some positions.">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Mediated some screen flickering">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hal/display.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/hal/display.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/system/SystemManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/SystemManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/images/CurrentDeviceLogo.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/images/CurrentDeviceLogo.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -209,7 +214,7 @@
       <workItem from="1767733927320" duration="1486000" />
       <workItem from="1767747435141" duration="15383000" />
       <workItem from="1767802308495" duration="22153000" />
-      <workItem from="1767831591892" duration="6953000" />
+      <workItem from="1767831591892" duration="12796000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -515,7 +520,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767833154181</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Mediated some screen flickering">
+      <option name="closed" value="true" />
+      <created>1767884973749</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1767884973749</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -533,7 +546,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added the error screen" />
     <MESSAGE value="Started adding the wifi onboarding" />
     <MESSAGE value="Added WiFi scanning and the displaying of networks" />
     <MESSAGE value="Added network onboarding" />
@@ -558,6 +570,7 @@
     <MESSAGE value="Fixed Image Scaling" />
     <MESSAGE value="Ensured the image scaling is dynamic" />
     <MESSAGE value="Got the layout of the now playing screen mostly complete - need to account for longer titles, and lock some positions." />
-    <option name="LAST_COMMIT_MESSAGE" value="Got the layout of the now playing screen mostly complete - need to account for longer titles, and lock some positions." />
+    <MESSAGE value="Mediated some screen flickering" />
+    <option name="LAST_COMMIT_MESSAGE" value="Mediated some screen flickering" />
   </component>
 </project>

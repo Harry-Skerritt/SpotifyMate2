@@ -212,8 +212,8 @@ void UIManager::update() {
                 showSpinner("Resuming Spotify Session...");
 
             case SPOTIFY_READY:
-                showContextScreen("Main Player!");
                 showMainPlayer();
+                resetMarquee(ui_song_title);
                 break;
 
             case SPOTIFY_LINK_ERROR:
@@ -554,61 +554,109 @@ void UIManager::showSpotifyLinking(const char *auth_url) {
 void UIManager::showMainPlayer() {
     clearScreen();
 
-    lv_obj_set_style_bg_color(current_screen, lv_color_hex(0x655a5a), 0);
+    lv_obj_set_style_bg_color(current_screen, lv_color_hex(0xB1A69D), 0);
+    lv_obj_clear_flag(current_screen, LV_OBJ_FLAG_SCROLLABLE);
 
-    // Album Art
-    ui_album_art = lv_img_create(current_screen);
+    // Main Container
+    lv_obj_t* main_row = lv_obj_create(current_screen);
+    lv_obj_set_size(main_row, lv_pct(100), 365);
+    lv_obj_align(main_row, LV_ALIGN_LEFT_MID, 0, 0);
+    lv_obj_set_style_pad_left(main_row, 20, 0);
+    lv_obj_set_style_pad_right(main_row, 20, 0);
+    lv_obj_set_flex_flow(main_row, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(main_row, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_column(main_row, 20, 0); // Gap between Art and Text
+    lv_obj_clear_flag(main_row, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(main_row, 0, 0);
+    lv_obj_set_style_bg_opa(main_row, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_shadow_width(main_row, 0 ,0);
+    lv_obj_clear_flag(main_row, LV_OBJ_FLAG_SCROLLABLE);
 
+
+    // --- Album Art ---
+    ui_album_art = lv_img_create(main_row);
     lv_img_set_src(ui_album_art, &album_dsc);
     lv_obj_set_size(ui_album_art, 365, 365);
-    lv_obj_align(ui_album_art, LV_ALIGN_LEFT_MID, 20, 0);
     lv_obj_set_style_radius(ui_album_art, 15, 0);
     lv_obj_set_style_clip_corner(ui_album_art, true, 0);
     lv_obj_move_foreground(ui_album_art);
+    lv_obj_set_style_shadow_width(ui_album_art, 20, 0);
+    lv_obj_set_style_shadow_color(ui_album_art, lv_color_hex(0x000000), 0);
+    lv_obj_set_style_shadow_opa(ui_album_art, LV_OPA_50, 0);
 
-    // Song Title
-    lv_obj_t* song_title = lv_label_create(current_screen);
-    if (!spotifyState.current_track_title.isEmpty()) {
-        lv_label_set_text(song_title, spotifyState.current_track_title.c_str());
-    } else {
-        lv_label_set_text(song_title, "Nothing Playing");
-    }
-    lv_obj_set_style_text_color(song_title, SPOTIFY_WHITE, 0);
-    lv_obj_set_style_text_font(song_title, &font_metropolis_black_45, 0);
-    lv_obj_align_to(song_title, ui_album_art, LV_ALIGN_OUT_BOTTOM_RIGHT, 350, -90);
+
+    // Text Container
+    lv_obj_t* info_con = lv_obj_create(main_row);
+    lv_obj_set_flex_grow(info_con, 1);
+    lv_obj_set_height(info_con, 365);
+    lv_obj_set_flex_flow(info_con, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(info_con, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_START,LV_FLEX_ALIGN_START);
+    lv_obj_clear_flag(info_con, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_pad_row(info_con, 0, 0);
+    lv_obj_set_style_pad_bottom(info_con, 15, 0);
+    lv_obj_set_style_border_width(info_con, 0, 0);
+    lv_obj_set_style_bg_opa(info_con, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_shadow_width(info_con, 0 ,0);
+    lv_obj_clear_flag(info_con, LV_OBJ_FLAG_SCROLLABLE);
+
+
+    // --- CURRENT DEVICE ---
+    // Device Info Container
+    lv_obj_t* device_con = lv_obj_create(info_con);
+    lv_obj_set_size(device_con, lv_pct(100), 37);
+    lv_obj_set_flex_flow(device_con, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(device_con, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_column(device_con, 10, 0);
+    lv_obj_set_style_pad_all(device_con, 0, 0);
+    lv_obj_clear_flag(device_con, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_pad_bottom(device_con, 10, 0);
+    lv_obj_set_style_border_width(device_con, 0, 0);
+    lv_obj_set_style_bg_opa(device_con, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_shadow_width(device_con, 0 ,0);
+    lv_obj_clear_flag(device_con, LV_OBJ_FLAG_SCROLLABLE);
+
+
+    // Device Icon
+    lv_obj_t* current_device_icon = lv_img_create(device_con);
+    lv_img_set_src(current_device_icon, &CurrentDeviceLogo);
+    lv_obj_set_size(current_device_icon, 35, 35);
+    lv_img_set_antialias(current_device_icon, true);
+
+    // Device Name
+    lv_obj_t* device_name = lv_label_create(device_con);
+    lv_label_set_text(device_name,
+        !spotifyState.current_track_device_name.isEmpty() ?
+        spotifyState.current_track_device_name.c_str() : "Not Playing");
+    lv_obj_set_style_text_color(device_name, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(device_name, &font_gotham_medium_20, 0);
+    lv_obj_set_width(device_name, 180);
+    lv_obj_set_style_max_height(device_name, 30, 0);
+    lv_label_set_long_mode(device_name, LV_LABEL_LONG_DOT);
+
+
+    // --- Song Title ---
+    ui_song_title = lv_label_create(info_con);
+    lv_label_set_text(ui_song_title,
+        !spotifyState.current_track_title.isEmpty() ?
+        spotifyState.current_track_title.c_str() : "Nothing Playing");
+    lv_obj_set_style_text_color(ui_song_title, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(ui_song_title, &font_metropolis_black_45, 0);
+    lv_obj_set_width(ui_song_title, 370);
+    lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_DOT);
+    lv_obj_set_style_anim_speed(ui_song_title, 35, 0); // Speed for when it eventually scrolls
+    lv_obj_set_style_pad_bottom(ui_song_title, 10, 0);
 
 
     // Song Artist
-    lv_obj_t* song_artist = lv_label_create(current_screen);
-    if (!spotifyState.current_track_artist.isEmpty()) {
-        lv_label_set_text(song_artist, spotifyState.current_track_artist.c_str());
-    } else {
-        lv_label_set_text(song_artist, "-");
-    }
+    lv_obj_t* song_artist = lv_label_create(info_con);
+    lv_label_set_text(song_artist,
+        !spotifyState.current_track_artist.isEmpty() ?
+        spotifyState.current_track_artist.c_str() : "-");
     lv_obj_set_style_text_color(song_artist, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(song_artist, &font_gotham_medium_30, 0);
-    lv_obj_align_to(song_artist, song_title, LV_ALIGN_TOP_LEFT, 0, 45);
+    lv_obj_set_width(song_artist, 370);
+    lv_label_set_long_mode(song_artist, LV_LABEL_LONG_SCROLL);
 
-    // Device Icon
-    lv_obj_t* current_device_icon = lv_img_create(current_screen);
-    lv_img_set_src(current_device_icon, &CurrentDeviceLogo);
-    lv_img_set_pivot(current_device_icon, 0, 0);
-    lv_img_set_zoom(current_device_icon, 59);
-    lv_obj_set_size(current_device_icon, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_obj_align_to(current_device_icon, song_title, LV_ALIGN_TOP_LEFT, 0, -50);
-    lv_img_set_antialias(current_device_icon, true);
-
-
-    // Device Name
-    lv_obj_t* device_name = lv_label_create(current_screen);
-    if (!spotifyState.current_track_device_name.isEmpty()) {
-        lv_label_set_text(device_name, spotifyState.current_track_device_name.c_str());
-    } else {
-        lv_label_set_text(device_name, "Not Playing");
-    }
-    lv_obj_set_style_text_color(device_name, SPOTIFY_WHITE, 0);
-    lv_obj_set_style_text_font(device_name, &font_gotham_medium_20, 0);
-    lv_obj_align_to(device_name, current_device_icon, LV_ALIGN_TOP_LEFT, 45, 9);
 
     // Load Image
     if (!spotifyState.current_track_url.isEmpty()) {
@@ -618,8 +666,6 @@ void UIManager::showMainPlayer() {
         SpotifyManager::getInstance().loadAlbumArt(np_url, 365);
     }
 }
-
-
 
 
 // --- PRIVATE ---
@@ -813,6 +859,19 @@ void UIManager::populateWifiList(lv_obj_t* list_cont, const std::vector<String>&
     lv_obj_set_style_border_width(spacer, 0, 0);
 
     lv_obj_scroll_to_y(list_cont, 0, LV_ANIM_OFF);
+}
+
+void UIManager::resetMarquee(lv_obj_t *label) {
+    lv_label_set_long_mode(label, LV_LABEL_LONG_DOT);
+
+    lv_timer_t* timer = lv_timer_create([](lv_timer_t* t) {
+        lv_obj_t* l = (lv_obj_t*)t->user_data;
+
+        lv_label_set_long_mode(l, LV_LABEL_LONG_SCROLL_CIRCULAR);
+
+        lv_timer_del(t);
+    }, 1500, label);
+
 }
 
 

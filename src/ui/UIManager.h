@@ -86,12 +86,15 @@ private:
 
     lv_obj_t* ui_album_art = nullptr;
     uint16_t imageWidth;
+    lv_obj_t* ui_song_title = nullptr;
 
     // Internal Helpers
     lv_obj_t* createSpotifyBtn(lv_obj_t* parent, lv_event_cb_t cb, const char* text, lv_align_t align, int x, int y, bool is_green);
     lv_obj_t* createLogo(lv_obj_t* parent, const lv_font_t* font, lv_align_t align, int x, int y);
     lv_obj_t* createNetworkItem(lv_obj_t* parent, const char* ssid);
     lv_obj_t* createCustomQRCode(lv_obj_t* parent, const char* url, int size);
+
+    void resetMarquee(lv_obj_t* label);
 
     void populateWifiList(lv_obj_t* list_cont, const std::vector<String>& networks);
 
