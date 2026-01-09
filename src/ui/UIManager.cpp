@@ -607,7 +607,7 @@ void UIManager::showSpotifyLinking(const char *auth_url) {
 
 // --- Main Functionality ---
 void UIManager::showMainPlayer() {
-    clearScreen();
+  clearScreen();
 
     lv_obj_set_style_bg_color(current_screen, lv_color_hex(spotifyState.album_average_colour), 0);
     lv_obj_clear_flag(current_screen, LV_OBJ_FLAG_SCROLLABLE);
@@ -616,36 +616,31 @@ void UIManager::showMainPlayer() {
     lv_obj_t* main_row = lv_obj_create(current_screen);
     lv_obj_set_size(main_row, lv_pct(100), 400); // 365 -> 400
     lv_obj_align(main_row, LV_ALIGN_LEFT_MID, 0, 0);
-    lv_obj_clear_flag(main_row, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_border_width(main_row, 0, 0);
-    lv_obj_set_style_bg_opa(main_row, LV_OPA_TRANSP, 0);
-
-    /*
     lv_obj_set_style_pad_left(main_row, 20, 0);
     lv_obj_set_style_pad_right(main_row, 20, 0);
     lv_obj_set_flex_flow(main_row, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(main_row, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
     lv_obj_set_style_pad_column(main_row, 20, 0); // Gap between Art and Text
-
-
+    lv_obj_clear_flag(main_row, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(main_row, 0, 0);
+    lv_obj_set_style_bg_opa(main_row, LV_OPA_TRANSP, 0);
     lv_obj_set_style_shadow_width(main_row, 0 ,0);
     lv_obj_clear_flag(main_row, LV_OBJ_FLAG_SCROLLABLE);
-*/
+
 
     // --- Album Art ---
     ui_album_art = lv_img_create(main_row);
     lv_img_set_src(ui_album_art, &album_dsc);
-    lv_obj_set_pos(ui_album_art, 20, 17);
     lv_obj_set_size(ui_album_art, 365, 365);
     lv_obj_set_style_radius(ui_album_art, 15, 0);
     lv_obj_set_style_clip_corner(ui_album_art, true, 0);
     lv_obj_move_foreground(ui_album_art);
-    lv_obj_add_flag(ui_album_art, LV_OBJ_FLAG_FLOATING);
 
     // Inner Border
     lv_obj_set_style_border_width(ui_album_art, 1, 0);
     lv_obj_set_style_border_color(ui_album_art, SPOTIFY_WHITE, 0);
     lv_obj_set_style_border_opa(ui_album_art, LV_OPA_10, 0);
+
 
     // Album Shadow
     static lv_style_t style_shadow;
@@ -662,14 +657,6 @@ void UIManager::showMainPlayer() {
 
     // Text Container
     lv_obj_t* info_con = lv_obj_create(main_row);
-    lv_obj_set_pos(info_con, 405, 17);
-    lv_obj_set_size(info_con, 375, 365);
-    lv_obj_clear_flag(info_con, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_border_width(info_con, 0, 0);
-    lv_obj_set_style_bg_opa(info_con, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_clip_corner(info_con, false, 0);
-
-    /*
     lv_obj_set_flex_grow(info_con, 1);
     lv_obj_set_height(info_con, 400); // 365 -> 400
     lv_obj_set_flex_flow(info_con, LV_FLEX_FLOW_COLUMN);
@@ -677,10 +664,10 @@ void UIManager::showMainPlayer() {
     lv_obj_clear_flag(info_con, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_style_pad_row(info_con, 0, 0);
     lv_obj_set_style_pad_bottom(info_con, 32, 0); // 15 -> 32
-
+    lv_obj_set_style_border_width(info_con, 0, 0);
+    lv_obj_set_style_bg_opa(info_con, LV_OPA_TRANSP, 0);
     lv_obj_set_style_shadow_width(info_con, 0 ,0);
-    */
-
+    lv_obj_clear_flag(info_con, LV_OBJ_FLAG_SCROLLABLE);
 
 
     // --- CURRENT DEVICE ---
@@ -697,7 +684,6 @@ void UIManager::showMainPlayer() {
     lv_obj_set_style_bg_opa(device_con, LV_OPA_TRANSP, 0);
     lv_obj_set_style_shadow_width(device_con, 0 ,0);
     lv_obj_clear_flag(device_con, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_pos(device_con, 0, 0);
 
 
     // Device Icon
@@ -728,13 +714,11 @@ void UIManager::showMainPlayer() {
     lv_obj_set_style_text_color(ui_song_title, SPOTIFY_WHITE, 0);
     lv_obj_set_style_text_font(ui_song_title, &font_metropolis_black_45, 0);
     lv_obj_set_width(ui_song_title, 370);
-    lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_SCROLL_CIRCULAR);
-    //lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_DOT);
-    //lv_obj_set_height(ui_song_title, 110);
+    //lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_DOT);
+    lv_obj_set_height(ui_song_title, 110);
     lv_obj_set_style_anim_speed(ui_song_title, 35, 0); // Speed for when it eventually scrolls
     lv_obj_set_style_pad_bottom(ui_song_title, 10, 0);
-    lv_obj_add_flag(ui_song_title, LV_OBJ_FLAG_IGNORE_LAYOUT);
-    lv_obj_set_pos(ui_song_title, 0, 50);
 
 
     // Song Artist
@@ -747,7 +731,6 @@ void UIManager::showMainPlayer() {
     lv_obj_set_style_text_font(ui_song_artist, &font_gotham_medium_30, 0);
     lv_obj_set_width(ui_song_artist, 370);
     lv_label_set_long_mode(ui_song_artist, LV_LABEL_LONG_SCROLL);
-    lv_obj_set_pos(ui_song_artist, 0, 160);
 
 
     // Load Image
@@ -999,5 +982,3 @@ void UIManager::resetMarquee(lv_obj_t *label) {
     lv_anim_start(&a);
     */
 }
-
-

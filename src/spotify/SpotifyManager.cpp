@@ -320,4 +320,3 @@ uint32_t SpotifyManager::calculateSmartBackground(const Spotify::Extensions::Ima
     // Fine
     return palette.average.to0x();
 }
-
