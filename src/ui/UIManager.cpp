@@ -9,6 +9,12 @@
 #include "spotify/SpotifyManager.h"
 #include "system/SystemManager.h"
 
+// For Manual WiFi Todo: Move?
+struct WiFiLoginFields {
+    lv_obj_t* ssid_ta;
+    lv_obj_t* pass_ta;
+};
+
 // Static Images
 LV_IMG_DECLARE(CurrentDeviceLogo);
 
@@ -502,7 +508,7 @@ void UIManager::showPasswordEntry(const String &ssid) {
 
     // Header
     lv_obj_t* title = lv_label_create(current_screen);
-    lv_label_set_text_fmt(title, "Connect to %s", ssid);
+    lv_label_set_text_fmt(title, "Connect to %s", &ssid);
     lv_obj_set_style_text_font(title, &font_gotham_medium_40, 0);
     lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
     lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 40);
@@ -553,7 +559,92 @@ void UIManager::showPasswordEntry(const String &ssid) {
     }, LV_EVENT_ALL, NULL);
 }
 
+void UIManager::showManualConnection() {
+    clearScreen();
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
 
+
+    // Keyboard Helper
+    lv_obj_t* kb = lv_keyboard_create(current_screen);
+    lv_obj_set_size(kb, 800, 240);
+    lv_obj_align(kb, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_set_style_bg_color(kb, BACKGROUND_GREY, 0);
+    lv_obj_set_style_bg_color(kb, SPOTIFY_GREEN, LV_PART_ITEMS | LV_STATE_CHECKED);
+
+    // Text Area Style
+    static lv_style_t style_ta;
+    lv_style_init(&style_ta);
+    lv_style_set_bg_color(&style_ta, lv_color_hex(0x333333));
+    lv_style_set_text_color(&style_ta, SPOTIFY_WHITE);
+    lv_style_set_border_width(&style_ta, 0);
+    lv_style_set_text_font(&style_ta, &font_gotham_medium_20);
+
+
+    // Header
+    lv_obj_t* title = lv_label_create(current_screen);
+    lv_label_set_text_fmt(title, "Manually Connect");
+    lv_obj_set_style_text_font(title, &font_gotham_medium_40, 0);
+    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
+    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 40);
+
+    // SSID Text Area
+    lv_obj_t* ta_ssid = lv_textarea_create(current_screen);
+    lv_textarea_set_one_line(ta_ssid, true);
+    lv_textarea_set_placeholder_text(ta_ssid, "Enter SSID");
+    lv_textarea_set_text(ta_ssid, "Enter SSID"); // Set initial value if known
+    lv_obj_set_size(ta_ssid, 500, 60);
+    lv_obj_align(ta_ssid, LV_ALIGN_TOP_MID, 0, 40);
+    lv_obj_add_style(ta_ssid, &style_ta, 0);
+
+    // --- Password Text Area ---
+    lv_obj_t* ta_pass = lv_textarea_create(current_screen);
+    lv_textarea_set_password_mode(ta_pass, true);
+    lv_textarea_set_one_line(ta_pass, true);
+    lv_textarea_set_placeholder_text(ta_pass, "Enter Password");
+    lv_obj_set_size(ta_pass, 500, 60);
+    lv_obj_align(ta_pass, LV_ALIGN_TOP_MID, 0, 110);
+    lv_obj_add_style(ta_pass, &style_ta, 0);
+
+    // Default focus
+    lv_keyboard_set_textarea(kb, ta_ssid);
+
+    // Focus Logic
+    auto focus_cb = [](lv_event_t* e) {
+        lv_obj_t* ta = lv_event_get_target(e);
+        lv_obj_t* kb = (lv_obj_t*)lv_event_get_user_data(e);
+        lv_keyboard_set_textarea(kb, ta);
+    };
+
+    lv_obj_add_event_cb(ta_ssid, focus_cb, LV_EVENT_CLICKED, kb);
+    lv_obj_add_event_cb(ta_pass, focus_cb, LV_EVENT_CLICKED, kb);
+
+    static WiFiLoginFields login_fields;
+    login_fields.ssid_ta = ta_ssid;
+    login_fields.pass_ta = ta_pass;
+
+
+    // Keyboard Callback
+    lv_obj_add_event_cb(kb, [](lv_event_t* e) {
+        lv_event_code_t code = lv_event_get_code(e);
+        lv_obj_t* kb = lv_event_get_target(e);
+
+        WiFiLoginFields* fields = (WiFiLoginFields*)lv_event_get_user_data(e);
+
+        if(code == LV_EVENT_READY) {
+            const char* ssid_val = lv_textarea_get_text(fields->ssid_ta);
+            const char* pass_val = lv_textarea_get_text(fields->pass_ta);
+
+            networkState.selected_ssid = ssid_val;
+            networkState.selected_pass = pass_val;
+
+            networkState.status = WIFI_CONNECTING;
+            WifiManager::getInstance().requestConnect();
+        } else if(code == LV_EVENT_CANCEL) {
+            getInstance().showOnboarding();
+        }
+
+    }, LV_EVENT_ALL, &login_fields);
+}
 
 // --- Spotify ---
 void UIManager::showSpotifyLinkError() {

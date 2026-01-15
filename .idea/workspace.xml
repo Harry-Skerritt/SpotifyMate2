@@ -24,9 +24,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Changed layout to avoid tearing in the scrolling text - needs realigning">
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_01_2026,_00_49_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_01_2026__00_49__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,11 +78,14 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Harry-Skerritt/SpotifyMate2.git&quot;,
-    &quot;accountId&quot;: &quot;5f314702-d3bf-4e2a-9560-968f32bc1895&quot;
+    &quot;accountId&quot;: &quot;b7a56c08-2897-4bfc-8305-2b0b866671d8&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/ui/images/CurrentDeviceLogo.c" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="hftCxpdW" />
   </component>
   <component name="PlatformioLocalSettings">
     <option name="availableProjects">
@@ -129,9 +135,11 @@
     &quot;PlatformIO.PlatformIO.executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
@@ -214,6 +222,8 @@
       <workItem from="1767802308495" duration="22153000" />
       <workItem from="1767831591892" duration="29551000" />
       <workItem from="1767917719500" duration="299000" />
+      <workItem from="1768491401349" duration="1529000" />
+      <workItem from="1768493492933" duration="1870000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />

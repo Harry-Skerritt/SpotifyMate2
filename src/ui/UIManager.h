@@ -49,6 +49,7 @@ public:
     void showNetworkList(const std::vector<String>& networks);
     void showPasswordEntry(const String& ssid);
     void showWifiError();
+    void showManualConnection();
 
     // Spotify Screens
     void showSpotifyLinkError();
