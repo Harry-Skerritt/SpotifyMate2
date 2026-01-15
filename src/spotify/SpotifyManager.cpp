@@ -295,6 +295,8 @@ bool SpotifyManager::getCurrentlyPlaying() {
     } catch (Spotify::Exception& e) {
         Serial.println("Spotify: Error getting playing state!");
         Serial.println(e.what());
+        spotifyState.status = SPOTIFY_ERROR;
+        networkState.status = WIFI_ERROR;
     }
     return false;
 }

@@ -23,9 +23,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added code for Manual Connection page">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added Manual WiFi connection option">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,7 +219,7 @@
       <workItem from="1767831591892" duration="29551000" />
       <workItem from="1767917719500" duration="299000" />
       <workItem from="1768491401349" duration="1529000" />
-      <workItem from="1768493492933" duration="2550000" />
+      <workItem from="1768493492933" duration="2967000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -597,7 +597,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768496857131</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="Added Manual WiFi connection option">
+      <option name="closed" value="true" />
+      <created>1768497690851</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1768497690851</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -615,7 +623,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated Spotify Manager?" />
     <MESSAGE value="Rebased the fix onto master and confirmed" />
     <MESSAGE value="Started adding the spotify manager, and so far tested from setup to link screen" />
     <MESSAGE value="Tested the SpotifyCPP lib works by making an auth URL" />
@@ -640,6 +647,7 @@
     <MESSAGE value="Attempted to reduce tearing" />
     <MESSAGE value="Changed layout to avoid tearing in the scrolling text - needs realigning" />
     <MESSAGE value="Added code for Manual Connection page" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added code for Manual Connection page" />
+    <MESSAGE value="Added Manual WiFi connection option" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Manual WiFi connection option" />
   </component>
 </project>
