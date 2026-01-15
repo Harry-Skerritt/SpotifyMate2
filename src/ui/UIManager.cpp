@@ -471,6 +471,34 @@ void UIManager::showNetworkList(const std::vector<String>& networks) {
 
     // Network list
     populateWifiList(list_cont, networks);
+
+    // Container for the "Manual Connect" footer
+    lv_obj_t* footer_cont = lv_obj_create(list_cont);
+    lv_obj_set_size(footer_cont, LV_PCT(100), LV_SIZE_CONTENT);
+    lv_obj_set_flex_flow(footer_cont, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(footer_cont, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_bg_opa(footer_cont, 0, 0);
+    lv_obj_set_style_border_width(footer_cont, 0, 0);
+    lv_obj_set_style_pad_gap(footer_cont, 5, 0);
+
+    // "Can't see your network?" (White)
+    lv_obj_t* hint_text = lv_label_create(footer_cont);
+    lv_label_set_text(hint_text, "Can't see your network?");
+    lv_obj_set_style_text_color(hint_text, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(hint_text, &font_gotham_medium_20, 0);
+
+    // "Connect Manually" (Green & Clickable)
+    lv_obj_t* manual_btn = lv_label_create(footer_cont);
+    lv_label_set_text(manual_btn, "Connect Manually");
+    lv_obj_set_style_text_color(manual_btn, SPOTIFY_GREEN, 0);
+    lv_obj_set_style_text_font(manual_btn, &font_gotham_medium_20, 0);
+    lv_obj_add_flag(manual_btn, LV_OBJ_FLAG_CLICKABLE);
+
+    // Click Event
+    lv_obj_add_event_cb(manual_btn, [](lv_event_t* e) {
+        getInstance().showManualConnection();
+    }, LV_EVENT_CLICKED, NULL);
+
 }
 
 void UIManager::showWifiError() {
@@ -563,7 +591,6 @@ void UIManager::showManualConnection() {
     clearScreen();
     lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
 
-
     // Keyboard Helper
     lv_obj_t* kb = lv_keyboard_create(current_screen);
     lv_obj_set_size(kb, 800, 240);
@@ -591,9 +618,8 @@ void UIManager::showManualConnection() {
     lv_obj_t* ta_ssid = lv_textarea_create(current_screen);
     lv_textarea_set_one_line(ta_ssid, true);
     lv_textarea_set_placeholder_text(ta_ssid, "Enter SSID");
-    lv_textarea_set_text(ta_ssid, "Enter SSID"); // Set initial value if known
     lv_obj_set_size(ta_ssid, 500, 60);
-    lv_obj_align(ta_ssid, LV_ALIGN_TOP_MID, 0, 40);
+    lv_obj_align(ta_ssid, LV_ALIGN_TOP_MID, 0, 100);
     lv_obj_add_style(ta_ssid, &style_ta, 0);
 
     // --- Password Text Area ---
@@ -602,7 +628,7 @@ void UIManager::showManualConnection() {
     lv_textarea_set_one_line(ta_pass, true);
     lv_textarea_set_placeholder_text(ta_pass, "Enter Password");
     lv_obj_set_size(ta_pass, 500, 60);
-    lv_obj_align(ta_pass, LV_ALIGN_TOP_MID, 0, 110);
+    lv_obj_align(ta_pass, LV_ALIGN_TOP_MID, 0, 170);
     lv_obj_add_style(ta_pass, &style_ta, 0);
 
     // Default focus

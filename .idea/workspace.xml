@@ -23,13 +23,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Changed layout to avoid tearing in the scrolling text - needs realigning">
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_01_2026,_00_49_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_07_01_2026__00_49__Changes_.xml" beforeDir="false" />
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added code for Manual Connection page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -223,7 +219,7 @@
       <workItem from="1767831591892" duration="29551000" />
       <workItem from="1767917719500" duration="299000" />
       <workItem from="1768491401349" duration="1529000" />
-      <workItem from="1768493492933" duration="1870000" />
+      <workItem from="1768493492933" duration="2550000" />
     </task>
     <task id="LOCAL-00001" summary="Got LVGL working with the display">
       <option name="closed" value="true" />
@@ -593,7 +589,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767916092851</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Added code for Manual Connection page">
+      <option name="closed" value="true" />
+      <created>1768496857131</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1768496857131</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -611,7 +615,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Tried abstracting" />
     <MESSAGE value="Updated Spotify Manager?" />
     <MESSAGE value="Rebased the fix onto master and confirmed" />
     <MESSAGE value="Started adding the spotify manager, and so far tested from setup to link screen" />
@@ -636,6 +639,7 @@
     <MESSAGE value="Synced changes of art and text" />
     <MESSAGE value="Attempted to reduce tearing" />
     <MESSAGE value="Changed layout to avoid tearing in the scrolling text - needs realigning" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed layout to avoid tearing in the scrolling text - needs realigning" />
+    <MESSAGE value="Added code for Manual Connection page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added code for Manual Connection page" />
   </component>
 </project>
