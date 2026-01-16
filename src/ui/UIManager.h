@@ -54,6 +54,7 @@ public:
     // Spotify Screens
     void showSpotifyLinkError();
     void showSpotifyLinking(const char* auth_url);
+    void showSpotifyError();
 
     // Main Funciton
     void showMainPlayer();

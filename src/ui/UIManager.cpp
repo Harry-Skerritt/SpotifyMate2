@@ -246,8 +246,8 @@ void UIManager::update() {
                 break;
 
             case SPOTIFY_ERROR:
-                //showFailure(); // Or a specific Spotify error screen
-                showContextScreen("Spotify Error");
+                showSpotifyError();
+                //showContextScreen("Spotify Error");
                 break;
 
             default: break;
@@ -299,6 +299,8 @@ static lv_obj_t* wifi_error_retry_btn_ptr;
 static lv_obj_t* wifi_error_reconnect_btn_ptr;
 static lv_obj_t* error_restart_btn_ptr;
 static lv_obj_t* spotify_link_error_btn_ptr;
+static lv_obj_t* spotify_error_retry_btn_ptr;
+static lv_obj_t* spotify_error_relink_btn_ptr;
 
 static void errorEventHandler(lv_event_t * e) {
     lv_event_code_t code = lv_event_get_code(e); // What happened?
@@ -319,8 +321,14 @@ static void errorEventHandler(lv_event_t * e) {
             // Restart Device
             ESP.restart();
         }
-        else if (btn == spotify_link_error_btn_ptr) {
-            // Re link spotify
+        else if (btn == spotify_error_retry_btn_ptr) {
+            // Try reconnecting to spotify - this being set should update everything
+            spotifyState.status = SPOTIFY_AUTHENTICATING;
+        }
+        else if (btn == spotify_error_relink_btn_ptr ||
+                 btn == spotify_link_error_btn_ptr)
+        {
+            // Re-link spotify
             SystemManager::getInstance().resetSpotifyTokens(); // Wipe saved tokens
             spotifyState.status = SPOTIFY_NEED_LINK; // Re onboard
             spotifyState.refresh_token = ""; // Clear local token
@@ -695,7 +703,6 @@ void UIManager::showSpotifyLinkError() {
     spotify_link_error_btn_ptr = createSpotifyBtn(current_screen, errorEventHandler, "Re-link", LV_ALIGN_BOTTOM_MID, 0, -32, true);
 }
 
-
 void UIManager::showSpotifyLinking(const char *auth_url) {
     clearScreen();
 
@@ -721,6 +728,34 @@ void UIManager::showSpotifyLinking(const char *auth_url) {
 
 }
 
+void UIManager::showSpotifyError() {
+    clearScreen();
+
+    lv_obj_set_style_bg_color(current_screen, BACKGROUND_GREY, 0);
+
+    // Header Title
+    lv_obj_t* title = lv_label_create(current_screen);
+    lv_label_set_text(title, "Spotify Failed to Connect");
+    lv_obj_set_style_text_color(title, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_text_font(title, &font_gotham_medium_60, 0);
+    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 30);
+
+    // Message
+    lv_obj_t * body = lv_label_create(current_screen);
+    lv_label_set_text(body, "A failure occurred when trying to \nauthorise Spotify. \nPlease try again. If the issue \npersists try re-linking!");
+    lv_obj_set_style_text_color(body, SPOTIFY_GREY, 0);
+    lv_obj_set_style_text_font(body, &font_gotham_medium_40, 0);
+    lv_obj_align(body, LV_ALIGN_TOP_LEFT, 30, 115);
+
+    // Retry Button
+    spotify_error_retry_btn_ptr = createSpotifyBtn(
+        current_screen, errorEventHandler, "Try Again", LV_ALIGN_BOTTOM_LEFT, 38, -19, true);
+
+    // Re-Link Button
+    spotify_error_relink_btn_ptr = createSpotifyBtn(
+        current_screen, errorEventHandler, "Re-Link", LV_ALIGN_BOTTOM_RIGHT, -38, -19, false);
+
+}
 
 // --- Main Functionality ---
 void UIManager::showMainPlayer() {

@@ -109,6 +109,7 @@ void SpotifyManager::handleRefreshValidation() {
     } else {
         Serial.println("Spotify: Refresh failed (Token expired or revoked)");
         spotifyState.status = SPOTIFY_LINK_ERROR;
+        // Todo: Make it more obvious and
     }
 }
 
