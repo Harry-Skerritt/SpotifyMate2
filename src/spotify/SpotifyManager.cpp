@@ -305,6 +305,7 @@ bool SpotifyManager::getCurrentlyPlaying() {
 
 // Helper
 uint32_t SpotifyManager::calculateSmartBackground(const Spotify::Extensions::VibrantPalette& palette) {
+   /* Old Logi
     float luma = (0.299f * palette.vibrant.r) +
                  (0.587f * palette.vibrant.g) +
                  (0.114f * palette.vibrant.b);
@@ -320,4 +321,16 @@ uint32_t SpotifyManager::calculateSmartBackground(const Spotify::Extensions::Vib
 
     // Fine
     return palette.vibrant.to0x();
+    */
+
+    // New Logic - Currently Testing
+    float luma = (0.299f * palette.darker_2.r) +
+                 (0.587f * palette.darker_2.g) +
+                 (0.114f * palette.darker_2.b);
+
+    if (luma < 30) {
+        return palette.darker_1.to0x();
+    }
+
+    return palette.darker_2.to0x();
 }

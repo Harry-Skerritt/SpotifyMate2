@@ -23,13 +23,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added a spotify specific error screen">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Changed the background to use the most vibrant colour from the art instead of the average">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,15 +221,7 @@
       <workItem from="1768491401349" duration="1529000" />
       <workItem from="1768493492933" duration="7189000" />
       <workItem from="1768589460919" duration="1562000" />
-      <workItem from="1768599516518" duration="996000" />
-    </task>
-    <task id="LOCAL-00002" summary="Tested WiFi">
-      <option name="closed" value="true" />
-      <created>1767636022442</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1767636022442</updated>
+      <workItem from="1768599516518" duration="1558000" />
     </task>
     <task id="LOCAL-00003" summary="Added a filesystem and a config file to load wifi creds">
       <option name="closed" value="true" />
@@ -619,7 +607,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768590157555</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="Changed the background to use the most vibrant colour from the art instead of the average">
+      <option name="closed" value="true" />
+      <created>1768601799602</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1768601799603</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -637,7 +633,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Tested the SpotifyCPP lib works by making an auth URL" />
     <MESSAGE value="Added a spotify link error" />
     <MESSAGE value="Added spotify authentication through a proxy" />
     <MESSAGE value="Started adding the PlayScreen (hardcoded for testing)" />
@@ -662,6 +657,7 @@
     <MESSAGE value="Added Manual WiFi connection option" />
     <MESSAGE value="Fixed some error handling" />
     <MESSAGE value="Added a spotify specific error screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a spotify specific error screen" />
+    <MESSAGE value="Changed the background to use the most vibrant colour from the art instead of the average" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed the background to use the most vibrant colour from the art instead of the average" />
   </component>
 </project>
