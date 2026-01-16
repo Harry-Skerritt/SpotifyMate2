@@ -6,7 +6,7 @@
 #define SPOTIFYMANAGER_H
 
 #include <spotify/spotify.hpp>
-#include <spotify/extensions/VisualAPI.hpp>
+#include <spotify/extensions.hpp>
 #include <lvgl.h>
 
 extern  lv_img_dsc_t spotify_img_dsc;
@@ -45,7 +45,7 @@ private:
 
     void handleRefreshValidation();
 
-    uint32_t calculateSmartBackground(const Spotify::Extensions::ImagePalette& palette);
+    uint32_t calculateSmartBackground(const Spotify::Extensions::VibrantPalette& palette);
 
 
     SpotifyManager(const SpotifyManager&) = delete;

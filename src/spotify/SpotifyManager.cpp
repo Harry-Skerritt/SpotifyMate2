@@ -109,7 +109,6 @@ void SpotifyManager::handleRefreshValidation() {
     } else {
         Serial.println("Spotify: Refresh failed (Token expired or revoked)");
         spotifyState.status = SPOTIFY_LINK_ERROR;
-        // Todo: Make it more obvious and
     }
 }
 
@@ -253,13 +252,13 @@ bool SpotifyManager::getCurrentlyPlaying() {
                     if (urlChanged) {
                         Serial.println("Spotify: New Album Art detected...");
                         try {
-                            Spotify::Extensions::ImagePalette palette =
-                                Spotify::Extensions::VisualAPI().getImagePalette(newUrl.c_str());
+                            Spotify::Extensions::VibrantPalette palette =
+                                Spotify::Extensions::VisualAPI().getVibrantImagePalette(newUrl.c_str());
 
-                            spotifyState.album_average_colour = calculateSmartBackground(palette);
+                            spotifyState.album_background_cover = calculateSmartBackground(palette);
                         } catch (...) {
                             Serial.println("Spotify: Image Palette Error - Couldn't get colour");
-                            spotifyState.album_average_colour = 0x191414; // Fallback
+                            spotifyState.album_background_cover = 0x191414; // Fallback
                         }
                         spotifyState.current_track_url = newUrl;
                         spotifyState.needs_art_update = true;
@@ -282,7 +281,7 @@ bool SpotifyManager::getCurrentlyPlaying() {
                 spotifyState.current_track_device_name = "No Device";
 
                 spotifyState.current_track_url = "https://raw.githubusercontent.com/Harry-Skerritt/files/refs/heads/main/not_playing_album.jpg";
-                spotifyState.album_average_colour = 0x13B94E;
+                spotifyState.album_background_cover = 0x13B94E;
 
                 spotifyState.current_track_progress_ms = 0;
                 spotifyState.current_track_duration_ms = 0;
@@ -305,11 +304,10 @@ bool SpotifyManager::getCurrentlyPlaying() {
 
 
 // Helper
-uint32_t SpotifyManager::calculateSmartBackground(const Spotify::Extensions::ImagePalette& palette) {
-
-    float luma = (0.299f * palette.average.r) +
-                 (0.587f * palette.average.g) +
-                 (0.114f * palette.average.b);
+uint32_t SpotifyManager::calculateSmartBackground(const Spotify::Extensions::VibrantPalette& palette) {
+    float luma = (0.299f * palette.vibrant.r) +
+                 (0.587f * palette.vibrant.g) +
+                 (0.114f * palette.vibrant.b);
 
     if (luma > 200) {
         // Too bright
@@ -321,5 +319,5 @@ uint32_t SpotifyManager::calculateSmartBackground(const Spotify::Extensions::Ima
     }
 
     // Fine
-    return palette.average.to0x();
+    return palette.vibrant.to0x();
 }

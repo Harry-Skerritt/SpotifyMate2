@@ -137,7 +137,7 @@ void UIManager::updateAlbumArt(uint8_t* jpgData, size_t len, short t_size) {
             lv_label_set_text(UIManager::getInstance().ui_song_artist, spotifyState.current_track_artist.c_str());
             lv_label_set_text(UIManager::getInstance().ui_device_name, spotifyState.current_track_device_name.c_str());
 
-            lv_obj_set_style_bg_color(UIManager::getInstance().current_screen, lv_color_hex(spotifyState.album_average_colour), 0);
+            lv_obj_set_style_bg_color(UIManager::getInstance().current_screen, lv_color_hex(spotifyState.album_background_cover), 0);
             UIManager::getInstance().resetMarquee(UIManager::getInstance().ui_song_title);
             Serial.println("UI: Complete atomic update finished.");
         }
@@ -277,8 +277,8 @@ void UIManager::update() {
         }
 
 
-        if (!spotifyState.needs_art_update && spotifyState.album_average_colour != last_ui_colour) {
-            last_ui_colour = spotifyState.album_average_colour;
+        if (!spotifyState.needs_art_update && spotifyState.album_background_cover != last_ui_colour) {
+            last_ui_colour = spotifyState.album_background_cover;
             Serial.printf("UI: Applying new pallete colour: 0x%06X\n", last_ui_colour);
             lv_obj_set_style_bg_color(current_screen, lv_color_hex(last_ui_colour), 0);
         }
@@ -761,7 +761,7 @@ void UIManager::showSpotifyError() {
 void UIManager::showMainPlayer() {
   clearScreen();
 
-    lv_obj_set_style_bg_color(current_screen, lv_color_hex(spotifyState.album_average_colour), 0);
+    lv_obj_set_style_bg_color(current_screen, lv_color_hex(spotifyState.album_background_cover), 0);
     lv_obj_clear_flag(current_screen, LV_OBJ_FLAG_SCROLLABLE);
 
     // Main Container
