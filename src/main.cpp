@@ -77,11 +77,15 @@ void TaskGraphics(void *pvParameters) {
     handleHardResetCheck();
 
     for (;;) {
+        if (systemState.status != SYSTEM_STATUS_SLEEP) {
+            UIManager::getInstance().update();
 
-        UIManager::getInstance().update();
-
-        lv_timer_handler();
-        vTaskDelay(pdMS_TO_TICKS(25));
+            lv_timer_handler();
+            vTaskDelay(pdMS_TO_TICKS(25));
+        }
+        else {
+            vTaskDelay(pdMS_TO_TICKS(500));
+        }
     }
 }
 
@@ -114,10 +118,31 @@ void TaskSystem(void *pvParameters) {
 
         // Only update if on WiFi
         if (networkState.wifi_connected) {
+            // Handle sleeping
+            if (systemState.status == SYSTEM_STATUS_IDLE) {
+                Serial.println("SLEEP DEBUG: IN IDLE STATE");
+                unsigned long idleTime = millis() - systemState.time_first_np;
+                unsigned long currentTimeout = (spotifyState.current_track_id == "NOT_PLAYING")
+                                           ? SLEEP_TIMEOUT_MS
+                                           : PAUSE_SLEEP_TIMEOUT_MS;
+
+                if (idleTime >= currentTimeout) {
+                    Serial.println("SLEEP DEBUG: TIMEOUT ELAPSED - SLEEPING...");
+                    systemState.status = SYSTEM_STATUS_SLEEP;
+                    SystemManager::getInstance().enterSleepMode();
+                }
+            }
+
             SpotifyManager::getInstance().update();
+
+            if (systemState.status != SYSTEM_STATUS_ACTIVE && spotifyState.is_playing) {
+                systemState.status = SYSTEM_STATUS_ACTIVE;
+                SystemManager::getInstance().exitSleepMode();
+            }
         }
 
-        vTaskDelay(pdMS_TO_TICKS(100));
+        int delayTime = (systemState.status == SYSTEM_STATUS_ACTIVE) ? 100 : 2000;
+        vTaskDelay(pdMS_TO_TICKS(delayTime));
     }
 }
 

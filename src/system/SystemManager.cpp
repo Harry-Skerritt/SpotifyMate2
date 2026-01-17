@@ -4,15 +4,18 @@
 
 #include "SystemManager.h"
 
+#include <Wire.h>
 #include <LittleFS.h>
 #include <ArduinoJson.h>
 
 #include "global_state.h"
+#include "../../../../../../.platformio/packages/toolchain-riscv32-esp/riscv32-esp-elf/include/c++/8.4.0/set"
 #include "network/WifiManager.h"
 #include "ui/UIManager.h"
 
 
 void SystemManager::init() {
+    systemState.status = SYSTEM_STATUS_ACTIVE;
 
     // --- Loading ---
     // Handling Config.json
@@ -157,7 +160,6 @@ bool SystemManager::loadSpotifySecrets() {
 }
 
 
-
 // --- TOKEN ---
 bool SystemManager::loadSpotifyTokens() {
     if (!LittleFS.exists("/tokens.json")) return false;
@@ -205,3 +207,41 @@ void SystemManager::resetSpotifyTokens() {
     spotifyState.refresh_token = "";
 }
 
+
+// --- Helper ---
+void SystemManager::setBacklight(bool on) {
+    Wire.beginTransmission(0x38);
+
+    // 0x0F usually turns it on/full brightness, 0x00 usually turns it off
+    Wire.write(on ? 0x0F : 0x00);
+
+    Wire.endTransmission();
+    Serial.printf("System: Backlight %s\n", on ? "ON" : "OFF");
+}
+
+
+
+// --- Sleep Mode ---
+void SystemManager::enterSleepMode() {
+    Serial.println("System: Entering sleep mode");
+
+    // Dim Backlight
+    setBacklight(false);
+
+    // Show Sleep Screen
+    UIManager::getInstance().showContextScreen("Sleeping...");
+}
+
+void SystemManager::exitSleepMode() {
+
+    // Turn Backlight on
+    setBacklight(true);
+
+    UIManager::getInstance().showMainPlayer();
+
+    // Refresh UI
+    spotifyState.needs_art_update = true;
+    spotifyState.needs_text_update = true;
+
+    Serial.println("System: Exited sleep mode");
+}

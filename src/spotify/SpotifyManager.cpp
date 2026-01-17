@@ -234,6 +234,26 @@ bool SpotifyManager::getCurrentlyPlaying() {
             spotifyState.current_track_progress_ms = pb->progress_ms;
             spotifyState.is_playing = pb->is_playing;
 
+            if (spotifyState.is_playing) {
+                if (systemState.status != SYSTEM_STATUS_ACTIVE) {
+                    if (systemState.status == SYSTEM_STATUS_SLEEP) {
+                        Serial.println("SLEEP DEBUG: PLAYBACK RESUMED WAKING HARDWARE");
+                        SystemManager::getInstance().exitSleepMode();
+                    }
+                    Serial.println("SLEEP DEBUG: PLAYBACK RESUMED ENTERING ACTIVE STATE");
+                    systemState.status = SYSTEM_STATUS_ACTIVE;
+
+                }
+            } else {
+                // Paused
+                if (systemState.status == SYSTEM_STATUS_ACTIVE) {
+                    Serial.println("SLEEP DEBUG: PLAYBACK PAUSED ENTERING IDLE STATE");
+                    systemState.status = SYSTEM_STATUS_IDLE;
+                    systemState.time_first_np = millis();
+                }
+            }
+
+
             auto track = pb->asTrack();
             if (track) {
                 String newId = sanitizeString(track->id.c_str());
@@ -289,6 +309,12 @@ bool SpotifyManager::getCurrentlyPlaying() {
 
                 spotifyState.needs_art_update = true;
                 spotifyState.needs_text_update = false;
+
+                if (systemState.status == SYSTEM_STATUS_ACTIVE) {
+                    Serial.println("SLEEP DEBUG: PLAYBACK STOPPED ENTERING ACTIVE STATE");
+                    systemState.status = SYSTEM_STATUS_IDLE;
+                    systemState.time_first_np = millis();
+                }
             }
             return true;
         }

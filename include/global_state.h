@@ -51,11 +51,28 @@ struct SpotifyState {
 };
 
 
+enum SystemStatus {
+    SYSTEM_STATUS_IDLE,
+    SYSTEM_STATUS_ACTIVE,
+    SYSTEM_STATUS_SLEEP,
+};
+
 struct SystemState {
     bool setup_complete = false;
     bool spotify_linked = false;
+
+    SystemStatus status = SYSTEM_STATUS_ACTIVE;
+    unsigned long time_first_np = 0; // First time not playing is hit
 };
 
+/*
+unsigned long const SLEEP_TIMEOUT_MS = (3 * 60000); // 3 Mins
+unsigned long const PAUSE_SLEEP_TIMEOUT_MS = (5 * 60000); // 5 Mins
+*/
+
+// DEBUG VALUES
+unsigned long const SLEEP_TIMEOUT_MS = (0.3 * 60000); // 20 Secs
+unsigned long const PAUSE_SLEEP_TIMEOUT_MS = (0.5 * 60000); // 30 Secs
 
 enum WifiStatus {
     WIFI_IDLE,

@@ -34,6 +34,12 @@ public:
     void writeSpotifyTokens();
     void resetSpotifyTokens();
 
+    // Helper
+    void setBacklight(bool on);
+
+    // Sleep / Wake
+    void enterSleepMode();
+    void exitSleepMode();
 
 
 private:
