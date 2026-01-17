@@ -27,10 +27,19 @@ static Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
 static Arduino_GFX *gfx = new Arduino_RGB_Display(SCREEN_WIDTH, SCREEN_HEIGHT, bus, 0, true);
 static TAMC_GT911 ts = TAMC_GT911(TOUCH_SDA, TOUCH_SCL, 43, -1, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-#define DISP_BUF_SIZE 40
+#define DISP_BUF_SIZE 120
 
 // --- Callbacks ---
+/*
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p) {
+    uint32_t w = (area->x2 - area->x1 + 1);
+    uint32_t h = (area->y2 - area->y1 + 1);
+    gfx->draw16bitRGBBitmap(area->x1, area->y1, (uint16_t *)&color_p->full, w, h);
+    lv_disp_flush_ready(disp);
+}
+*/
+
+void IRAM_ATTR my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p) {
     uint32_t w = (area->x2 - area->x1 + 1);
     uint32_t h = (area->y2 - area->y1 + 1);
     gfx->draw16bitRGBBitmap(area->x1, area->y1, (uint16_t *)&color_p->full, w, h);

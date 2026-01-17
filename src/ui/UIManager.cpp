@@ -809,8 +809,11 @@ void UIManager::showMainPlayer() {
     lv_label_set_text(ui_song_title, spotifyState.current_track_title.c_str());
     lv_obj_set_style_text_font(ui_song_title, &font_metropolis_black_45, 0);
     lv_obj_set_style_text_color(ui_song_title, SPOTIFY_WHITE, 0);
-    lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_DOT);
+    lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    lv_obj_set_style_anim_speed(ui_song_title, 30, 0);
     lv_obj_add_flag(ui_song_title, LV_OBJ_FLAG_FLOATING);
+    lv_obj_set_style_text_opa(ui_song_title, LV_OPA_COVER, 0);
+    lv_obj_set_style_blend_mode(ui_song_title, LV_BLEND_MODE_NORMAL, 0);
 
 
     // Device Info
@@ -828,7 +831,7 @@ void UIManager::showMainPlayer() {
 
     lv_obj_t* icon = lv_img_create(device_con);
     lv_img_set_src(icon, &CurrentDeviceLogo);
-    lv_obj_set_size(icon, 30, 30);
+    lv_obj_set_size(icon, 35, 35);
 
     ui_device_name = lv_label_create(device_con);
     lv_label_set_text(ui_device_name, spotifyState.current_track_device_name.c_str());

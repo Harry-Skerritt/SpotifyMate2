@@ -71,26 +71,32 @@ void handleHardResetCheck() {
 
 // --- CORE 1: Handle Screen Updates ---
 void TaskGraphics(void *pvParameters) {
-
     UIManager::getInstance().showSplashScreen();
-
     handleHardResetCheck();
+
+    static uint32_t last_progress = 0;
 
     for (;;) {
         if (systemState.status != SYSTEM_STATUS_SLEEP) {
 
-            if (spotifyState.status == SPOTIFY_READY) {
-                UIManager::getInstance().setTrackProgress(
-                    spotifyState.current_track_progress_ms,
-                    spotifyState.current_track_duration_ms
-                );
+            if (spotifyState.status == SPOTIFY_READY && spotifyState.is_playing) {
+                spotifyState.current_track_progress_ms += 33;
+
+                if (spotifyState.current_track_progress_ms != last_progress) {
+                    UIManager::getInstance().setTrackProgress(
+                        spotifyState.current_track_progress_ms,
+                        spotifyState.current_track_duration_ms
+                    );
+                    last_progress = spotifyState.current_track_progress_ms;
+                }
             }
 
 
             UIManager::getInstance().update();
 
             lv_timer_handler();
-            vTaskDelay(pdMS_TO_TICKS(25));
+            // 33ms ~30fps
+            vTaskDelay(pdMS_TO_TICKS(33)); // 25 -> 33
         }
         else {
             vTaskDelay(pdMS_TO_TICKS(500));
@@ -124,12 +130,11 @@ void TaskSystem(void *pvParameters) {
         WifiManager::getInstance().update();
         SystemManager::getInstance().update();
 
-
         // Only update if on WiFi
         if (networkState.wifi_connected) {
             // Handle sleeping
             if (systemState.status == SYSTEM_STATUS_IDLE) {
-                Serial.println("SLEEP DEBUG: IN IDLE STATE");
+
                 unsigned long idleTime = millis() - systemState.time_first_np;
                 unsigned long currentTimeout = (spotifyState.current_track_id == "NOT_PLAYING")
                                            ? SLEEP_TIMEOUT_MS
