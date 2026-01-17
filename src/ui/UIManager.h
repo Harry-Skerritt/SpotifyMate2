@@ -56,8 +56,9 @@ public:
     void showSpotifyLinking(const char* auth_url);
     void showSpotifyError();
 
-    // Main Funciton
+    // Main Function
     void showMainPlayer();
+    void setTrackProgress(int32_t current_ms, int32_t total_ms);
 
 
     void updateAlbumArt(uint8_t* jpgData, size_t len, short t_size);
@@ -72,6 +73,7 @@ public:
     lv_obj_t* ui_song_title = nullptr;
     lv_obj_t* ui_song_artist = nullptr;
     lv_obj_t* ui_device_name = nullptr;
+    lv_obj_t* ui_progress_bar = nullptr;
 
 private:
     UIManager() {}

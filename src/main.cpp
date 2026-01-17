@@ -78,6 +78,15 @@ void TaskGraphics(void *pvParameters) {
 
     for (;;) {
         if (systemState.status != SYSTEM_STATUS_SLEEP) {
+
+            if (spotifyState.status == SPOTIFY_READY) {
+                UIManager::getInstance().setTrackProgress(
+                    spotifyState.current_track_progress_ms,
+                    spotifyState.current_track_duration_ms
+                );
+            }
+
+
             UIManager::getInstance().update();
 
             lv_timer_handler();

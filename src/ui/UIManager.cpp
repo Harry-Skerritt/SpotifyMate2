@@ -759,8 +759,139 @@ void UIManager::showSpotifyError() {
 
 // --- Main Functionality ---
 void UIManager::showMainPlayer() {
-  clearScreen();
+    clearScreen();
 
+    // Background
+    lv_obj_set_style_bg_color(current_screen, lv_color_hex(spotifyState.album_background_cover), 0);
+    lv_obj_set_style_bg_opa(current_screen, LV_OPA_COVER, 0);
+    lv_obj_clear_flag(current_screen, LV_OBJ_FLAG_SCROLLABLE);
+
+    // Album Art
+    ui_album_art = lv_img_create(current_screen);
+    lv_img_set_src(ui_album_art, &album_dsc);
+    lv_obj_set_size(ui_album_art, 365, 365);
+    lv_obj_align(ui_album_art, LV_ALIGN_LEFT_MID, 25, -10);
+    lv_obj_set_style_radius(ui_album_art, 15, 0);
+    lv_obj_set_style_clip_corner(ui_album_art, true, 0);
+    lv_obj_add_flag(ui_album_art, LV_OBJ_FLAG_IGNORE_LAYOUT | LV_OBJ_FLAG_FLOATING);
+
+    // Album Art - Inner Border
+    lv_obj_set_style_border_width(ui_album_art, 1, 0);
+    lv_obj_set_style_border_color(ui_album_art, SPOTIFY_WHITE, 0);
+    lv_obj_set_style_border_opa(ui_album_art, LV_OPA_10, 0);
+
+
+    // Info Container
+    lv_obj_t* info_con = lv_obj_create(current_screen);
+    lv_obj_set_size(info_con, 375, 365);
+    lv_obj_align(info_con, LV_ALIGN_RIGHT_MID, -20, -10);
+    lv_obj_set_style_bg_opa(info_con, 0, 0);
+    lv_obj_set_style_border_width(info_con, 0, 0);
+    lv_obj_set_style_pad_all(info_con, 0, 0);
+    lv_obj_clear_flag(info_con, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_flag(info_con, LV_OBJ_FLAG_IGNORE_LAYOUT | LV_OBJ_FLAG_FLOATING);
+
+
+    // Artist Name
+    ui_song_artist = lv_label_create(info_con);
+    lv_obj_set_width(ui_song_artist, 370);
+    lv_obj_align(ui_song_artist, LV_ALIGN_BOTTOM_LEFT, 0, 0);
+    lv_label_set_text(ui_song_artist, spotifyState.current_track_artist.c_str());
+    lv_obj_set_style_text_font(ui_song_artist, &font_gotham_medium_30, 0);
+    lv_obj_set_style_text_color(ui_song_artist, lv_color_hex(0xBBBBBB), 0);
+    lv_label_set_long_mode(ui_song_artist, LV_LABEL_LONG_DOT);
+
+    // Song Title
+    ui_song_title = lv_label_create(info_con);
+    lv_obj_set_width(ui_song_title, 370);
+    lv_obj_set_height(ui_song_title, 110);
+    lv_obj_align_to(ui_song_title, ui_song_artist, LV_ALIGN_OUT_TOP_LEFT, 0, -5);
+    lv_label_set_text(ui_song_title, spotifyState.current_track_title.c_str());
+    lv_obj_set_style_text_font(ui_song_title, &font_metropolis_black_45, 0);
+    lv_obj_set_style_text_color(ui_song_title, SPOTIFY_WHITE, 0);
+    lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_DOT);
+    lv_obj_add_flag(ui_song_title, LV_OBJ_FLAG_FLOATING);
+
+
+    // Device Info
+    lv_obj_t* device_con = lv_obj_create(info_con);
+    lv_obj_set_size(device_con, 370, 40);
+    lv_obj_align_to(device_con, ui_song_title, LV_ALIGN_OUT_TOP_LEFT, 0, -5);
+    lv_obj_set_style_bg_opa(device_con, 0, 0);
+    lv_obj_set_style_border_width(device_con, 0, 0);
+    lv_obj_set_style_pad_all(device_con, 0, 0);
+    lv_obj_add_flag(device_con, LV_OBJ_FLAG_IGNORE_LAYOUT);
+
+    // Only use flex for this tiny, static sub-container
+    lv_obj_set_flex_flow(device_con, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(device_con, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+
+    lv_obj_t* icon = lv_img_create(device_con);
+    lv_img_set_src(icon, &CurrentDeviceLogo);
+    lv_obj_set_size(icon, 30, 30);
+
+    ui_device_name = lv_label_create(device_con);
+    lv_label_set_text(ui_device_name, spotifyState.current_track_device_name.c_str());
+    lv_obj_set_style_text_font(ui_device_name, &font_gotham_medium_20, 0);
+    lv_obj_set_style_text_color(ui_device_name, SPOTIFY_WHITE, 0);
+    lv_obj_set_width(ui_device_name, 280);
+    lv_label_set_long_mode(ui_device_name, LV_LABEL_LONG_DOT);
+
+    // Progress Bar
+    ui_progress_bar = lv_bar_create(current_screen);
+    lv_obj_set_size(ui_progress_bar, 800, 10);
+    lv_obj_align(ui_progress_bar, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_set_style_bg_color(ui_progress_bar, lv_color_hex(0x333333), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(ui_progress_bar, SPOTIFY_WHITE, LV_PART_INDICATOR);
+    lv_obj_set_style_radius(ui_progress_bar, 0, 0);
+    lv_obj_set_style_bg_opa(ui_progress_bar, LV_OPA_COVER, LV_PART_INDICATOR);
+    lv_obj_set_style_bg_opa(ui_progress_bar, LV_OPA_COVER, LV_PART_MAIN);
+
+    // Load Image
+    if (!spotifyState.current_track_url.isEmpty()) {
+        SpotifyManager::getInstance().loadAlbumArt(spotifyState.current_track_url, 365);
+    } else {
+        String np_url = "https://raw.githubusercontent.com/Harry-Skerritt/files/refs/heads/main/not_playing_album.jpg";
+        SpotifyManager::getInstance().loadAlbumArt(np_url, 365);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
     lv_obj_set_style_bg_color(current_screen, lv_color_hex(spotifyState.album_background_cover), 0);
     lv_obj_clear_flag(current_screen, LV_OBJ_FLAG_SCROLLABLE);
 
@@ -893,6 +1024,15 @@ void UIManager::showMainPlayer() {
         SpotifyManager::getInstance().loadAlbumArt(np_url, 365);
     }
     resetMarquee(ui_song_title);
+    */
+}
+
+
+void UIManager::setTrackProgress(int32_t current_ms, int32_t total_ms) {
+    if (ui_progress_bar == nullptr || total_ms <= 0) return;
+
+    int progress = (current_ms * 100) / total_ms;
+    lv_bar_set_value(ui_progress_bar, progress, LV_ANIM_OFF);
 }
 
 

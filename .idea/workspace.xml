@@ -23,13 +23,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Swapped the logic for the background colour to favour darker colours - needs tweaking still">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added a sleep state">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/global_state.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/global_state.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/spotify/SpotifyManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system/SystemManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/SystemManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system/SystemManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/SystemManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UIManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -226,15 +224,7 @@
       <workItem from="1768493492933" duration="7189000" />
       <workItem from="1768589460919" duration="1562000" />
       <workItem from="1768599516518" duration="1908000" />
-      <workItem from="1768606365191" duration="2249000" />
-    </task>
-    <task id="LOCAL-00004" summary="Set up the project structure, and abstracted. Also added FreeRTOS">
-      <option name="closed" value="true" />
-      <created>1767643903962</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1767643903962</updated>
+      <workItem from="1768606365191" duration="5182000" />
     </task>
     <task id="LOCAL-00005" summary="Added the UI file and added a splash screen">
       <option name="closed" value="true" />
@@ -620,7 +610,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768602570950</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="Added a sleep state">
+      <option name="closed" value="true" />
+      <created>1768608789103</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1768608789103</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -638,7 +636,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added spotify authentication through a proxy" />
     <MESSAGE value="Started adding the PlayScreen (hardcoded for testing)" />
     <MESSAGE value="Got an iamge drawing to the screen, with incorrect colours" />
     <MESSAGE value="Image drawing to the screen okay Red and Blue swapped" />
@@ -663,6 +660,7 @@
     <MESSAGE value="Added a spotify specific error screen" />
     <MESSAGE value="Changed the background to use the most vibrant colour from the art instead of the average" />
     <MESSAGE value="Swapped the logic for the background colour to favour darker colours - needs tweaking still" />
-    <option name="LAST_COMMIT_MESSAGE" value="Swapped the logic for the background colour to favour darker colours - needs tweaking still" />
+    <MESSAGE value="Added a sleep state" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a sleep state" />
   </component>
 </project>
