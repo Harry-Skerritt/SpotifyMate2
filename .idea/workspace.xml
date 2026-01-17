@@ -23,10 +23,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Added progress bar and attempted to reduce screen tearing and have a more stable display">
+    <list default="true" id="c49142d0-ce73-443d-9b1c-5099a514e861" name="Changes" comment="Improved screen stability">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hal/display.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/hal/display.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lv_conf.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/lv_conf.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/UIManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UIManager.cpp" afterDir="false" />
     </list>
@@ -225,15 +224,7 @@
       <workItem from="1768493492933" duration="7189000" />
       <workItem from="1768589460919" duration="1562000" />
       <workItem from="1768599516518" duration="1908000" />
-      <workItem from="1768606365191" duration="6307000" />
-    </task>
-    <task id="LOCAL-00006" summary="Bunch of errors">
-      <option name="closed" value="true" />
-      <created>1767656967652</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1767656967652</updated>
+      <workItem from="1768606365191" duration="7438000" />
     </task>
     <task id="LOCAL-00007" summary="Adding missed files">
       <option name="closed" value="true" />
@@ -619,7 +610,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768611856839</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="Improved screen stability">
+      <option name="closed" value="true" />
+      <created>1768612959433</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1768612959434</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -637,7 +636,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Got an iamge drawing to the screen, with incorrect colours" />
     <MESSAGE value="Image drawing to the screen okay Red and Blue swapped" />
     <MESSAGE value="Fix incorrect colours" />
     <MESSAGE value="Got a scaled - but glitchy image" />
@@ -662,6 +660,7 @@
     <MESSAGE value="Swapped the logic for the background colour to favour darker colours - needs tweaking still" />
     <MESSAGE value="Added a sleep state" />
     <MESSAGE value="Added progress bar and attempted to reduce screen tearing and have a more stable display" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added progress bar and attempted to reduce screen tearing and have a more stable display" />
+    <MESSAGE value="Improved screen stability" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improved screen stability" />
   </component>
 </project>

@@ -41,7 +41,7 @@ void setup() {
     SpotifyManager::getInstance().init();
 
     // UI Task (Core 1)
-    xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 32768, NULL, 3, NULL, 1);
+    xTaskCreatePinnedToCore(TaskGraphics, "Graphics", 32768, NULL, 5, NULL, 1);
 
     // Network Task (Core 0)
     xTaskCreatePinnedToCore(TaskSystem, "System", 32768, NULL, 1, &systemTaskHandle, 0);

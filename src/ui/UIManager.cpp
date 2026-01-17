@@ -809,8 +809,8 @@ void UIManager::showMainPlayer() {
     lv_label_set_text(ui_song_title, spotifyState.current_track_title.c_str());
     lv_obj_set_style_text_font(ui_song_title, &font_metropolis_black_45, 0);
     lv_obj_set_style_text_color(ui_song_title, SPOTIFY_WHITE, 0);
-    lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_SCROLL_CIRCULAR);
-    lv_obj_set_style_anim_speed(ui_song_title, 30, 0);
+    lv_label_set_long_mode(ui_song_title, LV_LABEL_LONG_DOT);
+    //lv_obj_set_style_anim_speed(ui_song_title, 30, 0);
     lv_obj_add_flag(ui_song_title, LV_OBJ_FLAG_FLOATING);
     lv_obj_set_style_text_opa(ui_song_title, LV_OPA_COVER, 0);
     lv_obj_set_style_blend_mode(ui_song_title, LV_BLEND_MODE_NORMAL, 0);
@@ -857,37 +857,6 @@ void UIManager::showMainPlayer() {
         String np_url = "https://raw.githubusercontent.com/Harry-Skerritt/files/refs/heads/main/not_playing_album.jpg";
         SpotifyManager::getInstance().loadAlbumArt(np_url, 365);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
