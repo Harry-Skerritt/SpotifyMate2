@@ -27,7 +27,6 @@ static Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
 static Arduino_GFX *gfx = new Arduino_RGB_Display(SCREEN_WIDTH, SCREEN_HEIGHT, bus, 0, true);
 static TAMC_GT911 ts = TAMC_GT911(TOUCH_SDA, TOUCH_SCL, 43, -1, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-#define DISP_BUF_SIZE 120
 
 // --- Callbacks ---
 void IRAM_ATTR my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p) {
@@ -53,6 +52,7 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
     }
 }
 
+#define DISP_BUF_SIZE 30
 #define TOUCH_GT911_ADDRESS 0x5D
 
 // --- Setup ---
@@ -84,8 +84,8 @@ void halSetup() {
     // LVGL Memory
     lv_init();
     // Allocate 40 lines of screen height in PSRAM
-    static lv_color_t *buf1 = (lv_color_t *)ps_malloc(SCREEN_WIDTH * DISP_BUF_SIZE * sizeof(lv_color_t));
-    static lv_color_t *buf2 = (lv_color_t *)ps_malloc(SCREEN_WIDTH * DISP_BUF_SIZE * sizeof(lv_color_t));
+    static lv_color_t *buf1 = (lv_color_t *)heap_caps_malloc(SCREEN_WIDTH * DISP_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+    static lv_color_t *buf2 = (lv_color_t *)heap_caps_malloc(SCREEN_WIDTH * DISP_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_SPIRAM);
     static lv_disp_draw_buf_t draw_buf;
     lv_disp_draw_buf_init(&draw_buf, buf1, buf2, SCREEN_WIDTH * DISP_BUF_SIZE);
 

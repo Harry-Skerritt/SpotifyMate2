@@ -155,7 +155,7 @@ void TaskSystem(void *pvParameters) {
             }
         }
 
-        int delayTime = (systemState.status == SYSTEM_STATUS_ACTIVE) ? 100 : 2000;
+        int delayTime = (systemState.status == SYSTEM_STATUS_ACTIVE) ? 500 : 2000;
         vTaskDelay(pdMS_TO_TICKS(delayTime));
     }
 }
